@@ -12,7 +12,7 @@ const addons = [
     },
     image: "images/skill-system.png", // Standardized to 'image'
     video: "https://www.youtube.com/watch?v=8njgICxykg0",
-    file: "addons/kiem-bay.mcaddon",
+    file: "addons/Skill System 1.21.90 - 1.0.1.zip",
   },
 ];
 
