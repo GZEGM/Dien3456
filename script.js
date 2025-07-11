@@ -1,5 +1,5 @@
 const targetDate = new Date("2025-12-31T00:00:00");
-document.getElementById("target-date-text").textContent = "31/12/2025";
+document.getElementById("target-date-text").textContent = "1/1/2026";
 
 function updateCountdown() {
   const now = new Date();
