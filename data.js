@@ -415,7 +415,7 @@ Quest System - Version 1.0.0 - Changelog
   🔇 Removed debug spam.
           `,
         },
-        file: "addons/Quest System 1.21.90 - 1.0.0.zip",
+        file: "addons/Quest System 1.21.90 - 1.0.1.zip",
       },
       // ==============================================================================================================
     ],
