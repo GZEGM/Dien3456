@@ -17,7 +17,7 @@ import {
 } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
 
 // Global variables for language and theme
-let currentLanguage = localStorage.getItem("language") || "vi";
+let currentLanguage = localStorage.getItem("language") || "en"; // Default language is English
 let currentTheme = localStorage.getItem("theme") || "dark";
 
 // Firebase configuration (Cần khớp với Project Firebase của bạn)
@@ -46,8 +46,9 @@ const emailLoginBtn = document.getElementById("emailLoginBtn");
 const googleLoginBtn = document.getElementById("googleLoginBtn");
 const registerBtn = document.getElementById("registerBtn");
 const messageDiv = document.getElementById("message");
-const logoutBtn = document.getElementById("logoutBtn");
 const anonLoginBtn = document.getElementById("anonLoginBtn");
+const noAccountText = document.getElementById("noAccountText");
+const haveAccountText = document.getElementById("haveAccountText");
 
 // Language and Theme setup (same as forum.js for consistency)
 const authTranslations = {
@@ -133,36 +134,15 @@ const authTranslations = {
 function applyTheme(theme) {
   document.body.classList.remove("dark-mode", "light-mode");
   document.body.classList.add(`${theme}-mode`);
-  const themeToggleIcon = document.querySelector("#themeToggle i");
-  if (themeToggleIcon) {
-    if (theme === "dark") {
-      themeToggleIcon.classList.remove("fa-moon");
-      themeToggleIcon.classList.add("fa-sun");
-    } else {
-      themeToggleIcon.classList.remove("fa-sun");
-      themeToggleIcon.classList.add("fa-moon");
-    }
-  } else {
-    console.warn("Theme toggle icon not found.");
-  }
 }
 
 function updateUIText() {
-  // Update header
   const headerTitle = document.getElementById("headerTitle");
   if (headerTitle) {
-    headerTitle.textContent = "🧩 MCPE Addons"; // Static title
-  }
-  const navHome = document.getElementById("navHome");
-  if (navHome) {
-    navHome.textContent = authTranslations[currentLanguage].home;
-  }
-  const navForum = document.getElementById("navForum");
-  if (navForum) {
-    navForum.textContent = authTranslations[currentLanguage].forum;
+    headerTitle.textContent = "Dienkon Addon"; // Updated
   }
 
-  // Update auth form
+  // Update auth form based on which form is currently visible
   if (authTitle) {
     authTitle.textContent =
       loginForm && loginForm.style.display === "block"
@@ -208,63 +188,20 @@ function updateUIText() {
     anonLoginBtn.textContent = authTranslations[currentLanguage].anonLogin;
   }
 
-  const noAccountText = document.getElementById("noAccountText");
   if (noAccountText) {
-    noAccountText.textContent = authTranslations[currentLanguage].noAccount;
+    noAccountText.childNodes[0].nodeValue =
+      authTranslations[currentLanguage].noAccount + " ";
   }
   if (toggleToRegisterLink) {
     toggleToRegisterLink.textContent =
       authTranslations[currentLanguage].registerNow;
   }
-  const haveAccountText = document.getElementById("haveAccountText");
   if (haveAccountText) {
-    haveAccountText.textContent = authTranslations[currentLanguage].haveAccount;
+    haveAccountText.childNodes[0].nodeValue =
+      authTranslations[currentLanguage].haveAccount + " ";
   }
   if (toggleToLoginLink) {
     toggleToLoginLink.textContent = authTranslations[currentLanguage].loginNow;
-  }
-
-  // Update settings modal
-  const settingsModalTitle = document.getElementById("settingsModalTitle");
-  if (settingsModalTitle) {
-    settingsModalTitle.textContent = authTranslations[currentLanguage].settings;
-  }
-  const modalLangLabel = document.getElementById("modalLangLabel");
-  if (modalLangLabel) {
-    modalLangLabel.textContent =
-      authTranslations[currentLanguage].language + ":";
-  }
-  const modalThemeLabel = document.getElementById("modalThemeLabel");
-  if (modalThemeLabel) {
-    modalThemeLabel.textContent = authTranslations[currentLanguage].theme + ":";
-  }
-  const modalThemeDarkText = document.getElementById("modalThemeDarkText");
-  if (modalThemeDarkText) {
-    modalThemeDarkText.textContent = authTranslations[currentLanguage].darkMode;
-  }
-  const modalThemeLightText = document.getElementById("modalThemeLightText");
-  if (modalThemeLightText) {
-    modalThemeLightText.textContent =
-      authTranslations[currentLanguage].lightMode;
-  }
-
-  // Update selected language in modal
-  const modalLangSelect = document.getElementById("modalLangSelect");
-  if (modalLangSelect) {
-    modalLangSelect.value = currentLanguage;
-  }
-
-  // Update theme button text in modal
-  const modalThemeDark = document.getElementById("modalThemeDark");
-  const modalThemeLight = document.getElementById("modalThemeLight");
-  if (modalThemeDark && modalThemeLight) {
-    if (currentTheme === "dark") {
-      modalThemeDark.classList.add("active");
-      modalThemeLight.classList.remove("active");
-    } else {
-      modalThemeDark.classList.remove("active");
-      modalThemeLight.classList.add("active");
-    }
   }
 }
 
@@ -300,106 +237,12 @@ function redirectToPreviousPage() {
 // Event listeners
 document.addEventListener("DOMContentLoaded", () => {
   applyTheme(currentTheme);
-  updateUIText(); // Initial UI text update
-
-  // Event Listeners for Header Controls (copied from script.js/addon.js)
-  // Language Dropdown
-  document.querySelectorAll(".dropdown-content a").forEach((link) => {
-    if (link) {
-      link.addEventListener("click", (e) => {
-        e.preventDefault();
-        currentLanguage = e.target.dataset.lang;
-        localStorage.setItem("language", currentLanguage);
-        updateUIText();
-      });
-    } else {
-      console.warn("Dropdown content link not found.");
-    }
-  });
-
-  // Theme Toggle
-  const themeToggle = document.getElementById("themeToggle");
-  if (themeToggle) {
-    themeToggle.addEventListener("click", () => {
-      currentTheme = currentTheme === "dark" ? "light" : "dark";
-      localStorage.setItem("theme", currentTheme);
-      applyTheme(currentTheme);
-      updateUIText(); // Update modal theme buttons
-    });
-  } else {
-    console.warn("Theme toggle button not found.");
-  }
-
-  // Settings Modal
-  const settingsModal = document.getElementById("settingsModal");
-  const settingsBtn = document.getElementById("settingsBtn");
-  const closeSettingsModal = document.getElementById("closeSettingsModal");
-  const modalLangSelect = document.getElementById("modalLangSelect");
-  const modalThemeDark = document.getElementById("modalThemeDark");
-  const modalThemeLight = document.getElementById("modalThemeLight");
-
-  if (settingsBtn) {
-    settingsBtn.addEventListener("click", () => {
-      if (settingsModal) settingsModal.style.display = "block";
-      updateUIText(); // Ensure modal content is in current language and theme buttons are active
-    });
-  } else {
-    console.warn("Settings button not found.");
-  }
-
-  if (closeSettingsModal) {
-    closeSettingsModal.addEventListener("click", () => {
-      if (settingsModal) settingsModal.style.display = "none";
-    });
-  } else {
-    console.warn("Close settings modal button not found.");
-  }
-
-  if (settingsModal) {
-    window.addEventListener("click", (event) => {
-      if (event.target == settingsModal) {
-        settingsModal.style.display = "none";
-      }
-    });
-  }
-
-  // Modal Language Select
-  if (modalLangSelect) {
-    modalLangSelect.addEventListener("change", (e) => {
-      currentLanguage = e.target.value;
-      localStorage.setItem("language", currentLanguage);
-      updateUIText();
-    });
-  } else {
-    console.warn("Modal language select not found.");
-  }
-
-  // Modal Theme Buttons
-  if (modalThemeDark) {
-    modalThemeDark.addEventListener("click", () => {
-      currentTheme = "dark";
-      localStorage.setItem("theme", currentTheme);
-      applyTheme(currentTheme);
-      updateUIText();
-    });
-  } else {
-    console.warn("Modal Dark Theme button not found.");
-  }
-
-  if (modalThemeLight) {
-    modalThemeLight.addEventListener("click", () => {
-      currentTheme = "light";
-      localStorage.setItem("theme", currentTheme);
-      applyTheme(currentTheme);
-      updateUIText();
-    });
-  } else {
-    console.warn("Modal Light Theme button not found.");
-  }
+  updateUIText(); // Initial UI text update based on default English and login form
 
   // Email/Password Login
   if (emailLoginBtn) {
-    emailLoginBtn.addEventListener("click", async () => {
+    emailLoginBtn.addEventListener("click", async (e) => {
+      e.preventDefault(); // Prevent default form submission
       console.log("Email Login button clicked.");
       hideMessage();
       const email = document.getElementById("loginEmail")?.value;
@@ -410,12 +253,10 @@ document.addEventListener("DOMContentLoaded", () => {
         return;
       }
       if (password && password.length < 6) {
-        // Check password existence before length
         showMessage(authTranslations[currentLanguage].passwordError, true);
         return;
       }
       if (!password) {
-        // Handle case where password input might be missing or empty
         showMessage(authTranslations[currentLanguage].passwordError, true);
         return;
       }
@@ -461,7 +302,7 @@ document.addEventListener("DOMContentLoaded", () => {
             lastLoginAt: user.metadata.lastSignInTime,
           },
           { merge: true }
-        ); // Use merge to update if exists, create if not
+        );
         showMessage(authTranslations[currentLanguage].loginSuccess, false);
         setTimeout(redirectToPreviousPage, 1500);
       } catch (error) {
@@ -478,7 +319,8 @@ document.addEventListener("DOMContentLoaded", () => {
 
   // Email/Password Register
   if (registerBtn) {
-    registerBtn.addEventListener("click", async () => {
+    registerBtn.addEventListener("click", async (e) => {
+      e.preventDefault(); // Prevent default form submission
       console.log("Register button clicked.");
       hideMessage();
       const email = document.getElementById("registerEmail")?.value;
@@ -490,12 +332,10 @@ document.addEventListener("DOMContentLoaded", () => {
         return;
       }
       if (password && password.length < 6) {
-        // Check password existence before length
         showMessage(authTranslations[currentLanguage].passwordError, true);
         return;
       }
       if (!password) {
-        // Handle case where password input might be missing or empty
         showMessage(authTranslations[currentLanguage].passwordError, true);
         return;
       }
@@ -522,9 +362,9 @@ document.addEventListener("DOMContentLoaded", () => {
           ),
           {
             uid: user.uid,
-            displayName: displayName || user.email, // Use display name if provided, else email
+            displayName: displayName || user.email,
             email: user.email,
-            photoURL: user.photoURL || "", // photoURL might be null for email/password users
+            photoURL: user.photoURL || "",
             createdAt: user.metadata.creationTime,
             lastLoginAt: user.metadata.lastSignInTime,
           },
@@ -562,7 +402,7 @@ document.addEventListener("DOMContentLoaded", () => {
           ),
           {
             uid: user.uid,
-            displayName: "Khách ẩn danh", // Default name for anonymous users
+            displayName: "Guest", // Default anonymous name is English
             photoURL: "",
             createdAt: user.metadata.creationTime,
             lastLoginAt: user.metadata.lastSignInTime,
@@ -581,34 +421,44 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   // Toggle between login and register forms
-  if (toggleToRegisterLink && loginForm && registerForm && authTitle) {
+  if (
+    toggleToRegisterLink &&
+    loginForm &&
+    registerForm &&
+    authTitle &&
+    noAccountText &&
+    haveAccountText
+  ) {
     toggleToRegisterLink.addEventListener("click", (e) => {
       console.log("Toggle to Register link clicked.");
       e.preventDefault();
       loginForm.style.display = "none";
       registerForm.style.display = "block";
       authTitle.textContent = authTranslations[currentLanguage].register;
-      if (toggleToRegisterLink.parentNode)
-        toggleToRegisterLink.parentNode.style.display = "none";
-      if (toggleToLoginLink && toggleToLoginLink.parentNode)
-        toggleToLoginLink.parentNode.style.display = "block";
+      noAccountText.style.display = "none";
+      haveAccountText.style.display = "block";
       hideMessage();
     });
   } else {
     console.warn("Toggle to Register link or related forms/title not found.");
   }
 
-  if (toggleToLoginLink && loginForm && registerForm && authTitle) {
+  if (
+    toggleToLoginLink &&
+    loginForm &&
+    registerForm &&
+    authTitle &&
+    noAccountText &&
+    haveAccountText
+  ) {
     toggleToLoginLink.addEventListener("click", (e) => {
       console.log("Toggle to Login link clicked.");
       e.preventDefault();
       loginForm.style.display = "block";
       registerForm.style.display = "none";
       authTitle.textContent = authTranslations[currentLanguage].login;
-      if (toggleToRegisterLink && toggleToRegisterLink.parentNode)
-        toggleToRegisterLink.parentNode.style.display = "block";
-      if (toggleToLoginLink.parentNode)
-        toggleToLoginLink.parentNode.style.display = "none";
+      noAccountText.style.display = "block";
+      haveAccountText.style.display = "none";
       hideMessage();
     });
   } else {
@@ -618,9 +468,14 @@ document.addEventListener("DOMContentLoaded", () => {
   // Initial authentication check on page load
   onAuthStateChanged(auth, (user) => {
     if (user) {
-      // If user is already signed in, redirect to the stored URL or forum.html
       redirectToPreviousPage();
     }
-    // If no user is signed in, stay on auth.html and let user choose login method.
   });
+
+  // Set initial display for forms and toggle text
+  loginForm.style.display = "block";
+  registerForm.style.display = "none";
+  authTitle.textContent = authTranslations[currentLanguage].login;
+  noAccountText.style.display = "block";
+  haveAccountText.style.display = "none";
 });

@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="vi">
+<html lang="en">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title id="pageTitle">Diễn đàn</title>
+    <title id="pageTitle">Forum</title>
     <link rel="stylesheet" href="style.css" />
     <!-- Font Awesome for icons -->
     <link
@@ -706,10 +706,10 @@
   </head>
   <body>
     <header>
-      <h1><a href="index.html" id="headerTitle">🧩 MCPE Addons</a></h1>
+      <h1><a href="index.html" id="headerTitle">Dienkon Addon</a></h1>
       <nav>
-        <a href="index.html" id="navHome">Trang chủ</a>
-        <a href="forum.html" id="navForum">Diễn đàn</a>
+        <a href="index.html" id="navHome">Home</a>
+        <a href="forum.html" id="navForum">Forum</a>
         <div class="header-controls">
           <!-- Language Selector -->
           <div class="dropdown">
@@ -755,9 +755,9 @@
               />
             </button>
             <div class="user-dropdown-content">
-              <p id="userNameDisplay">Chào mừng, Khách</p>
-              <p id="userIdDisplay">ID: Đang tải...</p>
-              <button id="logoutBtn" class="btn logout-btn">Đăng xuất</button>
+              <p id="userNameDisplay">Welcome, Guest</p>
+              <p id="userIdDisplay">ID: Loading...</p>
+              <button id="logoutBtn" class="btn logout-btn">Logout</button>
             </div>
           </div>
         </div>
@@ -771,43 +771,43 @@
       <div class="tab-container">
         <button class="tab-button active" data-tab="posts">
           <i class="fas fa-newspaper"></i>
-          <span id="tabPostsText">Bài viết</span>
+          <span id="tabPostsText">Posts</span>
         </button>
         <button class="tab-button" data-tab="friends">
           <i class="fas fa-user-friends"></i>
-          <span id="tabFriendsText">Bạn bè</span>
+          <span id="tabFriendsText">Friends</span>
         </button>
         <button class="tab-button" data-tab="messages">
           <i class="fas fa-comments"></i>
-          <span id="tabMessagesText">Tin nhắn</span>
+          <span id="tabMessagesText">Messages</span>
         </button>
         <button class="tab-button" data-tab="profile">
           <i class="fas fa-user"></i>
-          <span id="tabProfileText">Hồ sơ</span>
+          <span id="tabProfileText">Profile</span>
         </button>
       </div>
 
       <!-- Tab Content: Posts -->
       <div id="postsTabContent" class="tab-content active">
         <section class="new-post-section">
-          <h2 id="newPostTitle">Tạo bài viết mới</h2>
+          <h2 id="newPostTitle">Create New Post</h2>
           <textarea
             id="postContent"
-            placeholder="Viết bài viết của bạn ở đây..."
+            placeholder="Write your post here..."
             rows="5"
           ></textarea>
           <input
             type="text"
             id="postImageUrl"
-            placeholder="Dán URL hình ảnh (tùy chọn)"
+            placeholder="Paste image URL (optional)"
           />
-          <button id="createPostBtn" class="btn">Đăng bài</button>
+          <button id="createPostBtn" class="btn">Post</button>
         </section>
 
         <section class="forum-posts-section">
-          <h2 id="forumPostsTitle">Bài viết gần đây</h2>
+          <h2 id="forumPostsTitle">Recent Posts</h2>
           <div id="postsContainer">
-            <p id="loadingPosts">Đang tải bài viết...</p>
+            <p id="loadingPosts">Loading posts...</p>
           </div>
         </section>
       </div>
@@ -821,26 +821,26 @@
               data-section="friendsList"
             >
               <i class="fas fa-users"></i>
-              <span id="friendsListBtnText">Danh sách bạn bè</span>
+              <span id="friendsListBtnText">Friend List</span>
             </button>
             <button
               class="friends-sidebar-button"
               data-section="friendRequests"
             >
               <i class="fas fa-user-plus"></i>
-              <span id="friendRequestsBtnText">Yêu cầu kết bạn</span>
+              <span id="friendRequestsBtnText">Friend Requests</span>
             </button>
             <button class="friends-sidebar-button" data-section="findUsers">
               <i class="fas fa-search"></i>
-              <span id="findUsersBtnText">Tìm kiếm người dùng</span>
+              <span id="findUsersBtnText">Find Users</span>
             </button>
           </div>
 
           <div class="friends-main-content">
             <!-- Friends List Sub-section -->
             <div id="friendsListContainer" class="friends-sub-section">
-              <h2 id="friendsSectionTitle">Bạn bè</h2>
-              <p id="loadingFriends">Đang tải bạn bè...</p>
+              <h2 id="friendsSectionTitle">Friends</h2>
+              <p id="loadingFriends">Loading friends...</p>
               <ul id="friendsList" class="friends-list">
                 <!-- Friends will be loaded here -->
               </ul>
@@ -852,8 +852,8 @@
               class="friends-sub-section"
               style="display: none"
             >
-              <h2 id="friendRequestsSectionTitle">Yêu cầu kết bạn</h2>
-              <p id="loadingFriendRequests">Đang tải yêu cầu...</p>
+              <h2 id="friendRequestsSectionTitle">Friend Requests</h2>
+              <p id="loadingFriendRequests">Loading requests...</p>
               <ul id="friendRequestsList" class="friend-requests-list">
                 <!-- Friend requests will be loaded here -->
               </ul>
@@ -865,12 +865,12 @@
               class="friends-sub-section"
               style="display: none"
             >
-              <h2 id="findUsersSectionTitle">Tìm kiếm người dùng</h2>
+              <h2 id="findUsersSectionTitle">Find Users</h2>
               <div class="find-users-section">
                 <input
                   type="text"
                   id="findUserSearchInput"
-                  placeholder="Tìm người dùng theo tên hiển thị..."
+                  placeholder="Search users by display name..."
                 />
                 <div id="findUserSearchResults">
                   <!-- Search results will be loaded here -->
@@ -884,9 +884,9 @@
       <!-- Tab Content: Messages -->
       <div id="messagesTabContent" class="tab-content">
         <section class="messages-section">
-          <h2 id="messagesSectionTitle">Tin nhắn của tôi</h2>
+          <h2 id="messagesSectionTitle">My Messages</h2>
           <div id="conversationsListContainer">
-            <p id="loadingConversations">Đang tải tin nhắn...</p>
+            <p id="loadingConversations">Loading messages...</p>
             <ul id="conversationsList" class="message-list">
               <!-- Recent conversations will be loaded here -->
             </ul>
@@ -897,7 +897,7 @@
       <!-- Tab Content: Profile -->
       <div id="profileTabContent" class="tab-content">
         <section class="user-profile-section">
-          <h2 id="profileSectionTitle">Hồ sơ của tôi</h2>
+          <h2 id="profileSectionTitle">My Profile</h2>
           <div class="profile-details">
             <img
               id="profileAvatar"
@@ -907,7 +907,7 @@
               onerror="this.onerror=null;this.src='https://placehold.co/100x100/333333/FFFFFF?text=U';"
             />
             <p>
-              <strong id="profileDisplayNameLabel">Tên hiển thị:</strong>
+              <strong id="profileDisplayNameLabel">Display Name:</strong>
               <span id="profileDisplayName"></span>
             </p>
             <p>
@@ -920,13 +920,13 @@
             </p>
             <div class="profile-description-area">
               <label for="profileDescription" id="profileDescriptionLabel"
-                >Mô tả:</label
+                >Description:</label
               >
               <textarea
                 id="profileDescription"
-                placeholder="Thêm mô tả về bản thân bạn..."
+                placeholder="Add a description about yourself..."
               ></textarea>
-              <button id="saveProfileBtn" class="btn">Lưu Hồ sơ</button>
+              <button id="saveProfileBtn" class="btn">Save Profile</button>
             </div>
           </div>
         </section>
@@ -937,10 +937,10 @@
     <div id="settingsModal" class="modal">
       <div class="modal-content">
         <span class="close-button" id="closeSettingsModal">&times;</span>
-        <h2 id="settingsModalTitle">Cài đặt</h2>
+        <h2 id="settingsModalTitle">Settings</h2>
 
         <div class="setting-item">
-          <label for="modalLangSelect" id="modalLangLabel">Ngôn ngữ:</label>
+          <label for="modalLangSelect" id="modalLangLabel">Language:</label>
           <select id="modalLangSelect">
             <option value="vi">Tiếng Việt</option>
             <option value="en">English</option>
@@ -948,15 +948,15 @@
         </div>
 
         <div class="setting-item">
-          <label id="modalThemeLabel">Chủ đề:</label>
+          <label id="modalThemeLabel">Theme:</label>
           <div class="theme-options">
             <button id="modalThemeDark" class="theme-btn">
               <i class="fas fa-moon"></i>
-              <span id="modalThemeDarkText">Chế độ Tối</span>
+              <span id="modalThemeDarkText">Dark Mode</span>
             </button>
             <button id="modalThemeLight" class="theme-btn">
               <i class="fas fa-sun"></i>
-              <span id="modalThemeLightText">Chế độ Sáng</span>
+              <span id="modalThemeLightText">Light Mode</span>
             </button>
           </div>
         </div>
@@ -967,7 +967,7 @@
     <div id="mainChatModal" class="modal">
       <div class="modal-content chat-modal-content">
         <span class="close-button" id="closeMainChatModal">&times;</span>
-        <h2 id="mainChatModalTitle">Trò chuyện</h2>
+        <h2 id="mainChatModalTitle">Chat</h2>
 
         <!-- This section is now mainly for starting new chats from search,
              or can be repurposed for a global chat lobby if desired.
@@ -976,7 +976,7 @@
           <input
             type="text"
             id="chatUserSearchInput"
-            placeholder="Tìm người dùng theo tên hiển thị..."
+            placeholder="Search users by display name..."
           />
           <div id="chatSearchResults">
             <!-- Search results will be loaded here -->
@@ -992,7 +992,7 @@
             <input
               type="text"
               id="chatMessageInput"
-              placeholder="Nhập tin nhắn của bạn..."
+              placeholder="Type your message..."
             />
             <input
               type="file"
@@ -1003,7 +1003,7 @@
             <button id="attachFileBtn" class="btn icon-btn">
               <i class="fas fa-paperclip"></i>
             </button>
-            <button id="sendChatBtn" class="btn">Gửi</button>
+            <button id="sendChatBtn" class="btn">Send</button>
           </div>
           <div
             id="chatUploadProgress"
@@ -1021,11 +1021,11 @@
     <div id="confirmationModal" class="modal">
       <div class="modal-content">
         <span class="close-button" id="closeConfirmationModal">&times;</span>
-        <h2 id="confirmationModalTitle">Xác nhận</h2>
+        <h2 id="confirmationModalTitle">Confirm</h2>
         <p id="confirmationMessage"></p>
         <div class="modal-actions">
-          <button id="confirmActionBtn" class="btn btn-danger">Xác nhận</button>
-          <button id="cancelActionBtn" class="btn btn-secondary">Hủy</button>
+          <button id="confirmActionBtn" class="btn btn-danger">Confirm</button>
+          <button id="cancelActionBtn" class="btn btn-secondary">Cancel</button>
         </div>
       </div>
     </div>
@@ -1043,19 +1043,19 @@
         <p id="popupUserName"></p>
         <p id="popupUserId"></p>
         <button id="popupChatBtn" class="btn">
-          <i class="fas fa-comment-dots"></i> Trò chuyện
+          <i class="fas fa-comment-dots"></i> Chat
         </button>
         <button id="popupAddFriendBtn" class="btn">
-          <i class="fas fa-user-plus"></i> Kết bạn
+          <i class="fas fa-user-plus"></i> Add Friend
         </button>
         <button
           id="popupRemoveFriendBtn"
           class="btn btn-danger"
           style="display: none"
         >
-          <i class="fas fa-user-minus"></i> Hủy kết bạn
+          <i class="fas fa-user-minus"></i> Remove Friend
         </button>
-        <button id="popupCloseBtn" class="btn btn-secondary">Đóng</button>
+        <button id="popupCloseBtn" class="btn btn-secondary">Close</button>
       </div>
     </div>
 

@@ -10,7 +10,7 @@ import {
 import { getFirestore } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
 
 // Global variables for language and theme
-let currentLanguage = localStorage.getItem("language") || "vi";
+let currentLanguage = localStorage.getItem("language") || "en"; // Changed default language to English
 let currentTheme = localStorage.getItem("theme") || "dark";
 let currentUser = null; // To store current authenticated user
 let db, auth; // Firebase instances
@@ -155,8 +155,11 @@ function loadAddonDetails() {
           <div class="image-gallery">
             ${latestVersion.images
               .map(
-                (imgSrc) => `
-              <img src="${imgSrc}" alt="${latestVersion.title[currentLanguage]}" onerror="this.onerror=null;this.src='https://placehold.co/600x400/000000/FFFFFF?text=Image+Not+Found';" />
+                (image) => `
+              <div class="image-item">
+                <img src="${image.src}" alt="${latestVersion.title[currentLanguage]}" onerror="this.onerror=null;this.src='https://placehold.co/600x400/000000/FFFFFF?text=Image+Not+Found';" />
+                <p>${image.captions[currentLanguage]}</p>
+              </div>
             `
               )
               .join("")}
@@ -219,8 +222,11 @@ function updateAddonContent(version) {
   const imageGallery = document.querySelector("#addonImages .image-gallery");
   imageGallery.innerHTML = version.images
     .map(
-      (imgSrc) => `
-    <img src="${imgSrc}" alt="${version.title[currentLanguage]}" onerror="this.onerror=null;this.src='https://placehold.co/600x400/000000/FFFFFF?text=Image+Not+Found';" />
+      (image) => `
+    <div class="image-item">
+      <img src="${image.src}" alt="${version.title[currentLanguage]}" onerror="this.onerror=null;this.src='https://placehold.co/600x400/000000/FFFFFF?text=Image+Not+Found';" />
+      <p>${image.captions[currentLanguage]}</p>
+    </div>
   `
     )
     .join("");

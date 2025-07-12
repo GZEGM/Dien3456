@@ -11,67 +11,16 @@
     />
   </head>
   <body class="auth-page">
-    <header class="header">
-      <div class="container">
-        <a href="index.html" class="header-title" id="headerTitle"
-          >🧩 MCPE Addons</a
-        >
-        <nav class="nav">
-          <ul>
-            <li><a href="index.html" id="navHome">Trang chủ</a></li>
-            <li><a href="forum.html" id="navForum">Diễn đàn</a></li>
-            <li class="dropdown">
-              <a href="#" class="dropbtn" id="settingsBtn"
-                ><i class="fas fa-cog"></i
-              ></a>
-              <div class="dropdown-content">
-                <a href="#" data-lang="en">English</a>
-                <a href="#" data-lang="vi">Tiếng Việt</a>
-              </div>
-            </li>
-            <li>
-              <button id="themeToggle" class="icon-btn">
-                <i class="fas fa-sun"></i>
-              </button>
-            </li>
-          </ul>
-        </nav>
-      </div>
-    </header>
-
-    <div id="settingsModal" class="modal">
-      <div class="modal-content">
-        <span class="close-button" id="closeSettingsModal">&times;</span>
-        <h2 id="settingsModalTitle">Cài đặt</h2>
-        <div class="setting-item">
-          <label for="modalLangSelect" id="modalLangLabel">Ngôn ngữ:</label>
-          <select id="modalLangSelect">
-            <option value="vi">Tiếng Việt</option>
-            <option value="en">English</option>
-          </select>
-        </div>
-        <div class="setting-item">
-          <label id="modalThemeLabel">Chủ đề:</label>
-          <div class="theme-switch">
-            <button class="btn" id="modalThemeDark">
-              <i class="fas fa-moon"></i>
-              <span id="modalThemeDarkText">Chế độ Tối</span>
-            </button>
-            <button class="btn" id="modalThemeLight">
-              <i class="fas fa-sun"></i>
-              <span id="modalThemeLightText">Chế độ Sáng</span>
-            </button>
-          </div>
-        </div>
-      </div>
-    </div>
+    <!-- Removed the entire header section as requested -->
 
     <main class="auth-container">
       <div class="auth-form-card">
         <h2 id="authTitle">Đăng nhập</h2>
+        <!-- Default title is Login -->
         <div id="message" class="auth-message"></div>
 
         <form id="loginForm">
+          <!-- Visible by default -->
           <div class="input-group">
             <label for="loginEmail">Email:</label>
             <input
@@ -96,6 +45,15 @@
         </form>
 
         <form id="registerForm" style="display: none">
+          <!-- Hidden by default -->
+          <div class="input-group">
+            <label for="registerDisplayName">Tên hiển thị (tùy chọn):</label>
+            <input
+              type="text"
+              id="registerDisplayName"
+              placeholder="Nhập tên hiển thị của bạn"
+            />
+          </div>
           <div class="input-group">
             <label for="registerEmail">Email:</label>
             <input
@@ -114,14 +72,6 @@
               required
             />
           </div>
-          <div class="input-group">
-            <label for="registerDisplayName">Tên hiển thị (tùy chọn):</label>
-            <input
-              type="text"
-              id="registerDisplayName"
-              placeholder="Nhập tên hiển thị của bạn"
-            />
-          </div>
           <button type="submit" class="btn auth-btn" id="registerBtn">
             Đăng ký
           </button>
@@ -135,13 +85,19 @@
           Đăng nhập với tư cách Khách
         </button>
 
+        <!-- Toggle text for login form (visible when login form is active) -->
         <p class="auth-toggle-text" id="noAccountText">
           Bạn chưa có tài khoản?
-          <a href="#" id="toggleToRegister">Đăng ký ngay!</a>
+          <a href="#" id="toggleToRegister" style="color: var(--primary)"
+            >Đăng ký ngay!</a
+          >
         </p>
+        <!-- Toggle text for register form (visible when register form is active) -->
         <p class="auth-toggle-text" id="haveAccountText" style="display: none">
           Bạn đã có tài khoản?
-          <a href="#" id="toggleToLogin">Đăng nhập ngay!</a>
+          <a href="#" id="toggleToLogin" style="color: var(--primary)"
+            >Đăng nhập ngay!</a
+          >
         </p>
       </div>
     </main>

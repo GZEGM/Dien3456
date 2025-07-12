@@ -349,7 +349,7 @@ main {
 
 .addon-detail p {
   color: var(--dark-text);
-  font-size: 1.1em;
+  font-size: 1.2em; /* Increased font size */
   text-align: center;
 }
 
@@ -394,19 +394,42 @@ main {
   font-size: 1.5em;
 }
 
+/* Modified image-gallery to display one image per row with captions */
 .image-gallery {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-  gap: 15px;
-  justify-content: center;
+  display: flex; /* Use flexbox */
+  flex-direction: column; /* Stack items vertically */
+  gap: 20px; /* Space between image items */
+  align-items: center; /* Center images horizontally */
 }
 
-.image-gallery img {
-  width: 100%;
-  height: 200px;
-  object-fit: cover;
+.image-item {
+  width: 100%; /* Ensure each image item takes full width */
+  max-width: 600px; /* Reduced max width of individual image item */
+  display: flex;
+  flex-direction: column;
+  align-items: center; /* Center image and text within its container */
+  background-color: var(--dark-input-bg); /* Add a subtle background */
+  padding: 15px;
+  border-radius: 10px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+}
+
+.image-item img {
+  width: 100%; /* Image takes full width of its parent (.image-item) */
+  height: auto; /* Maintain aspect ratio */
+  max-height: 300px; /* Reduced max-height for images */
+  object-fit: contain; /* Ensure the whole image is visible */
   border-radius: 8px;
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+  margin-bottom: 10px; /* Space between image and caption */
+}
+
+.image-item p {
+  color: var(--dark-secondary-text);
+  font-size: 1.2em; /* Increased font size for captions */
+  text-align: center;
+  margin: 0; /* Remove default paragraph margin */
+  padding: 0 10px; /* Add some horizontal padding for text */
 }
 
 .video-gallery {
@@ -443,12 +466,13 @@ main {
   word-wrap: break-word; /* Ensures long words break */
   color: var(--dark-text);
   font-family: monospace;
-  font-size: 0.95em;
+  font-size: 2em; /* Increased font size for changelog */
   max-height: 300px; /* Limit height */
   overflow-y: auto; /* Add scroll if content overflows */
   padding: 10px;
   border: 1px solid var(--dark-input-border);
   border-radius: 5px;
+  text-align: left; /* Changed to left alignment */
 }
 
 .btn {
@@ -661,7 +685,9 @@ main {
 }
 
 .input-group input[type="email"],
-.input-group input[type="password"] {
+.input-group input[type="password"],
+.input-group input[type="text"] {
+  /* Added input[type="text"] for consistent styling */
   width: calc(100% - 24px); /* Account for padding */
   padding: 12px;
   border: 1px solid var(--dark-input-border);
@@ -673,12 +699,16 @@ main {
 }
 
 .input-group input[type="email"]::placeholder,
-.input-group input[type="password"]::placeholder {
+.input-group input[type="password"]::placeholder,
+.input-group input[type="text"]::placeholder {
+  /* Added input[type="text"] for consistent placeholder styling */
   color: var(--dark-secondary-text);
 }
 
 .input-group input[type="email"]:focus,
-.input-group input[type="password"]:focus {
+.input-group input[type="password"]:focus,
+.input-group input[type="text"]:focus {
+  /* Added input[type="text"] for consistent focus styling */
   border-color: var(--primary);
   outline: none;
   box-shadow: 0 0 0 2px rgba(0, 230, 118, 0.3);

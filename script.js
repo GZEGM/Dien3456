@@ -10,7 +10,7 @@ import {
 import { getFirestore } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
 
 // Global variables for language and theme
-let currentLanguage = localStorage.getItem("language") || "vi";
+let currentLanguage = localStorage.getItem("language") || "en"; // Changed default language to English
 let currentTheme = localStorage.getItem("theme") || "dark";
 let currentUser = null; // To store current authenticated user
 let db, auth; // Firebase instances
@@ -61,7 +61,7 @@ function updateUIText() {
   document.getElementById("pageTitle").textContent =
     translations[currentLanguage].addonGallery;
   document.getElementById("headerTitle").textContent =
-    translations[currentLanguage].mcpeAddons;
+    translations[currentLanguage].mcpeAddons; // Updated
   document.getElementById("navHome").textContent =
     translations[currentLanguage].home;
   document.getElementById("navForum").textContent =

@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="vi">
+<html lang="en">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title id="pageTitle">Chi tiết Addon</title>
+    <title id="pageTitle">Addon Details</title>
     <link rel="stylesheet" href="style.css" />
     <!-- Font Awesome for icons -->
     <link
@@ -13,10 +13,10 @@
   </head>
   <body>
     <header>
-      <h1><a href="index.html" id="headerTitle">🧩 MCPE Addons</a></h1>
+      <h1><a href="index.html" id="headerTitle">Dienkon Addon</a></h1>
       <nav>
-        <a href="index.html" id="navHome">Trang chủ</a>
-        <a href="forum.html" id="navForum">Diễn đàn</a>
+        <a href="index.html" id="navHome">Home</a>
+        <a href="forum.html" id="navForum">Forum</a>
         <div class="header-controls">
           <!-- Language Selector -->
           <div class="dropdown">
@@ -62,9 +62,9 @@
               />
             </button>
             <div class="user-dropdown-content">
-              <p id="userNameDisplay">Chào mừng, Khách</p>
-              <p id="userIdDisplay">ID: Đang tải...</p>
-              <button id="logoutBtn" class="btn logout-btn">Đăng xuất</button>
+              <p id="userNameDisplay">Welcome, Guest</p>
+              <p id="userIdDisplay">ID: Loading...</p>
+              <button id="logoutBtn" class="btn logout-btn">Logout</button>
             </div>
           </div>
         </div>
@@ -73,17 +73,17 @@
 
     <main id="addonDetailContent">
       <!-- Addon details will be loaded here by JavaScript -->
-      <p id="loadingMessage">Đang tải addon...</p>
+      <p id="loadingMessage">Loading addon...</p>
     </main>
 
     <!-- Settings Modal -->
     <div id="settingsModal" class="modal">
       <div class="modal-content">
         <span class="close-button" id="closeSettingsModal">&times;</span>
-        <h2 id="settingsModalTitle">Cài đặt</h2>
+        <h2 id="settingsModalTitle">Settings</h2>
 
         <div class="setting-item">
-          <label for="modalLangSelect" id="modalLangLabel">Ngôn ngữ:</label>
+          <label for="modalLangSelect" id="modalLangLabel">Language:</label>
           <select id="modalLangSelect">
             <option value="vi">Tiếng Việt</option>
             <option value="en">English</option>
@@ -91,15 +91,15 @@
         </div>
 
         <div class="setting-item">
-          <label id="modalThemeLabel">Chủ đề:</label>
+          <label id="modalThemeLabel">Theme:</label>
           <div class="theme-options">
             <button id="modalThemeDark" class="theme-btn">
               <i class="fas fa-moon"></i>
-              <span id="modalThemeDarkText">Chế độ Tối</span>
+              <span id="modalThemeDarkText">Dark Mode</span>
             </button>
             <button id="modalThemeLight" class="theme-btn">
               <i class="fas fa-sun"></i>
-              <span id="modalThemeLightText">Chế độ Sáng</span>
+              <span id="modalThemeLightText">Light Mode</span>
             </button>
           </div>
         </div>
