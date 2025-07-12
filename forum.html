@@ -1,0 +1,1069 @@
+<!DOCTYPE html>
+<html lang="vi">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title id="pageTitle">Diễn đàn</title>
+    <link rel="stylesheet" href="style.css" />
+    <!-- Font Awesome for icons -->
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"
+    />
+    <style>
+      /* Thêm CSS cho khung chat */
+      .chat-modal-content {
+        display: flex;
+        flex-direction: column;
+        height: 90%; /* Chiều cao cố định cho modal chat */
+        max-height: 800px; /* Chiều cao tối đa */
+        width: 90%;
+        max-width: 800px;
+        background-color: var(--background-color);
+        border-radius: 10px;
+        overflow: hidden; /* Đảm bảo nội dung không tràn */
+      }
+
+      #chatUserSearchInput {
+        width: 100%;
+        padding: 10px;
+        margin-bottom: 15px;
+        border: 1px solid var(--border-color);
+        border-radius: 5px;
+        background-color: var(--input-bg-color);
+        color: var(--text-color);
+      }
+
+      #chatSearchResults {
+        flex-grow: 1;
+        overflow-y: auto; /* Cho phép cuộn */
+        border: 1px solid var(--border-color);
+        border-radius: 5px;
+        padding: 10px;
+        background-color: var(--secondary-bg-color);
+      }
+
+      .chat-search-result-item {
+        display: flex;
+        align-items: center;
+        padding: 10px;
+        border-bottom: 1px solid var(--border-color);
+        cursor: pointer;
+      }
+
+      .chat-search-result-item:last-child {
+        border-bottom: none;
+      }
+
+      .chat-search-result-item img {
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        margin-right: 10px;
+        object-fit: cover;
+      }
+
+      .chat-search-result-item span {
+        flex-grow: 1;
+        font-weight: bold;
+        color: var(--text-color);
+      }
+
+      .chat-search-result-item .start-chat-btn {
+        background-color: var(--primary-color);
+        color: white;
+        border: none;
+        padding: 8px 12px;
+        border-radius: 5px;
+        cursor: pointer;
+        transition: background-color 0.3s ease;
+      }
+
+      .chat-search-result-item .start-chat-btn:hover {
+        background-color: var(--primary-hover-color);
+      }
+
+      #currentChatRecipientName {
+        text-align: center;
+        margin-bottom: 15px;
+        color: var(--text-color);
+      }
+
+      .chat-messages {
+        flex-grow: 1;
+        overflow-y: auto;
+        padding: 10px;
+        border: 1px solid var(--border-color);
+        border-radius: 5px;
+        background-color: var(--secondary-bg-color);
+        margin-bottom: 15px;
+        display: flex;
+        flex-direction: column;
+      }
+
+      /* Zalo-like chat message styling */
+      .chat-message {
+        display: flex;
+        align-items: flex-end; /* Align bubbles to the bottom */
+        margin-bottom: 8px; /* Reduced margin */
+        max-width: 100%; /* Ensure it doesn't overflow */
+      }
+
+      .chat-message.my-message {
+        justify-content: flex-end;
+      }
+
+      .chat-message.other-message {
+        justify-content: flex-start;
+      }
+
+      .chat-avatar {
+        width: 32px; /* Smaller avatar */
+        height: 32px;
+        border-radius: 50%;
+        object-fit: cover;
+        margin-right: 8px; /* Space between avatar and bubble */
+        flex-shrink: 0; /* Prevent avatar from shrinking */
+      }
+
+      .chat-message.my-message .chat-avatar {
+        display: none; /* Hide my own avatar */
+      }
+
+      .message-bubble {
+        max-width: 70%; /* Keep bubbles from being too wide */
+        padding: 10px 14px;
+        border-radius: 18px; /* More rounded */
+        position: relative;
+        word-wrap: break-word;
+        font-size: 0.95em;
+        line-height: 1.4;
+        box-shadow: 0 1px 1px rgba(0, 0, 0, 0.1); /* Subtle shadow */
+      }
+
+      .chat-message.my-message .message-bubble {
+        background-color: #0084ff; /* Zalo blue */
+        color: white;
+        border-bottom-right-radius: 4px; /* Pointy corner */
+      }
+
+      .chat-message.other-message .message-bubble {
+        background-color: #e4e6eb; /* Light grey for others */
+        color: #333;
+        border-bottom-left-radius: 4px; /* Pointy corner */
+      }
+
+      /* Dark mode adjustments for message bubbles */
+      body.dark-mode .chat-message.other-message .message-bubble {
+        background-color: #3a3b3c; /* Darker grey for others in dark mode */
+        color: #e4e6eb;
+      }
+
+      .message-bubble .sender-name {
+        font-weight: bold;
+        margin-bottom: 2px; /* Less margin */
+        display: block;
+        font-size: 0.75em; /* Smaller font for name */
+        color: rgba(255, 255, 255, 0.8); /* For my messages */
+      }
+
+      .chat-message.other-message .message-bubble .sender-name {
+        color: #606770; /* Darker grey for others' names */
+      }
+      body.dark-mode .chat-message.other-message .message-bubble .sender-name {
+        color: #b0b3b8; /* Lighter grey for others' names in dark mode */
+      }
+
+      .message-bubble .message-text {
+        margin: 0;
+        padding: 0;
+      }
+
+      .message-bubble .message-timestamp {
+        display: block;
+        font-size: 0.65em; /* Smaller timestamp */
+        text-align: right;
+        margin-top: 4px; /* Less margin */
+        color: rgba(255, 255, 255, 0.7); /* For my messages */
+      }
+
+      .chat-message.other-message .message-bubble .message-timestamp {
+        color: #606770; /* Darker grey for others' timestamps */
+      }
+      body.dark-mode
+        .chat-message.other-message
+        .message-bubble
+        .message-timestamp {
+        color: #b0b3b8; /* Lighter grey for others' timestamps in dark mode */
+      }
+
+      .chat-input-area {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        padding: 10px 0; /* Add padding for input area */
+        border-top: 1px solid var(--border-color); /* Separator */
+      }
+
+      #chatMessageInput {
+        flex-grow: 1;
+        padding: 10px 15px; /* More padding */
+        border: 1px solid var(--border-color);
+        border-radius: 22px; /* Bo tròn hơn */
+        background-color: var(--input-bg-color);
+        color: var(--text-color);
+        font-size: 1em;
+      }
+
+      #sendChatBtn {
+        background-color: #0084ff; /* Zalo blue */
+        color: white;
+        border: none;
+        padding: 10px 20px;
+        border-radius: 22px; /* Bo tròn hơn */
+        cursor: pointer;
+        transition: background-color 0.3s ease;
+        font-weight: bold;
+      }
+
+      #sendChatBtn:hover {
+        background-color: #006bb3; /* Darker blue on hover */
+      }
+
+      .icon-btn {
+        background: none;
+        border: none;
+        color: var(--text-color);
+        font-size: 1.2em;
+        cursor: pointer;
+        padding: 8px;
+        border-radius: 50%;
+        transition: background-color 0.3s ease;
+      }
+
+      .icon-btn:hover {
+        background-color: var(--hover-bg-color);
+      }
+
+      .no-messages-message,
+      .no-users-found-message,
+      .error-message {
+        text-align: center;
+        color: var(--text-color-light);
+        padding: 20px;
+      }
+
+      /* Thêm kiểu cho phần bạn bè */
+      .friends-section {
+        background-color: var(--secondary-bg-color);
+        border-radius: 10px;
+        padding: 20px;
+        margin-top: 20px;
+        box-shadow: var(--shadow);
+        display: flex; /* Use flexbox for sidebar layout */
+        gap: 20px;
+      }
+
+      .friends-section h2 {
+        color: var(--heading-color);
+        margin-bottom: 15px;
+        text-align: center;
+      }
+
+      .friends-list,
+      .friend-requests-list {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+      }
+
+      .friend-item {
+        display: flex;
+        align-items: center;
+        padding: 10px;
+        border-bottom: 1px solid var(--border-color);
+      }
+
+      .friend-item:last-child {
+        border-bottom: none;
+      }
+
+      .friend-item img {
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        margin-right: 10px;
+        object-fit: cover;
+      }
+
+      .friend-item span {
+        flex-grow: 1;
+        color: var(--text-color);
+      }
+
+      .friend-item .btn {
+        margin-left: 10px;
+        padding: 5px 10px;
+        border-radius: 5px;
+        cursor: pointer;
+      }
+
+      .friend-item .accept-btn {
+        background-color: #28a745; /* Green */
+        color: white;
+      }
+
+      .friend-item .decline-btn {
+        background-color: #dc3545; /* Red */
+        color: white;
+      }
+
+      .friend-item .chat-btn {
+        background-color: var(--primary-color);
+        color: white;
+      }
+
+      .friend-item .remove-friend-btn {
+        background-color: #ffc107; /* Yellow */
+        color: black;
+      }
+
+      .no-friends-message,
+      .no-requests-message {
+        text-align: center;
+        color: var(--text-color-light);
+        padding: 10px;
+      }
+
+      /* Styles for Tabs */
+      .tab-container {
+        display: flex;
+        margin-bottom: 20px;
+        border-bottom: 1px solid var(--border-color);
+      }
+
+      .tab-button {
+        background-color: transparent;
+        border: none;
+        padding: 15px 20px;
+        cursor: pointer;
+        font-size: 1.1em;
+        color: var(--dark-secondary-text);
+        transition: color 0.3s ease, border-bottom 0.3s ease;
+        flex-grow: 1;
+        text-align: center;
+      }
+
+      .tab-button.active {
+        color: var(--primary);
+        border-bottom: 3px solid var(--primary);
+        font-weight: bold;
+      }
+
+      .tab-button:hover:not(.active) {
+        color: var(--text-color);
+      }
+
+      .tab-content {
+        display: none; /* Hidden by default */
+        padding: 20px 0;
+      }
+
+      .tab-content.active {
+        display: block;
+      }
+
+      /* Message List Specific Styles */
+      .message-list {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+      }
+
+      .message-list-item {
+        display: flex;
+        align-items: center;
+        padding: 10px;
+        border-bottom: 1px solid var(--border-color);
+        cursor: pointer;
+        transition: background-color 0.2s ease;
+      }
+
+      .message-list-item:hover {
+        background-color: var(--hover-bg-color);
+      }
+
+      .message-list-item:last-child {
+        border-bottom: none;
+      }
+
+      .message-list-item img {
+        width: 50px;
+        height: 50px;
+        border-radius: 50%;
+        margin-right: 15px;
+        object-fit: cover;
+      }
+
+      .message-list-item .message-info {
+        flex-grow: 1;
+      }
+
+      .message-list-item .message-info .chat-partner-name {
+        font-weight: bold;
+        color: var(--primary);
+        font-size: 1.1em;
+      }
+
+      .message-list-item .message-info .last-message-preview {
+        color: var(--dark-secondary-text);
+        font-size: 0.9em;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        max-width: 250px; /* Adjust as needed */
+      }
+
+      .message-list-item .message-timestamp {
+        font-size: 0.8em;
+        color: var(--dark-secondary-text);
+      }
+
+      /* New styles for Friends tab sidebar */
+      .friends-sidebar {
+        flex: 0 0 200px; /* Fixed width sidebar */
+        background-color: var(--dark-input-bg);
+        border-radius: 8px;
+        padding: 15px;
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+        box-shadow: inset 0 0 5px rgba(0, 0, 0, 0.2);
+      }
+
+      .friends-sidebar-button {
+        background-color: transparent;
+        border: none;
+        padding: 12px 15px;
+        text-align: left;
+        cursor: pointer;
+        font-size: 1em;
+        color: var(--dark-secondary-text);
+        border-radius: 8px;
+        transition: background-color 0.3s ease, color 0.3s ease;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+      }
+
+      .friends-sidebar-button:hover {
+        background-color: var(--hover-bg-color);
+        color: var(--text-color);
+      }
+
+      .friends-sidebar-button.active {
+        background-color: var(--primary);
+        color: white;
+        font-weight: bold;
+      }
+
+      .friends-sidebar-button.active:hover {
+        background-color: #00b359;
+      }
+
+      .friends-main-content {
+        flex-grow: 1; /* Takes remaining space */
+        background-color: var(--dark-card-bg);
+        border-radius: 10px;
+        padding: 20px;
+        box-shadow: var(--shadow);
+      }
+
+      .friends-sub-section {
+        display: none; /* Hidden by default, controlled by JS */
+      }
+
+      .friends-sub-section h2 {
+        text-align: center;
+        margin-bottom: 20px;
+        color: var(--heading-color);
+      }
+
+      /* Responsive adjustments for friends tab */
+      @media (max-width: 768px) {
+        .friends-section {
+          flex-direction: column; /* Stack sidebar and content vertically */
+        }
+
+        .friends-sidebar {
+          flex: none; /* Remove fixed width */
+          width: 100%; /* Take full width */
+          flex-direction: row; /* Buttons in a row */
+          justify-content: space-around;
+          padding: 10px;
+        }
+
+        .friends-sidebar-button {
+          flex-grow: 1; /* Distribute space evenly */
+          text-align: center;
+          justify-content: center;
+          padding: 10px;
+        }
+
+        .friends-main-content {
+          width: 100%; /* Take full width */
+          padding: 15px;
+        }
+      }
+
+      /* Profile Tab Styles */
+      .user-profile-section {
+        background-color: var(--dark-card-bg);
+        padding: 25px;
+        border-radius: 10px;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+        margin-bottom: 25px;
+        text-align: center;
+      }
+
+      .user-profile-section h2 {
+        color: var(--primary);
+        margin-top: 0;
+        margin-bottom: 20px;
+        font-size: 1.8em;
+      }
+
+      .profile-details {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 15px;
+      }
+
+      .user-avatar-large {
+        width: 100px;
+        height: 100px;
+        border-radius: 50%;
+        object-fit: cover;
+        border: 3px solid var(--primary);
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+      }
+
+      .profile-details p {
+        margin: 0;
+        color: var(--dark-text);
+        font-size: 1.1em;
+      }
+
+      .profile-details strong {
+        color: var(--primary);
+      }
+
+      .profile-description-area {
+        width: 100%;
+        max-width: 500px;
+        margin-top: 20px;
+        text-align: left;
+      }
+
+      .profile-description-area label {
+        display: block;
+        margin-bottom: 8px;
+        font-size: 1.1em;
+        color: var(--dark-text);
+      }
+
+      .profile-description-area textarea {
+        width: calc(100% - 24px);
+        padding: 12px;
+        margin-bottom: 15px;
+        border: 1px solid var(--dark-input-border);
+        border-radius: 8px;
+        background-color: var(--dark-input-bg);
+        color: var(--dark-text);
+        font-size: 1em;
+        resize: vertical;
+        min-height: 80px;
+      }
+
+      .profile-description-area textarea:focus {
+        border-color: var(--primary);
+        outline: none;
+        box-shadow: 0 0 0 2px rgba(0, 230, 118, 0.3);
+      }
+
+      #saveProfileBtn {
+        width: auto;
+        padding: 10px 20px;
+        font-size: 1em;
+        margin: 0 auto;
+        display: block;
+      }
+
+      /* User Interaction Pop-up */
+      .user-interaction-popup {
+        display: none; /* Hidden by default */
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        background-color: var(--dark-modal-bg);
+        padding: 25px;
+        border-radius: 12px;
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.4);
+        z-index: 101; /* Higher than other modals */
+        text-align: center;
+        max-width: 300px;
+        width: 90%;
+      }
+
+      .user-interaction-popup .popup-content {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 15px;
+      }
+
+      .user-interaction-popup .user-avatar-large {
+        width: 60px;
+        height: 60px;
+        border: 2px solid var(--primary);
+      }
+
+      .user-interaction-popup p {
+        margin: 0;
+        color: var(--dark-text);
+        font-weight: bold;
+      }
+
+      .user-interaction-popup .btn {
+        width: 100%;
+        margin-top: 0; /* Override default btn margin */
+      }
+
+      .user-interaction-popup .btn-danger {
+        background-color: #dc3545;
+      }
+
+      .user-interaction-popup .btn-danger:hover {
+        background-color: #c82333;
+      }
+
+      .user-interaction-popup .btn-secondary {
+        background-color: #6c757d;
+      }
+
+      .user-interaction-popup .btn-secondary:hover {
+        background-color: #5a6268;
+      }
+
+      /* Confirmation Modal specific styles */
+      #confirmationModal .modal-actions {
+        display: flex;
+        justify-content: center;
+        gap: 15px;
+        margin-top: 25px;
+      }
+
+      #confirmationModal .modal-actions .btn {
+        margin: 0; /* Remove default margin */
+        width: auto;
+        padding: 10px 20px;
+      }
+
+      #confirmationModal .modal-actions .btn-danger {
+        background-color: #dc3545;
+      }
+
+      #confirmationModal .modal-actions .btn-danger:hover {
+        background-color: #c82333;
+      }
+
+      #confirmationModal .modal-actions .btn-secondary {
+        background-color: #6c757d;
+      }
+
+      #confirmationModal .modal-actions .btn-secondary:hover {
+        background-color: #5a6268;
+      }
+
+      /* Hide loading messages when content is loaded */
+      #postsContainer:not(:empty) #loadingPosts,
+      #friendsListContainer:not(:empty) #loadingFriends,
+      #friendRequestsContainer:not(:empty) #loadingFriendRequests,
+      #conversationsListContainer:not(:empty) #loadingConversations {
+        display: none;
+      }
+
+      /* Ensure empty message is shown if no content */
+      #postsContainer.empty #loadingPosts,
+      #friendsListContainer.empty #loadingFriends,
+      #friendRequestsContainer.empty #loadingFriendRequests,
+      #conversationsListContainer.empty #loadingConversations {
+        display: block; /* Show loading if it's explicitly marked empty */
+      }
+    </style>
+  </head>
+  <body>
+    <header>
+      <h1><a href="index.html" id="headerTitle">🧩 MCPE Addons</a></h1>
+      <nav>
+        <a href="index.html" id="navHome">Trang chủ</a>
+        <a href="forum.html" id="navForum">Diễn đàn</a>
+        <div class="header-controls">
+          <!-- Language Selector -->
+          <div class="dropdown">
+            <button class="dropbtn" id="langBtn">
+              <i class="fas fa-globe"></i>
+            </button>
+            <div class="dropdown-content">
+              <a href="#" data-lang="vi">Tiếng Việt</a>
+              <a href="#" data-lang="en">English</a>
+            </div>
+          </div>
+          <!-- Theme Toggle -->
+          <button id="themeToggle" class="icon-btn">
+            <i class="fas fa-sun"></i>
+          </button>
+          <!-- Social Media Icons -->
+          <a
+            href="https://www.youtube.com/@dien3456"
+            target="_blank"
+            class="icon-btn"
+          >
+            <i class="fab fa-youtube"></i>
+          </a>
+          <a
+            href="https://discord.gg/P2BBa5JpHr"
+            target="_blank"
+            class="icon-btn"
+          >
+            <i class="fab fa-discord"></i>
+          </a>
+          <!-- Settings Button -->
+          <button id="settingsBtn" class="icon-btn">
+            <i class="fas fa-cog"></i>
+          </button>
+          <!-- User Profile/Logout -->
+          <div class="user-profile-menu">
+            <button id="userProfileBtn" class="icon-btn">
+              <img
+                id="userAvatar"
+                src="https://placehold.co/40x40/333333/FFFFFF?text=U"
+                alt="User Avatar"
+                class="user-avatar"
+              />
+            </button>
+            <div class="user-dropdown-content">
+              <p id="userNameDisplay">Chào mừng, Khách</p>
+              <p id="userIdDisplay">ID: Đang tải...</p>
+              <button id="logoutBtn" class="btn logout-btn">Đăng xuất</button>
+            </div>
+          </div>
+        </div>
+      </nav>
+    </header>
+
+    <main class="forum-main">
+      <div id="forumMessage" class="forum-message"></div>
+
+      <!-- Tab Navigation -->
+      <div class="tab-container">
+        <button class="tab-button active" data-tab="posts">
+          <i class="fas fa-newspaper"></i>
+          <span id="tabPostsText">Bài viết</span>
+        </button>
+        <button class="tab-button" data-tab="friends">
+          <i class="fas fa-user-friends"></i>
+          <span id="tabFriendsText">Bạn bè</span>
+        </button>
+        <button class="tab-button" data-tab="messages">
+          <i class="fas fa-comments"></i>
+          <span id="tabMessagesText">Tin nhắn</span>
+        </button>
+        <button class="tab-button" data-tab="profile">
+          <i class="fas fa-user"></i>
+          <span id="tabProfileText">Hồ sơ</span>
+        </button>
+      </div>
+
+      <!-- Tab Content: Posts -->
+      <div id="postsTabContent" class="tab-content active">
+        <section class="new-post-section">
+          <h2 id="newPostTitle">Tạo bài viết mới</h2>
+          <textarea
+            id="postContent"
+            placeholder="Viết bài viết của bạn ở đây..."
+            rows="5"
+          ></textarea>
+          <input
+            type="text"
+            id="postImageUrl"
+            placeholder="Dán URL hình ảnh (tùy chọn)"
+          />
+          <button id="createPostBtn" class="btn">Đăng bài</button>
+        </section>
+
+        <section class="forum-posts-section">
+          <h2 id="forumPostsTitle">Bài viết gần đây</h2>
+          <div id="postsContainer">
+            <p id="loadingPosts">Đang tải bài viết...</p>
+          </div>
+        </section>
+      </div>
+
+      <!-- Tab Content: Friends (Redesigned) -->
+      <div id="friendsTabContent" class="tab-content">
+        <section class="friends-section">
+          <div class="friends-sidebar">
+            <button
+              class="friends-sidebar-button active"
+              data-section="friendsList"
+            >
+              <i class="fas fa-users"></i>
+              <span id="friendsListBtnText">Danh sách bạn bè</span>
+            </button>
+            <button
+              class="friends-sidebar-button"
+              data-section="friendRequests"
+            >
+              <i class="fas fa-user-plus"></i>
+              <span id="friendRequestsBtnText">Yêu cầu kết bạn</span>
+            </button>
+            <button class="friends-sidebar-button" data-section="findUsers">
+              <i class="fas fa-search"></i>
+              <span id="findUsersBtnText">Tìm kiếm người dùng</span>
+            </button>
+          </div>
+
+          <div class="friends-main-content">
+            <!-- Friends List Sub-section -->
+            <div id="friendsListContainer" class="friends-sub-section">
+              <h2 id="friendsSectionTitle">Bạn bè</h2>
+              <p id="loadingFriends">Đang tải bạn bè...</p>
+              <ul id="friendsList" class="friends-list">
+                <!-- Friends will be loaded here -->
+              </ul>
+            </div>
+
+            <!-- Friend Requests Sub-section -->
+            <div
+              id="friendRequestsContainer"
+              class="friends-sub-section"
+              style="display: none"
+            >
+              <h2 id="friendRequestsSectionTitle">Yêu cầu kết bạn</h2>
+              <p id="loadingFriendRequests">Đang tải yêu cầu...</p>
+              <ul id="friendRequestsList" class="friend-requests-list">
+                <!-- Friend requests will be loaded here -->
+              </ul>
+            </div>
+
+            <!-- Find Users Sub-section -->
+            <div
+              id="findUsersContainer"
+              class="friends-sub-section"
+              style="display: none"
+            >
+              <h2 id="findUsersSectionTitle">Tìm kiếm người dùng</h2>
+              <div class="find-users-section">
+                <input
+                  type="text"
+                  id="findUserSearchInput"
+                  placeholder="Tìm người dùng theo tên hiển thị..."
+                />
+                <div id="findUserSearchResults">
+                  <!-- Search results will be loaded here -->
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+      </div>
+
+      <!-- Tab Content: Messages -->
+      <div id="messagesTabContent" class="tab-content">
+        <section class="messages-section">
+          <h2 id="messagesSectionTitle">Tin nhắn của tôi</h2>
+          <div id="conversationsListContainer">
+            <p id="loadingConversations">Đang tải tin nhắn...</p>
+            <ul id="conversationsList" class="message-list">
+              <!-- Recent conversations will be loaded here -->
+            </ul>
+          </div>
+        </section>
+      </div>
+
+      <!-- Tab Content: Profile -->
+      <div id="profileTabContent" class="tab-content">
+        <section class="user-profile-section">
+          <h2 id="profileSectionTitle">Hồ sơ của tôi</h2>
+          <div class="profile-details">
+            <img
+              id="profileAvatar"
+              src="https://placehold.co/100x100/333333/FFFFFF?text=U"
+              alt="User Avatar"
+              class="user-avatar-large"
+              onerror="this.onerror=null;this.src='https://placehold.co/100x100/333333/FFFFFF?text=U';"
+            />
+            <p>
+              <strong id="profileDisplayNameLabel">Tên hiển thị:</strong>
+              <span id="profileDisplayName"></span>
+            </p>
+            <p>
+              <strong id="profileIdLabel">ID:</strong>
+              <span id="profileId"></span>
+            </p>
+            <p>
+              <strong id="profileEmailLabel">Email:</strong>
+              <span id="profileEmail"></span>
+            </p>
+            <div class="profile-description-area">
+              <label for="profileDescription" id="profileDescriptionLabel"
+                >Mô tả:</label
+              >
+              <textarea
+                id="profileDescription"
+                placeholder="Thêm mô tả về bản thân bạn..."
+              ></textarea>
+              <button id="saveProfileBtn" class="btn">Lưu Hồ sơ</button>
+            </div>
+          </div>
+        </section>
+      </div>
+    </main>
+
+    <!-- Settings Modal -->
+    <div id="settingsModal" class="modal">
+      <div class="modal-content">
+        <span class="close-button" id="closeSettingsModal">&times;</span>
+        <h2 id="settingsModalTitle">Cài đặt</h2>
+
+        <div class="setting-item">
+          <label for="modalLangSelect" id="modalLangLabel">Ngôn ngữ:</label>
+          <select id="modalLangSelect">
+            <option value="vi">Tiếng Việt</option>
+            <option value="en">English</option>
+          </select>
+        </div>
+
+        <div class="setting-item">
+          <label id="modalThemeLabel">Chủ đề:</label>
+          <div class="theme-options">
+            <button id="modalThemeDark" class="theme-btn">
+              <i class="fas fa-moon"></i>
+              <span id="modalThemeDarkText">Chế độ Tối</span>
+            </button>
+            <button id="modalThemeLight" class="theme-btn">
+              <i class="fas fa-sun"></i>
+              <span id="modalThemeLightText">Chế độ Sáng</span>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Main Chat Modal (Updated to support user search) -->
+    <div id="mainChatModal" class="modal">
+      <div class="modal-content chat-modal-content">
+        <span class="close-button" id="closeMainChatModal">&times;</span>
+        <h2 id="mainChatModalTitle">Trò chuyện</h2>
+
+        <!-- This section is now mainly for starting new chats from search,
+             or can be repurposed for a global chat lobby if desired.
+             For direct friend chat, we'll bypass this and go straight to conversation. -->
+        <div id="chatUserSearchSection" style="display: none">
+          <input
+            type="text"
+            id="chatUserSearchInput"
+            placeholder="Tìm người dùng theo tên hiển thị..."
+          />
+          <div id="chatSearchResults">
+            <!-- Search results will be loaded here -->
+          </div>
+        </div>
+
+        <div id="chatConversationSection" style="display: none">
+          <h3 id="currentChatRecipientName"></h3>
+          <div class="chat-messages" id="chatMessages">
+            <!-- Chat messages will be loaded here -->
+          </div>
+          <div class="chat-input-area">
+            <input
+              type="text"
+              id="chatMessageInput"
+              placeholder="Nhập tin nhắn của bạn..."
+            />
+            <input
+              type="file"
+              id="chatFileAttachment"
+              style="display: none"
+              accept="image/*,.zip"
+            />
+            <button id="attachFileBtn" class="btn icon-btn">
+              <i class="fas fa-paperclip"></i>
+            </button>
+            <button id="sendChatBtn" class="btn">Gửi</button>
+          </div>
+          <div
+            id="chatUploadProgress"
+            class="upload-progress"
+            style="display: none"
+          >
+            <div class="progress-bar" style="width: 0%"></div>
+            <span class="progress-text">0%</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Confirmation Modal (General Purpose) -->
+    <div id="confirmationModal" class="modal">
+      <div class="modal-content">
+        <span class="close-button" id="closeConfirmationModal">&times;</span>
+        <h2 id="confirmationModalTitle">Xác nhận</h2>
+        <p id="confirmationMessage"></p>
+        <div class="modal-actions">
+          <button id="confirmActionBtn" class="btn btn-danger">Xác nhận</button>
+          <button id="cancelActionBtn" class="btn btn-secondary">Hủy</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- User Interaction Pop-up (hidden by default, managed by JS) -->
+    <div id="userInteractionPopup" class="user-interaction-popup">
+      <div class="popup-content">
+        <img
+          id="popupUserAvatar"
+          src=""
+          alt="User Avatar"
+          class="user-avatar-large"
+          onerror="this.onerror=null;this.src='https://placehold.co/60x60/333333/FFFFFF?text=U';"
+        />
+        <p id="popupUserName"></p>
+        <p id="popupUserId"></p>
+        <button id="popupChatBtn" class="btn">
+          <i class="fas fa-comment-dots"></i> Trò chuyện
+        </button>
+        <button id="popupAddFriendBtn" class="btn">
+          <i class="fas fa-user-plus"></i> Kết bạn
+        </button>
+        <button
+          id="popupRemoveFriendBtn"
+          class="btn btn-danger"
+          style="display: none"
+        >
+          <i class="fas fa-user-minus"></i> Hủy kết bạn
+        </button>
+        <button id="popupCloseBtn" class="btn btn-secondary">Đóng</button>
+      </div>
+    </div>
+
+    <!-- Scroll to Top Button -->
+    <button id="scrollToTopBtn" title="Go to top">
+      <i class="fas fa-arrow-up"></i>
+    </button>
+
+    <script type="module" src="forum.js"></script>
+  </body>
+</html>

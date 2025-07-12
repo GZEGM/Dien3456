@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="vi">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title id="pageTitle">Đăng nhập / Đăng ký</title>
+    <link rel="stylesheet" href="style.css" />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"
+    />
+  </head>
+  <body class="auth-page">
+    <header class="header">
+      <div class="container">
+        <a href="index.html" class="header-title" id="headerTitle"
+          >🧩 MCPE Addons</a
+        >
+        <nav class="nav">
+          <ul>
+            <li><a href="index.html" id="navHome">Trang chủ</a></li>
+            <li><a href="forum.html" id="navForum">Diễn đàn</a></li>
+            <li class="dropdown">
+              <a href="#" class="dropbtn" id="settingsBtn"
+                ><i class="fas fa-cog"></i
+              ></a>
+              <div class="dropdown-content">
+                <a href="#" data-lang="en">English</a>
+                <a href="#" data-lang="vi">Tiếng Việt</a>
+              </div>
+            </li>
+            <li>
+              <button id="themeToggle" class="icon-btn">
+                <i class="fas fa-sun"></i>
+              </button>
+            </li>
+          </ul>
+        </nav>
+      </div>
+    </header>
+
+    <div id="settingsModal" class="modal">
+      <div class="modal-content">
+        <span class="close-button" id="closeSettingsModal">&times;</span>
+        <h2 id="settingsModalTitle">Cài đặt</h2>
+        <div class="setting-item">
+          <label for="modalLangSelect" id="modalLangLabel">Ngôn ngữ:</label>
+          <select id="modalLangSelect">
+            <option value="vi">Tiếng Việt</option>
+            <option value="en">English</option>
+          </select>
+        </div>
+        <div class="setting-item">
+          <label id="modalThemeLabel">Chủ đề:</label>
+          <div class="theme-switch">
+            <button class="btn" id="modalThemeDark">
+              <i class="fas fa-moon"></i>
+              <span id="modalThemeDarkText">Chế độ Tối</span>
+            </button>
+            <button class="btn" id="modalThemeLight">
+              <i class="fas fa-sun"></i>
+              <span id="modalThemeLightText">Chế độ Sáng</span>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <main class="auth-container">
+      <div class="auth-form-card">
+        <h2 id="authTitle">Đăng nhập</h2>
+        <div id="message" class="auth-message"></div>
+
+        <form id="loginForm">
+          <div class="input-group">
+            <label for="loginEmail">Email:</label>
+            <input
+              type="email"
+              id="loginEmail"
+              placeholder="Nhập email của bạn"
+              required
+            />
+          </div>
+          <div class="input-group">
+            <label for="loginPassword">Mật khẩu:</label>
+            <input
+              type="password"
+              id="loginPassword"
+              placeholder="Nhập mật khẩu của bạn"
+              required
+            />
+          </div>
+          <button type="submit" class="btn auth-btn" id="emailLoginBtn">
+            Đăng nhập
+          </button>
+        </form>
+
+        <form id="registerForm" style="display: none">
+          <div class="input-group">
+            <label for="registerEmail">Email:</label>
+            <input
+              type="email"
+              id="registerEmail"
+              placeholder="Nhập email của bạn"
+              required
+            />
+          </div>
+          <div class="input-group">
+            <label for="registerPassword">Mật khẩu:</label>
+            <input
+              type="password"
+              id="registerPassword"
+              placeholder="Tạo mật khẩu (ít nhất 6 ký tự)"
+              required
+            />
+          </div>
+          <div class="input-group">
+            <label for="registerDisplayName">Tên hiển thị (tùy chọn):</label>
+            <input
+              type="text"
+              id="registerDisplayName"
+              placeholder="Nhập tên hiển thị của bạn"
+            />
+          </div>
+          <button type="submit" class="btn auth-btn" id="registerBtn">
+            Đăng ký
+          </button>
+        </form>
+
+        <button id="googleLoginBtn" class="btn google-btn">
+          <i class="fab fa-google"></i> Đăng nhập với Google
+        </button>
+
+        <button id="anonLoginBtn" class="btn guest-btn">
+          Đăng nhập với tư cách Khách
+        </button>
+
+        <p class="auth-toggle-text" id="noAccountText">
+          Bạn chưa có tài khoản?
+          <a href="#" id="toggleToRegister">Đăng ký ngay!</a>
+        </p>
+        <p class="auth-toggle-text" id="haveAccountText" style="display: none">
+          Bạn đã có tài khoản?
+          <a href="#" id="toggleToLogin">Đăng nhập ngay!</a>
+        </p>
+      </div>
+    </main>
+
+    <script type="module" src="auth.js"></script>
+  </body>
+</html>

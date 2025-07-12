@@ -1,8 +1,44 @@
 // script.js
+import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
+import {
+  getAuth,
+  onAuthStateChanged,
+  signOut,
+  // signInWithCustomToken, // Removed: Rely on Firebase session persistence
+  // signInAnonymously, // Removed: Rely on Firebase session persistence
+} from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+import { getFirestore } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
 
 // Global variables for language and theme
 let currentLanguage = localStorage.getItem("language") || "vi";
 let currentTheme = localStorage.getItem("theme") || "dark";
+let currentUser = null; // To store current authenticated user
+let db, auth; // Firebase instances
+
+// Firebase configuration (provided by Canvas environment or hardcoded fallback)
+const firebaseConfig =
+  typeof __firebase_config !== "undefined"
+    ? JSON.parse(__firebase_config)
+    : {
+        apiKey: "AIzaSyByxU2b9nfT9XvDUKGYG6qMPxq-Lt2h2YI",
+        authDomain: "dienkon-addon.firebaseapp.com",
+        projectId: "dienkon-addon",
+        storageBucket: "dienkon-addon.firebasestorage.app",
+        messagingSenderId: "222007544409",
+        appId: "1:222007544409:web:e5bd9965f3da46c8013f48",
+        measurementId: "G-P00YDS3E58",
+      };
+
+// Sử dụng appId từ cấu hình hardcoded hoặc từ biến toàn cục của Canvas
+const appId = typeof __app_id !== "undefined" ? __app_id : firebaseConfig.appId;
+
+// Initialize Firebase
+const app = initializeApp(firebaseConfig);
+auth = getAuth(app);
+db = getFirestore(app);
+
+// Flag to ensure initial rendering happens only after auth state is determined
+let isInitialAuthCheckComplete = false;
 
 // Function to apply theme
 function applyTheme(theme) {
@@ -28,6 +64,8 @@ function updateUIText() {
     translations[currentLanguage].mcpeAddons;
   document.getElementById("navHome").textContent =
     translations[currentLanguage].home;
+  document.getElementById("navForum").textContent =
+    translations[currentLanguage].forum; // Added forum translation
   document.getElementById("addonSearch").placeholder =
     translations[currentLanguage].searchPlaceholder;
   document.getElementById("settingsModalTitle").textContent =
@@ -40,6 +78,8 @@ function updateUIText() {
     translations[currentLanguage].darkMode;
   document.getElementById("modalThemeLightText").textContent =
     translations[currentLanguage].lightMode;
+  document.getElementById("logoutBtn").textContent =
+    translations[currentLanguage].logout;
 
   // Update selected language in modal
   document.getElementById("modalLangSelect").value = currentLanguage;
@@ -53,8 +93,11 @@ function updateUIText() {
     document.getElementById("modalThemeLight").classList.add("active");
   }
 
-  // Re-render addon cards to apply new language
-  renderAddonCards(addons);
+  // Re-render addon cards to apply new language if already initialized
+  if (isInitialAuthCheckComplete) {
+    // Only re-render if initial check is done
+    renderAddonCards(addons);
+  }
 }
 
 // Function to render addon cards
@@ -88,12 +131,57 @@ function renderAddonCards(filteredAddons) {
   });
 }
 
-document.addEventListener("DOMContentLoaded", () => {
+document.addEventListener("DOMContentLoaded", async () => {
   applyTheme(currentTheme);
   updateUIText(); // Initial UI text update
 
-  // Initial render of all addons
-  renderAddonCards(addons);
+  // Auth state listener
+  onAuthStateChanged(auth, (user) => {
+    if (user) {
+      currentUser = user;
+      document.getElementById("userNameDisplay").textContent = `${
+        translations[currentLanguage].welcome
+      } ${user.displayName || user.email || "Guest"}`;
+      document.getElementById(
+        "userIdDisplay"
+      ).textContent = `${translations[currentLanguage].userId} ${user.uid}`;
+      document.getElementById("userAvatar").src =
+        user.photoURL ||
+        `https://placehold.co/40x40/333333/FFFFFF?text=${(
+          user.displayName ||
+          user.email ||
+          "U"
+        )
+          .charAt(0)
+          .toUpperCase()}`;
+      document.getElementById("userProfileBtn").style.display = "block";
+    } else {
+      currentUser = null;
+      document.getElementById(
+        "userNameDisplay"
+      ).textContent = `${translations[currentLanguage].welcome} Guest`;
+      document.getElementById(
+        "userIdDisplay"
+      ).textContent = `${translations[currentLanguage].userId} Loading...`;
+      document.getElementById("userAvatar").src =
+        "https://placehold.co/40x40/333333/FFFFFF?text=U";
+      document.getElementById("userProfileBtn").style.display = "block"; // Still show button, but content is "Guest"
+
+      // Only redirect to auth.html if the user is not authenticated and not already on the auth page
+      if (window.location.pathname !== "/auth.html") {
+        localStorage.setItem("redirectAfterLogin", window.location.href);
+        window.location.href = "auth.html";
+        return; // Stop further execution on this page
+      }
+    }
+
+    // Only render addons AFTER the initial auth check is complete and no redirect occurred
+    if (!isInitialAuthCheckComplete) {
+      console.log("Initial auth check complete. Rendering addon cards.");
+      renderAddonCards(addons);
+      isInitialAuthCheckComplete = true;
+    }
+  });
 
   // Event Listeners for Header Controls
   // Language Dropdown
@@ -205,5 +293,23 @@ document.addEventListener("DOMContentLoaded", () => {
       top: 0,
       behavior: "smooth",
     });
+  });
+
+  // User Profile Dropdown
+  document.getElementById("userProfileBtn").addEventListener("click", () => {
+    const dropdown = document.querySelector(".user-dropdown-content");
+    dropdown.style.display =
+      dropdown.style.display === "block" ? "none" : "block";
+  });
+
+  // Logout button
+  document.getElementById("logoutBtn").addEventListener("click", async () => {
+    try {
+      await signOut(auth);
+      window.location.href = "auth.html"; // Redirect to login page after logout
+    } catch (error) {
+      console.error("Error logging out:", error);
+      // In a real app, you might show a message to the user
+    }
   });
 });

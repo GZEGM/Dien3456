@@ -16,6 +16,7 @@
       <h1><a href="index.html" id="headerTitle">🧩 MCPE Addons</a></h1>
       <nav>
         <a href="index.html" id="navHome">Trang chủ</a>
+        <a href="forum.html" id="navForum">Diễn đàn</a>
         <div class="header-controls">
           <!-- Language Selector -->
           <div class="dropdown">
@@ -50,6 +51,22 @@
           <button id="settingsBtn" class="icon-btn">
             <i class="fas fa-cog"></i>
           </button>
+          <!-- User Profile/Logout -->
+          <div class="user-profile-menu">
+            <button id="userProfileBtn" class="icon-btn">
+              <img
+                id="userAvatar"
+                src="https://placehold.co/40x40/333333/FFFFFF?text=U"
+                alt="User Avatar"
+                class="user-avatar"
+              />
+            </button>
+            <div class="user-dropdown-content">
+              <p id="userNameDisplay">Chào mừng, Khách</p>
+              <p id="userIdDisplay">ID: Đang tải...</p>
+              <button id="logoutBtn" class="btn logout-btn">Đăng xuất</button>
+            </div>
+          </div>
         </div>
       </nav>
     </header>
@@ -104,6 +121,6 @@
     </button>
 
     <script src="data.js"></script>
-    <script src="script.js"></script>
+    <script type="module" src="script.js"></script>
   </body>
 </html>
