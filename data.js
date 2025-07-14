@@ -436,11 +436,11 @@ Quest System - Version 1.0.0 - Changelog
     video: "https://www.youtube.com/embed/IjODNOW32zg?si=UTZIJbqG1nCBoOtR",
     versions: [
       {
-        versionName: "1.0.1",
+        versionName: "1.0.0",
         releaseDate: "6/7/2025",
         title: {
-          vi: "Hệ Thống Kỹ Năng v1.0.1",
-          en: "Skill System v1.0.1",
+          vi: "Chest Spawner v1.0.0",
+          en: "Chest Spawner v1.0.0",
         },
         description: {
           vi: "Addon này cho phép quản trị viên tạo và quản lý các spawner rương tùy chỉnh tự động điền lại vật phẩm theo thời gian, cung cấp các tùy chọn ngẫu nhiên hóa và hồi sinh khác nhau. Hỗ trợ Minecraft Bedrock 1.21.90+.",
