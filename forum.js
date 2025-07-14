@@ -5,6 +5,8 @@ import {
   onAuthStateChanged,
   signOut,
   updateProfile, // Added for profile updates
+  signInAnonymously, // Added for anonymous sign-in
+  signInWithCustomToken, // Added for custom token sign-in
 } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
 import {
   getFirestore,
@@ -12,7 +14,7 @@ import {
   addDoc,
   serverTimestamp,
   query,
-  orderBy,
+  orderBy, // Removed orderBy from direct import as it will be used in-memory sorting
   onSnapshot,
   doc, // Ensure 'doc' is explicitly imported
   getDocs,
@@ -44,7 +46,7 @@ const firebaseConfig =
         apiKey: "AIzaSyByxU2b9nfT9XvDUKGYG6qMPxq-Lt2h2YI",
         authDomain: "dienkon-addon.firebaseapp.com",
         projectId: "dienkon-addon",
-        storageBucket: "dienkon-addon.firebasestorage.app",
+        storageBucket: "dienkon-addon.firebaseapp.com",
         messagingSenderId: "222007544409",
         appId: "1:222007544409:web:e5bd9965f3da46c8013f48",
         measurementId: "G-P00YDS3E58",
@@ -90,7 +92,7 @@ const forumTranslations = {
     chatWith: "Trò chuyện với",
     typeMessage: "Nhập tin nhắn của bạn...",
     send: "Gửi",
-    attachFile: "Đính kèm tệp (Không khả dụng)",
+    attachFile: "Đính kèm tệp (Không khả dụng)", // Updated translation
     fileUploadError: "Lỗi tải lên tệp: ",
     fileTooLarge: "Tệp quá lớn. Kích thước tối đa là 5MB.",
     chatFile: "Tệp đính kèm",
@@ -152,6 +154,18 @@ const forumTranslations = {
     confirm: "Xác nhận", // New
     cancel: "Hủy", // New
     thisIsYourProfile: "Đây là hồ sơ của bạn.", // New translation for self-profile click
+    edit: "Chỉnh sửa", // New translation for edit option
+    editPostTitle: "Chỉnh sửa bài đăng", // New
+    editCommentTitle: "Chỉnh sửa bình luận", // New
+    save: "Lưu", // New
+    editCommentConfirm: "Bạn có chắc chắn muốn xóa bình luận này?", // New
+    noChatSelected: "Chọn một cuộc trò chuyện để bắt đầu", // New
+    recallMessage: "Thu hồi", // New
+    confirmRecallMessage:
+      "Bạn có chắc chắn muốn thu hồi tin nhắn này? Tin nhắn sẽ biến mất với cả hai bên.", // New
+    messageRecalled: "Tin nhắn đã được thu hồi!", // New
+    messageEdited: "Tin nhắn đã được chỉnh sửa!", // New
+    messageRecalledText: "Tin nhắn đã được thu hồi", // New
   },
   en: {
     forum: "Forum",
@@ -190,7 +204,7 @@ const forumTranslations = {
     chatWith: "Chat with",
     typeMessage: "Type your message...",
     send: "Send",
-    attachFile: "Attach File (Disabled)",
+    attachFile: "Attach File (Disabled)", // Updated translation
     fileUploadError: "File upload error: ",
     fileTooLarge: "File too large. Max size is 5MB.",
     chatFile: "Attached File",
@@ -252,6 +266,18 @@ const forumTranslations = {
     confirm: "Confirm", // New
     cancel: "Cancel", // New
     thisIsYourProfile: "This is your profile.", // New translation for self-profile click
+    edit: "Edit", // New translation for edit option
+    editPostTitle: "Edit Post", // New
+    editCommentTitle: "Edit Comment", // New
+    save: "Save", // New
+    editCommentConfirm: "Are you sure you want to delete this comment?", // New
+    noChatSelected: "Select a conversation to start", // New
+    recallMessage: "Recall", // New
+    confirmRecallMessage:
+      "Are you sure you want to recall this message? It will disappear for both sides.", // New
+    messageRecalled: "Message recalled!", // New
+    messageEdited: "Message edited!", // New
+    messageRecalledText: "Message recalled", // New
   },
 };
 
@@ -307,17 +333,11 @@ function updateUIText() {
   document.getElementById("logoutBtn").textContent =
     forumTranslations[currentLanguage].logout;
 
-  // Chat modal elements (Main Chat Modal)
-  document.getElementById("mainChatModalTitle").textContent =
-    forumTranslations[currentLanguage].chat;
-  document.getElementById("chatUserSearchInput").placeholder =
-    forumTranslations[currentLanguage].searchUsers;
+  // Chat elements (now part of the messages tab)
   document.getElementById("chatMessageInput").placeholder =
     forumTranslations[currentLanguage].typeMessage;
   document.getElementById("sendChatBtn").textContent =
     forumTranslations[currentLanguage].send;
-  document.getElementById("attachFileBtn").textContent =
-    forumTranslations[currentLanguage].attachFile; // Update attach file button text
 
   // Friends section
   document.getElementById("friendsSectionTitle").textContent =
@@ -338,6 +358,8 @@ function updateUIText() {
     forumTranslations[currentLanguage].messagesSectionTitle;
   document.getElementById("loadingConversations").textContent =
     forumTranslations[currentLanguage].loadingConversations;
+  document.getElementById("noChatSelectedMessage").textContent =
+    forumTranslations[currentLanguage].noChatSelected;
 
   // Tab buttons
   document.getElementById("tabPostsText").textContent =
@@ -381,6 +403,26 @@ function updateUIText() {
   document.getElementById("cancelActionBtn").textContent =
     forumTranslations[currentLanguage].cancel;
 
+  // Context Menu
+  document.getElementById("editOption").textContent =
+    forumTranslations[currentLanguage].edit;
+  document.getElementById("recallOption").textContent =
+    forumTranslations[currentLanguage].recallMessage; // New
+  document.getElementById("deleteOption").textContent =
+    forumTranslations[currentLanguage].deletePost; // Reusing deletePost for comments too
+
+  // Post Edit Modal
+  document.getElementById("editPostTitle").textContent =
+    forumTranslations[currentLanguage].editPostTitle;
+  document.getElementById("editPostContent").placeholder =
+    forumTranslations[currentLanguage].postPlaceholder;
+  document.getElementById("editPostImageUrl").placeholder =
+    forumTranslations[currentLanguage].imageUrlPlaceholder;
+  document.getElementById("savePostEditBtn").textContent =
+    forumTranslations[currentLanguage].save;
+  document.getElementById("cancelPostEditBtn").textContent =
+    forumTranslations[currentLanguage].cancel;
+
   // Update selected language in modal
   document.getElementById("modalLangSelect").value = currentLanguage;
 
@@ -412,6 +454,20 @@ function switchTab(tabName) {
   if (unsubscribeFriendsListener) unsubscribeFriendsListener();
   if (unsubscribeFriendRequestsListener) unsubscribeFriendRequestsListener();
   if (unsubscribeConversationsListener) unsubscribeConversationsListener();
+  // NEW: Unsubscribe from chat listener when switching away from messages tab
+  if (unsubscribeChatListener) {
+    unsubscribeChatListener();
+    unsubscribeChatListener = null; // Reset to null after unsubscribing
+    currentChatRecipientId = null; // Clear current chat recipient
+    // Hide chat specific UI when leaving messages tab
+    document.getElementById("chatHeader").style.display = "none";
+    document.getElementById("chatMessages").style.display = "none";
+    document.getElementById("chatInputArea").style.display = "none";
+    document.getElementById("noChatSelectedMessage").style.display = "block";
+  }
+
+  // Ensure body scroll is re-enabled when switching tabs, as modals might have disabled it
+  document.body.classList.remove("modal-open");
 
   // Deactivate all tab buttons and content
   document.querySelectorAll(".tab-button").forEach((button) => {
@@ -434,7 +490,24 @@ function switchTab(tabName) {
     // Default to showing friends list when friends tab is opened
     showFriendsSubSection("friendsList");
   } else if (tabName === "messages") {
-    listenForConversations(); // Load recent conversations
+    // For messages tab, hide chat content initially on mobile, show sidebar
+    if (window.innerWidth <= 768) {
+      document
+        .getElementById("chatMainContent")
+        .classList.add("hidden-on-mobile");
+      document
+        .querySelector(".messages-section")
+        .classList.add("sidebar-visible");
+    } else {
+      document
+        .getElementById("chatMainContent")
+        .classList.remove("hidden-on-mobile");
+      document
+        .querySelector(".messages-section")
+        .classList.remove("sidebar-visible");
+    }
+    // Only listen for conversations if the tab is active
+    listenForConversations(true); // Load recent conversations and auto-select the latest
   } else if (tabName === "profile") {
     renderProfile(); // Load user profile
   }
@@ -620,16 +693,19 @@ document.addEventListener("DOMContentLoaded", async () => {
 
   settingsBtn.addEventListener("click", () => {
     settingsModal.style.display = "block";
+    document.body.classList.add("modal-open"); // Disable body scroll
     updateUIText(); // Ensure modal content is in current language and theme buttons are active
   });
 
   closeSettingsModal.addEventListener("click", () => {
     settingsModal.style.display = "none";
+    document.body.classList.remove("modal-open"); // Re-enable body scroll
   });
 
   window.addEventListener("click", (event) => {
     if (event.target == settingsModal) {
       settingsModal.style.display = "none";
+      document.body.classList.remove("modal-open"); // Re-enable body scroll
     }
   });
 
@@ -738,39 +814,17 @@ document.addEventListener("DOMContentLoaded", async () => {
       }
     });
 
-  // Main Chat Modal Event Listeners
-  const mainChatModal = document.getElementById("mainChatModal");
-  const closeMainChatModal = document.getElementById("closeMainChatModal");
-  const chatUserSearchInput = document.getElementById("chatUserSearchInput");
-  const chatSearchResults = document.getElementById("chatSearchResults");
-  const chatConversationSection = document.getElementById(
-    "chatConversationSection"
-  );
+  // Chat message input (now part of the messages tab)
   const chatMessageInput = document.getElementById("chatMessageInput");
   const sendChatBtn = document.getElementById("sendChatBtn");
   const attachFileBtn = document.getElementById("attachFileBtn");
-  const chatFileAttachment = document.getElementById("chatFileAttachment");
   const chatUploadProgress = document.getElementById("chatUploadProgress");
 
-  closeMainChatModal.addEventListener("click", () => {
-    mainChatModal.style.display = "none";
-    if (unsubscribeChatListener) {
-      unsubscribeChatListener(); // Unsubscribe from previous chat listener
-      unsubscribeChatListener = null;
-    }
-    currentChatRecipientId = null;
-    chatUploadProgress.style.display = "none"; // Hide progress bar
-  });
-
-  window.addEventListener("click", (event) => {
-    if (event.target == mainChatModal) {
-      mainChatModal.style.display = "none";
-      if (unsubscribeChatListener) {
-        unsubscribeChatListener();
-        unsubscribeChatListener = null;
-      }
-      currentChatRecipientId = null;
-      chatUploadProgress.style.display = "none"; // Hide progress bar
+  // Send message when Enter is pressed in chat input
+  chatMessageInput.addEventListener("keypress", async (event) => {
+    if (event.key === "Enter") {
+      event.preventDefault(); // Prevent new line
+      sendChatBtn.click(); // Trigger send button click
     }
   });
 
@@ -804,7 +858,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         const usersRef = collection(db, `artifacts/${appId}/public/data/users`);
         const q = query(
           usersRef,
-          orderBy("displayName"),
+          // orderBy("displayName"), // Removed orderBy for Firestore query
           where("displayName", ">=", searchTerm),
           where("displayName", "<=", searchTerm + "\uf8ff")
         );
@@ -862,6 +916,9 @@ document.addEventListener("DOMContentLoaded", async () => {
           }
         }
 
+        // Sort usersFound in memory by displayName
+        usersFound.sort((a, b) => a.displayName.localeCompare(b.displayName));
+
         if (usersFound.length > 0) {
           usersFound.forEach((user) => {
             const userElement = document.createElement("div");
@@ -893,7 +950,9 @@ document.addEventListener("DOMContentLoaded", async () => {
             <span>${user.displayName}</span>
             <button class="btn start-chat-btn" data-user-id="${
               user.uid
-            }" data-user-name="${user.displayName}">
+            }" data-user-name="${user.displayName}" data-user-photo="${
+              user.photoURL
+            }">
               <i class="fas fa-comment-dots"></i> ${
                 forumTranslations[currentLanguage].chat
               }
@@ -910,7 +969,8 @@ document.addEventListener("DOMContentLoaded", async () => {
               button.addEventListener("click", (e) => {
                 const userId = e.target.dataset.userId;
                 const userName = e.target.dataset.userName;
-                startConversation(userId, userName);
+                const userPhoto = e.target.dataset.userPhoto;
+                startConversation(userId, userName, userPhoto);
               });
             });
 
@@ -939,7 +999,7 @@ document.addEventListener("DOMContentLoaded", async () => {
               });
             });
 
-          // --- FIX: Add event listener for avatar clicks in search results ---
+          // Add event listener for avatar clicks in search results
           document
             .querySelectorAll("#findUserSearchResults .user-avatar")
             .forEach((avatar) => {
@@ -954,7 +1014,6 @@ document.addEventListener("DOMContentLoaded", async () => {
                 );
               });
             });
-          // --- END FIX ---
         } else {
           findUserSearchResults.innerHTML = `<p class="no-users-found-message">${forumTranslations[currentLanguage].noUsersFound}</p>`;
         }
@@ -972,10 +1031,6 @@ document.addEventListener("DOMContentLoaded", async () => {
       true
     );
   });
-  // Clear any existing file input value
-  chatFileAttachment.value = "";
-  // Remove the change listener for file input as it's disabled
-  // chatFileAttachment.addEventListener("change", async (event) => { /* ... */ });
 
   sendChatBtn.addEventListener("click", async () => {
     const messageText = chatMessageInput.value.trim();
@@ -1032,15 +1087,65 @@ document.addEventListener("DOMContentLoaded", async () => {
 
   closeConfirmationModal.addEventListener("click", () => {
     confirmationModal.style.display = "none";
+    document.body.classList.remove("modal-open"); // Re-enable body scroll
   });
 
   cancelActionBtn.addEventListener("click", () => {
     confirmationModal.style.display = "none";
+    document.body.classList.remove("modal-open"); // Re-enable body scroll
   });
 
   window.addEventListener("click", (event) => {
     if (event.target === confirmationModal) {
       confirmationModal.style.display = "none";
+      document.body.classList.remove("modal-open"); // Re-enable body scroll
+    }
+  });
+
+  // Context Menu Listeners
+  const contextMenu = document.getElementById("contextMenu");
+  const editOption = document.getElementById("editOption");
+  const recallOption = document.getElementById("recallOption"); // New
+  const deleteOption = document.getElementById("deleteOption");
+
+  // Hide context menu if clicked outside
+  document.addEventListener("click", (e) => {
+    if (
+      contextMenu.style.display === "block" &&
+      !contextMenu.contains(e.target)
+    ) {
+      contextMenu.style.display = "none";
+    }
+  });
+
+  // Prevent default context menu on right-click
+  document.addEventListener("contextmenu", (e) => {
+    // Only prevent default if we're showing our custom menu
+    if (contextMenu.style.display === "block") {
+      e.preventDefault();
+    }
+  });
+
+  // Post Edit Modal Listeners
+  const postEditModal = document.getElementById("postEditModal");
+  const closePostEditModal = document.getElementById("closePostEditModal");
+  const savePostEditBtn = document.getElementById("savePostEditBtn");
+  const cancelPostEditBtn = document.getElementById("cancelPostEditBtn");
+
+  closePostEditModal.addEventListener("click", () => {
+    postEditModal.style.display = "none";
+    document.body.classList.remove("modal-open"); // Re-enable body scroll
+  });
+
+  cancelPostEditBtn.addEventListener("click", () => {
+    postEditModal.style.display = "none";
+    document.body.classList.remove("modal-open"); // Re-enable body scroll
+  });
+
+  window.addEventListener("click", (event) => {
+    if (event.target === postEditModal) {
+      postEditModal.style.display = "none";
+      document.body.classList.remove("modal-open"); // Re-enable body scroll
     }
   });
 });
@@ -1116,8 +1221,12 @@ function listenForPosts() {
             }</span>
             ${
               currentUser && currentUser.uid === post.userId
-                ? `<button class="btn delete-post-btn" data-post-id="${postId}">
-                     <i class="fas fa-trash"></i> ${forumTranslations[currentLanguage].deletePost}
+                ? `<button class="btn post-options-btn" data-post-id="${postId}" data-type="post" data-content="${encodeURIComponent(
+                    post.content
+                  )}" data-image-url="${encodeURIComponent(
+                    post.imageUrl || ""
+                  )}">
+                     <i class="fas fa-ellipsis-h"></i>
                    </button>`
                 : ""
             }
@@ -1152,15 +1261,16 @@ function listenForPosts() {
       `;
         postsContainer.appendChild(postElement);
 
-        // Add event listener for delete post button
-        const deletePostButton = postElement.querySelector(".delete-post-btn");
-        if (deletePostButton) {
-          deletePostButton.addEventListener("click", (e) => {
-            const postIdToDelete = e.currentTarget.dataset.postId;
-            showConfirmationModal(
-              forumTranslations[currentLanguage].confirmDeletePost,
-              () => deletePost(postIdToDelete)
+        // Add event listener for post options button (for edit/delete)
+        const postOptionsBtn = postElement.querySelector(".post-options-btn");
+        if (postOptionsBtn) {
+          postOptionsBtn.addEventListener("click", (e) => {
+            e.stopPropagation(); // Prevent click from bubbling up and closing menu
+            const content = decodeURIComponent(e.currentTarget.dataset.content);
+            const imageUrl = decodeURIComponent(
+              e.currentTarget.dataset.imageUrl
             );
+            showContextMenu(e, postId, "post", null, content, imageUrl);
           });
         }
 
@@ -1310,6 +1420,66 @@ async function deletePost(postId) {
   }
 }
 
+// Function to edit a post
+async function editPost(postId, currentContent, currentImageUrl) {
+  if (!currentUser) {
+    showForumMessage(forumTranslations[currentLanguage].loginToPost, true);
+    return;
+  }
+  if (!db) {
+    showForumMessage(
+      forumTranslations[currentLanguage].firebaseInitError,
+      true
+    );
+    return;
+  }
+
+  const postEditModal = document.getElementById("postEditModal");
+  const editPostContent = document.getElementById("editPostContent");
+  const editPostImageUrl = document.getElementById("editPostImageUrl");
+  const savePostEditBtn = document.getElementById("savePostEditBtn");
+  const editPostTitle = document.getElementById("editPostTitle"); // Get the title element
+
+  editPostTitle.textContent = forumTranslations[currentLanguage].editPostTitle; // Set correct title
+  editPostContent.value = currentContent;
+  editPostImageUrl.value = currentImageUrl;
+  editPostImageUrl.style.display = "block"; // Ensure image URL is visible for posts
+  postEditModal.style.display = "block";
+  document.body.classList.add("modal-open"); // Disable body scroll
+
+  // Remove previous event listener to prevent multiple calls
+  const newSavePostEditBtn = savePostEditBtn.cloneNode(true);
+  savePostEditBtn.parentNode.replaceChild(newSavePostEditBtn, savePostEditBtn);
+
+  newSavePostEditBtn.addEventListener("click", async () => {
+    const newContent = editPostContent.value.trim();
+    const newImageUrl = editPostImageUrl.value.trim();
+
+    if (!newContent) {
+      showForumMessage(
+        forumTranslations[currentLanguage].postContentEmpty,
+        true
+      );
+      return;
+    }
+
+    try {
+      const postRef = doc(db, `artifacts/${appId}/public/data/posts`, postId);
+      await updateDoc(postRef, {
+        content: newContent,
+        imageUrl: newImageUrl,
+        editedAt: serverTimestamp(),
+      });
+      showForumMessage("Bài đăng đã được cập nhật thành công!", false);
+      postEditModal.style.display = "none";
+      document.body.classList.remove("modal-open"); // Re-enable body scroll
+    } catch (error) {
+      console.error("Error updating post:", error);
+      showForumMessage("Lỗi khi cập nhật bài đăng: " + error.message, true);
+    }
+  });
+}
+
 // Function to listen for comments on a specific post
 function listenForComments(postId) {
   const commentsListContainer = document.getElementById(
@@ -1339,6 +1509,7 @@ function listenForComments(postId) {
 
       snapshot.forEach((doc) => {
         const comment = doc.data();
+        const commentId = doc.id;
         const commentElement = document.createElement("div");
         commentElement.className = "comment-item";
         commentElement.innerHTML = `
@@ -1364,9 +1535,30 @@ function listenForComments(postId) {
               ? new Date(comment.timestamp.toDate()).toLocaleString()
               : "Đang tải..."
           }</span>
+          ${
+            currentUser && currentUser.uid === comment.userId
+              ? `<button class="btn comment-options-btn" data-post-id="${postId}" data-comment-id="${commentId}" data-type="comment" data-content="${encodeURIComponent(
+                  comment.content
+                )}">
+                   <i class="fas fa-ellipsis-h"></i>
+                 </button>`
+              : ""
+          }
         </div>
       `;
         commentsListContainer.appendChild(commentElement);
+
+        // Add event listener to comment options button (for edit/delete)
+        const commentOptionsBtn = commentElement.querySelector(
+          ".comment-options-btn"
+        );
+        if (commentOptionsBtn) {
+          commentOptionsBtn.addEventListener("click", (e) => {
+            e.stopPropagation(); // Prevent click from bubbling up and closing menu
+            const content = decodeURIComponent(e.currentTarget.dataset.content);
+            showContextMenu(e, postId, "comment", commentId, content);
+          });
+        }
 
         // Add event listener to comment author avatar
         const commentAuthorAvatar = commentElement.querySelector(
@@ -1393,8 +1585,186 @@ function listenForComments(postId) {
   );
 }
 
+// Function to delete a comment
+async function deleteComment(postId, commentId) {
+  if (!currentUser) {
+    showForumMessage(forumTranslations[currentLanguage].loginToPost, true);
+    return;
+  }
+  if (!db) {
+    showForumMessage(
+      forumTranslations[currentLanguage].firebaseInitError,
+      true
+    );
+    return;
+  }
+
+  try {
+    const commentRef = doc(
+      db,
+      `artifacts/${appId}/public/data/posts/${postId}/comments`,
+      commentId
+    );
+    await deleteDoc(commentRef);
+    showForumMessage("Bình luận đã được xóa!", false);
+  } catch (error) {
+    console.error("Error deleting comment:", error);
+    showForumMessage("Lỗi khi xóa bình luận: " + error.message, true);
+  }
+}
+
+// Function to edit a comment
+async function editComment(postId, commentId, currentContent) {
+  if (!currentUser) {
+    showForumMessage(forumTranslations[currentLanguage].loginToPost, true);
+    return;
+  }
+  if (!db) {
+    showForumMessage(
+      forumTranslations[currentLanguage].firebaseInitError,
+      true
+    );
+    return;
+  }
+
+  const postEditModal = document.getElementById("postEditModal");
+  const editPostTitle = document.getElementById("editPostTitle");
+  const editPostContent = document.getElementById("editPostContent");
+  const editPostImageUrl = document.getElementById("editPostImageUrl"); // This will be hidden for comments
+  const savePostEditBtn = document.getElementById("savePostEditBtn");
+
+  editPostTitle.textContent =
+    forumTranslations[currentLanguage].editCommentTitle;
+  editPostContent.value = currentContent;
+  editPostImageUrl.style.display = "none"; // Hide image URL input for comments
+  postEditModal.style.display = "block";
+  document.body.classList.add("modal-open"); // Disable body scroll
+
+  // Remove previous event listener to prevent multiple calls
+  const newSavePostEditBtn = savePostEditBtn.cloneNode(true);
+  savePostEditBtn.parentNode.replaceChild(newSavePostEditBtn, savePostEditBtn);
+
+  newSavePostEditBtn.addEventListener("click", async () => {
+    const newContent = editPostContent.value.trim();
+
+    if (!newContent) {
+      showForumMessage(
+        forumTranslations[currentLanguage].postContentEmpty, // Reusing for comment content empty
+        true
+      );
+      return;
+    }
+
+    try {
+      const commentRef = doc(
+        db,
+        `artifacts/${appId}/public/data/posts/${postId}/comments`,
+        commentId
+      );
+      await updateDoc(commentRef, {
+        content: newContent,
+        editedAt: serverTimestamp(),
+      });
+      showForumMessage("Bình luận đã được cập nhật thành công!", false);
+      postEditModal.style.display = "none";
+      document.body.classList.remove("modal-open"); // Re-enable body scroll
+      // Reset title and image URL visibility for next use
+      editPostTitle.textContent =
+        forumTranslations[currentLanguage].editPostTitle;
+      editPostImageUrl.style.display = "block";
+    } catch (error) {
+      console.error("Error updating comment:", error);
+      showForumMessage("Lỗi khi cập nhật bình luận: " + error.message, true);
+    }
+  });
+}
+
+// Function to show context menu (edit/delete/recall)
+function showContextMenu(
+  event,
+  targetId, // postId or chatId
+  type, // 'post', 'comment', 'chat'
+  subId = null, // commentId or messageId
+  currentContent = null,
+  currentImageUrl = null
+) {
+  const contextMenu = document.getElementById("contextMenu");
+  const editOption = document.getElementById("editOption");
+  const recallOption = document.getElementById("recallOption");
+  const deleteOption = document.getElementById("deleteOption");
+
+  // Position the context menu
+  contextMenu.style.left = `${event.pageX}px`;
+  contextMenu.style.top = `${event.pageY}px`;
+  contextMenu.style.display = "block";
+
+  // Hide/Show options based on type
+  recallOption.style.display = "none"; // Hide recall by default
+  deleteOption.textContent = forumTranslations[currentLanguage].deletePost; // Default text
+
+  // Clear previous listeners
+  const newEditOption = editOption.cloneNode(true);
+  editOption.parentNode.replaceChild(newEditOption, editOption);
+
+  const newRecallOption = recallOption.cloneNode(true);
+  recallOption.parentNode.replaceChild(newRecallOption, recallOption);
+
+  const newDeleteOption = deleteOption.cloneNode(true);
+  deleteOption.parentNode.replaceChild(newDeleteOption, deleteOption);
+
+  if (type === "post") {
+    newEditOption.onclick = () => {
+      contextMenu.style.display = "none";
+      editPost(targetId, currentContent, currentImageUrl);
+    };
+    newDeleteOption.onclick = () => {
+      contextMenu.style.display = "none";
+      showConfirmationModal(
+        forumTranslations[currentLanguage].confirmDeletePost,
+        () => deletePost(targetId)
+      );
+    };
+  } else if (type === "comment") {
+    newEditOption.onclick = () => {
+      contextMenu.style.display = "none";
+      editComment(targetId, subId, currentContent);
+    };
+    newDeleteOption.onclick = () => {
+      contextMenu.style.display = "none";
+      showConfirmationModal(
+        forumTranslations[currentLanguage].editCommentConfirm, // Use specific translation for comment deletion
+        () => deleteComment(targetId, subId)
+      );
+    };
+  } else if (type === "chat") {
+    recallOption.style.display = "block"; // Show recall option for chat messages
+    deleteOption.textContent = "Xóa"; // Simpler "Delete" for chat, as recall is primary
+
+    newEditOption.onclick = () => {
+      contextMenu.style.display = "none";
+      editChatMessage(targetId, subId, currentContent);
+    };
+    newRecallOption.onclick = () => {
+      contextMenu.style.display = "none";
+      showConfirmationModal(
+        forumTranslations[currentLanguage].confirmRecallMessage,
+        () => recallChatMessage(targetId, subId)
+      );
+    };
+    // For now, deleteOption for chat will also perform a recall/full delete.
+    // A true "delete only for me" requires a more complex data model.
+    newDeleteOption.onclick = () => {
+      contextMenu.style.display = "none";
+      showConfirmationModal(
+        forumTranslations[currentLanguage].confirmRecallMessage, // Reusing for now
+        () => recallChatMessage(targetId, subId)
+      );
+    };
+  }
+}
+
 // Function to handle opening chat from various places
-async function startConversation(recipientId, recipientName) {
+async function startConversation(recipientId, recipientName, recipientPhoto) {
   if (!currentUser) {
     showForumMessage(forumTranslations[currentLanguage].loginToPost, true);
     return;
@@ -1411,16 +1781,70 @@ async function startConversation(recipientId, recipientName) {
     return;
   }
 
-  currentChatRecipientId = recipientId;
-  document.getElementById(
-    "currentChatRecipientName"
-  ).textContent = `${forumTranslations[currentLanguage].chatWith} ${recipientName}`;
-  document.getElementById("chatUserSearchSection").style.display = "none";
-  document.getElementById("chatConversationSection").style.display = "block";
-  document.getElementById("mainChatModal").style.display = "block"; // Open the main chat modal
+  // Set the current chat recipient ID
+  currentChatRecipientId = recipientId; // IMPORTANT: Set this before calling listenForChatMessages
 
+  const chatHeaderAvatar = document.getElementById("chatHeaderAvatar");
+  const currentChatRecipientNameElement = document.getElementById(
+    "currentChatRecipientName"
+  );
+  const chatMainContent = document.getElementById("chatMainContent");
+  const chatHeader = document.getElementById("chatHeader");
+  const chatMessagesContainer = document.getElementById("chatMessages");
+  const chatInputArea = document.getElementById("chatInputArea");
+  const noChatSelectedMessage = document.getElementById(
+    "noChatSelectedMessage"
+  );
+
+  // Update chat header
+  chatHeaderAvatar.src =
+    recipientPhoto ||
+    `https://placehold.co/40x40/333333/FFFFFF?text=${(recipientName || "U")
+      .charAt(0)
+      .toUpperCase()}`;
+  currentChatRecipientNameElement.textContent = `${forumTranslations[currentLanguage].chatWith} ${recipientName}`;
+
+  // Show chat elements and hide "no chat selected" message
+  noChatSelectedMessage.style.display = "none";
+  chatHeader.style.display = "flex";
+  chatMessagesContainer.style.display = "flex";
+  chatInputArea.style.display = "flex";
+
+  // If on mobile, hide the conversations sidebar to show chat full screen
+  if (window.innerWidth <= 768) {
+    document.querySelector(".conversations-sidebar").style.display = "none";
+    chatMainContent.classList.remove("hidden-on-mobile");
+    document
+      .querySelector(".messages-section")
+      .classList.remove("sidebar-visible"); // Ensure sidebar is hidden
+  } else {
+    chatMainContent.classList.remove("hidden-on-mobile");
+    document.querySelector(".conversations-sidebar").style.display = "flex"; // Ensure sidebar is visible on desktop
+    document
+      .querySelector(".messages-section")
+      .classList.remove("sidebar-visible");
+  }
+
+  // Only switch tab if not already on the messages tab
+  const messagesTabContent = document.getElementById("messagesTabContent");
+  const isMessagesTabActive = messagesTabContent.classList.contains("active");
+
+  if (!isMessagesTabActive) {
+    switchTab("messages");
+  } else {
+    // If already on messages tab, ensure conversations are re-rendered/highlighted
+    document.querySelectorAll(".message-list-item").forEach((item) => {
+      item.classList.remove("active");
+      if (item.dataset.chatPartnerId === recipientId) {
+        item.classList.add("active");
+      }
+    });
+  }
+
+  // Always listen for chat messages for the new or re-selected recipient
   listenForChatMessages(recipientId);
-  scrollToBottom("chatMessages");
+  // Scroll to bottom after messages are loaded and rendered
+  setTimeout(() => scrollToBottom("chatMessages"), 100);
 }
 
 // Function to get or create a chat ID between two users
@@ -1481,6 +1905,8 @@ async function sendMessage(recipientId, messageText) {
       message: messageText,
       timestamp: serverTimestamp(),
       type: "text", // Can be 'text', 'image', 'file'
+      edited: false, // New field for edited status
+      recalled: false, // New field for recalled status
     });
 
     // Update the last message in the chat document for conversations list
@@ -1498,10 +1924,11 @@ async function sendMessage(recipientId, messageText) {
   }
 }
 
-// Hàm lắng nghe tin nhắn chat (thường gọi khi mở chat với ai đó)
+// Function to listen for chat messages (called when opening chat with someone)
 function listenForChatMessages(recipientId) {
+  // Line 766: Unsubscribe from previous chat listener to prevent duplicates
   if (unsubscribeChatListener) {
-    unsubscribeChatListener(); // Dừng lắng nghe tin nhắn cũ
+    unsubscribeChatListener();
   }
   if (!currentUser) {
     console.warn("User not logged in, cannot listen for chat messages.");
@@ -1514,7 +1941,7 @@ function listenForChatMessages(recipientId) {
     return;
   }
 
-  // Lấy hoặc tạo chatId
+  // Get or create chatId
   getOrCreateChatId(currentUser.uid, recipientId)
     .then((chatId) => {
       if (!chatId) return;
@@ -1523,7 +1950,8 @@ function listenForChatMessages(recipientId) {
         db,
         `artifacts/${appId}/public/data/chats/${chatId}/messages`
       );
-      const q = query(messagesRef, orderBy("timestamp", "asc")); // Sắp xếp theo thời gian tăng dần
+      // Line 781: Fetch messages without orderBy in query, sort in memory
+      const q = query(messagesRef);
 
       unsubscribeChatListener = onSnapshot(
         q,
@@ -1532,8 +1960,15 @@ function listenForChatMessages(recipientId) {
           snapshot.forEach((doc) => {
             messages.push({ id: doc.id, ...doc.data() });
           });
-          renderChatMessages(messages);
-          scrollToBottom("chatMessages"); // Scroll to bottom on new messages
+          // Sort messages by timestamp in memory
+          messages.sort((a, b) => {
+            const timeA = a.timestamp ? a.timestamp.toMillis() : 0;
+            const timeB = b.timestamp ? b.timestamp.toMillis() : 0;
+            return timeA - timeB;
+          });
+          renderChatMessages(messages, chatId); // Pass chatId to render function
+          // Add a small delay to ensure rendering is complete before scrolling
+          setTimeout(() => scrollToBottom("chatMessages"), 50);
         },
         (error) => {
           console.error("Error listening for chat messages:", error);
@@ -1547,10 +1982,11 @@ function listenForChatMessages(recipientId) {
     });
 }
 
-// Hàm hiển thị tin nhắn chat
-function renderChatMessages(messages) {
+// Function to render chat messages
+function renderChatMessages(messages, chatId) {
   const chatMessagesContainer = document.getElementById("chatMessages");
-  chatMessagesContainer.innerHTML = ""; // Xóa tin nhắn cũ
+  // Clear existing messages to prevent duplication
+  chatMessagesContainer.innerHTML = "";
 
   if (messages.length === 0) {
     chatMessagesContainer.innerHTML = `<p class="no-messages-message">${forumTranslations[currentLanguage].noMessages}</p>`;
@@ -1559,13 +1995,23 @@ function renderChatMessages(messages) {
 
   messages.forEach((msg) => {
     const messageElement = document.createElement("div");
+    // Apply 'my-message' or 'other-message' class for alignment
     messageElement.className = `chat-message ${
       msg.senderId === currentUser.uid ? "my-message" : "other-message"
     }`;
 
     let messageContent = "";
-    if (msg.type === "text") {
+    let messageBubbleClasses = "message-bubble";
+
+    if (msg.recalled) {
+      messageContent = `<p class="message-text">${forumTranslations[currentLanguage].messageRecalledText}</p>`;
+      messageBubbleClasses += " recalled";
+    } else if (msg.type === "text") {
       messageContent = `<p class="message-text">${msg.message}</p>`;
+      if (msg.edited) {
+        messageBubbleClasses += " edited";
+        messageContent += `<span class="message-timestamp">(Đã chỉnh sửa)</span>`; // Add edited indicator
+      }
     } else if (msg.type === "image" && msg.fileUrl) {
       messageContent = `<img src="${msg.fileUrl}" alt="Attached Image" class="chat-image" onclick="window.open('${msg.fileUrl}', '_blank');" style="max-width: 100%; height: auto; border-radius: 8px; cursor: pointer;" />`;
     } else if (msg.type === "file" && msg.fileUrl && msg.fileName) {
@@ -1579,6 +2025,7 @@ function renderChatMessages(messages) {
     // New Zalo-like styling for message bubble and avatar
     messageElement.innerHTML = `
       ${
+        // Only show avatar for 'other-message'
         msg.senderId !== currentUser.uid
           ? `<img src="${
               msg.senderPhoto ||
@@ -1590,20 +2037,189 @@ function renderChatMessages(messages) {
             }" alt="Avatar" class="chat-avatar" onerror="this.onerror=null;this.src='https://placehold.co/40x40/333333/FFFFFF?text=U';"/>`
           : ""
       }
-      <div class="message-bubble">
+      <div class="${messageBubbleClasses}">
         ${
+          // Only show sender name for 'other-message'
           msg.senderId !== currentUser.uid
             ? `<span class="sender-name">${msg.senderName}</span>`
             : ""
         }
         ${messageContent}
-        <span class="message-timestamp">${
-          msg.timestamp ? new Date(msg.timestamp.toDate()).toLocaleString() : ""
-        }</span>
+        ${
+          !msg.edited && !msg.recalled
+            ? `<span class="message-timestamp">${
+                msg.timestamp
+                  ? new Date(msg.timestamp.toDate()).toLocaleString()
+                  : ""
+              }</span>`
+            : ""
+        }
       </div>
+      ${
+        currentUser && currentUser.uid === msg.senderId && !msg.recalled
+          ? `<button class="btn message-options-btn" data-chat-id="${chatId}" data-message-id="${
+              msg.id
+            }" data-content="${encodeURIComponent(msg.message)}">
+               <i class="fas fa-ellipsis-h"></i>
+             </button>`
+          : ""
+      }
     `;
     chatMessagesContainer.appendChild(messageElement);
+
+    // Add event listener for message options button
+    const messageOptionsBtn = messageElement.querySelector(
+      ".message-options-btn"
+    );
+    if (messageOptionsBtn) {
+      messageOptionsBtn.addEventListener("click", (e) => {
+        e.stopPropagation();
+        const msgChatId = e.currentTarget.dataset.chatId;
+        const msgId = e.currentTarget.dataset.messageId;
+        const msgContent = decodeURIComponent(e.currentTarget.dataset.content);
+        showChatContextMenu(e, msgChatId, msgId, msgContent);
+      });
+    }
   });
+}
+
+// Function to edit a chat message
+async function editChatMessage(chatId, messageId, currentContent) {
+  if (!currentUser) {
+    showForumMessage(forumTranslations[currentLanguage].loginToPost, true);
+    return;
+  }
+  if (!db) {
+    showForumMessage(
+      forumTranslations[currentLanguage].firebaseInitError,
+      true
+    );
+    return;
+  }
+
+  const postEditModal = document.getElementById("postEditModal");
+  const editPostTitle = document.getElementById("editPostTitle");
+  const editPostContent = document.getElementById("editPostContent");
+  const editPostImageUrl = document.getElementById("editPostImageUrl"); // This will be hidden for chat messages
+  const savePostEditBtn = document.getElementById("savePostEditBtn");
+
+  editPostTitle.textContent =
+    forumTranslations[currentLanguage].editCommentTitle; // Reusing for chat message edit
+  editPostContent.value = currentContent;
+  editPostImageUrl.style.display = "none"; // Hide image URL input for chat messages
+  postEditModal.style.display = "block";
+  document.body.classList.add("modal-open"); // Disable body scroll
+
+  // Remove previous event listener to prevent multiple calls
+  const newSavePostEditBtn = savePostEditBtn.cloneNode(true);
+  savePostEditBtn.parentNode.replaceChild(newSavePostEditBtn, savePostEditBtn);
+
+  newSavePostEditBtn.addEventListener("click", async () => {
+    const newContent = editPostContent.value.trim();
+
+    if (!newContent) {
+      showForumMessage(
+        forumTranslations[currentLanguage].postContentEmpty, // Reusing for message content empty
+        true
+      );
+      return;
+    }
+
+    try {
+      const messageRef = doc(
+        db,
+        `artifacts/${appId}/public/data/chats/${chatId}/messages`,
+        messageId
+      );
+      await updateDoc(messageRef, {
+        message: newContent,
+        edited: true, // Mark as edited
+        timestamp: serverTimestamp(), // Update timestamp to reflect edit
+      });
+      showForumMessage(forumTranslations[currentLanguage].messageEdited, false);
+      postEditModal.style.display = "none";
+      document.body.classList.remove("modal-open"); // Re-enable body scroll
+      // Reset title and image URL visibility for next use
+      editPostTitle.textContent =
+        forumTranslations[currentLanguage].editPostTitle;
+      editPostImageUrl.style.display = "block";
+    } catch (error) {
+      console.error("Error updating chat message:", error);
+      showForumMessage("Lỗi khi cập nhật tin nhắn: " + error.message, true);
+    }
+  });
+}
+
+// Function to recall a chat message (deletes for both sender and recipient)
+async function recallChatMessage(chatId, messageId) {
+  if (!currentUser) {
+    showForumMessage(forumTranslations[currentLanguage].loginToPost, true);
+    return;
+  }
+  if (!db) {
+    showForumMessage(
+      forumTranslations[currentLanguage].firebaseInitError,
+      true
+    );
+    return;
+  }
+
+  try {
+    const messageRef = doc(
+      db,
+      `artifacts/${appId}/public/data/chats/${chatId}/messages`,
+      messageId
+    );
+    // Instead of deleting, mark as recalled and change content
+    await updateDoc(messageRef, {
+      message: forumTranslations[currentLanguage].messageRecalledText,
+      recalled: true,
+      edited: false, // Reset edited status if recalled
+      timestamp: serverTimestamp(),
+    });
+    showForumMessage(forumTranslations[currentLanguage].messageRecalled, false);
+  } catch (error) {
+    console.error("Error recalling message:", error);
+    showForumMessage("Lỗi khi thu hồi tin nhắn: " + error.message, true);
+  }
+}
+
+// Function to show context menu for chat messages
+function showChatContextMenu(event, chatId, messageId, messageContent) {
+  const contextMenu = document.getElementById("contextMenu");
+  const editOption = document.getElementById("editOption");
+  const recallOption = document.getElementById("recallOption");
+  const deleteOption = document.getElementById("deleteOption");
+
+  // Position the context menu
+  contextMenu.style.left = `${event.pageX}px`;
+  contextMenu.style.top = `${event.pageY}px`;
+  contextMenu.style.display = "block";
+
+  // Show/Hide options
+  editOption.style.display = "block"; // Edit is always available for own messages
+  recallOption.style.display = "block"; // Recall is always available for own messages
+  deleteOption.style.display = "none"; // Hide general delete for chat, use recall instead
+
+  // Clear previous listeners
+  const newEditOption = editOption.cloneNode(true);
+  editOption.parentNode.replaceChild(newEditOption, editOption);
+
+  const newRecallOption = recallOption.cloneNode(true);
+  recallOption.parentNode.replaceChild(newRecallOption, recallOption);
+
+  // Attach new listeners
+  newEditOption.onclick = () => {
+    contextMenu.style.display = "none";
+    editChatMessage(chatId, messageId, messageContent);
+  };
+  newRecallOption.onclick = () => {
+    contextMenu.style.display = "none";
+    showConfirmationModal(
+      forumTranslations[currentLanguage].confirmRecallMessage,
+      () => recallChatMessage(chatId, messageId)
+    );
+  };
 }
 
 // Function to scroll chat to bottom
@@ -1682,7 +2298,9 @@ function listenForFriends() {
             <span>${friend.displayName}</span>
             <button class="btn chat-btn" data-recipient-id="${
               friend.uid
-            }" data-recipient-name="${friend.displayName}">
+            }" data-recipient-name="${
+            friend.displayName
+          }" data-recipient-photo="${friend.photoURL}">
               <i class="fas fa-comment-dots"></i> ${
                 forumTranslations[currentLanguage].chat
               }
@@ -1703,7 +2321,8 @@ function listenForFriends() {
             .addEventListener("click", (e) => {
               const recipientId = e.currentTarget.dataset.recipientId;
               const recipientName = e.currentTarget.dataset.recipientName;
-              startConversation(recipientId, recipientName);
+              const recipientPhoto = e.currentTarget.dataset.recipientPhoto;
+              startConversation(recipientId, recipientName, recipientPhoto);
             });
           friendItem
             .querySelector(".remove-friend-btn")
@@ -1802,12 +2421,10 @@ function listenForFriendRequests() {
     return;
   }
   if (!db) {
-    console.error(
-      "Firestore DB not initialized. Cannot listen for friend requests."
+    showForumMessage(
+      forumTranslations[currentLanguage].firebaseInitError,
+      true
     );
-    const friendRequestsList = document.getElementById("friendRequestsList");
-    friendRequestsList.innerHTML = `<p class="error-message">${forumTranslations[currentLanguage].firebaseInitError}</p>`;
-    friendRequestsList.classList.add("empty");
     return;
   }
 
@@ -2044,7 +2661,7 @@ async function removeFriend(friendId) {
 }
 
 // Function to listen for real-time updates to user's conversations list
-function listenForConversations() {
+async function listenForConversations(autoSelectLatest = false) {
   if (unsubscribeConversationsListener) {
     unsubscribeConversationsListener(); // Unsubscribe from previous listener
   }
@@ -2078,13 +2695,23 @@ function listenForConversations() {
   unsubscribeConversationsListener = onSnapshot(
     q,
     async (snapshot) => {
-      conversationsList.innerHTML = ""; // Clear existing conversations
+      conversationsList.innerHTML = ""; // Clear existing conversations to prevent duplicates
 
       if (snapshot.empty) {
         conversationsList.innerHTML = `<p class="no-conversations-message">${forumTranslations[currentLanguage].noConversations}</p>`;
         conversationsList.classList.add("empty");
+        // Hide chat main content if no conversations
+        document.getElementById("chatHeader").style.display = "none";
+        document.getElementById("chatMessages").style.display = "none";
+        document.getElementById("chatInputArea").style.display = "none";
+        document.getElementById("noChatSelectedMessage").style.display =
+          "block";
         return;
       }
+
+      let firstConversationPartnerId = null;
+      let firstConversationPartnerName = null;
+      let firstConversationPartnerPhoto = null;
 
       for (const chatDoc of snapshot.docs) {
         const chat = chatDoc.data();
@@ -2108,6 +2735,7 @@ function listenForConversations() {
           conversationItem.className = "message-list-item";
           conversationItem.dataset.chatPartnerId = otherUser.uid;
           conversationItem.dataset.chatPartnerName = otherUser.displayName;
+          conversationItem.dataset.chatPartnerPhoto = otherUser.photoURL;
 
           conversationItem.innerHTML = `
             <img src="${
@@ -2130,12 +2758,36 @@ function listenForConversations() {
           `;
           conversationsList.appendChild(conversationItem);
 
+          // Store the first conversation for auto-selection
+          if (firstConversationPartnerId === null) {
+            firstConversationPartnerId = otherUser.uid;
+            firstConversationPartnerName = otherUser.displayName;
+            firstConversationPartnerPhoto = otherUser.photoURL;
+          }
+
           conversationItem.addEventListener("click", (e) => {
             const recipientId = e.currentTarget.dataset.chatPartnerId;
             const recipientName = e.currentTarget.dataset.chatPartnerName;
-            startConversation(recipientId, recipientName);
+            const recipientPhoto = e.currentTarget.dataset.chatPartnerPhoto;
+            startConversation(recipientId, recipientName, recipientPhoto);
           });
         }
+      }
+
+      // Auto-select the latest conversation if requested and available
+      if (autoSelectLatest && firstConversationPartnerId) {
+        // Find the corresponding list item and add 'active' class
+        const activeItem = conversationsList.querySelector(
+          `[data-chat-partner-id="${firstConversationPartnerId}"]`
+        );
+        if (activeItem) {
+          activeItem.classList.add("active");
+        }
+        startConversation(
+          firstConversationPartnerId,
+          firstConversationPartnerName,
+          firstConversationPartnerPhoto
+        );
       }
     },
     (error) => {
@@ -2256,6 +2908,7 @@ function showConfirmationModal(message, onConfirmCallback) {
 
   confirmationMessage.textContent = message;
   confirmationModal.style.display = "block";
+  document.body.classList.add("modal-open"); // Disable body scroll
 
   // Remove previous event listener to prevent multiple calls
   const newConfirmActionBtn = confirmActionBtn.cloneNode(true);
@@ -2267,6 +2920,7 @@ function showConfirmationModal(message, onConfirmCallback) {
   newConfirmActionBtn.addEventListener("click", () => {
     onConfirmCallback();
     confirmationModal.style.display = "none";
+    document.body.classList.remove("modal-open"); // Re-enable body scroll
   });
 }
 
@@ -2315,6 +2969,7 @@ async function showUserInteractionPopup(
     popupAddFriendBtn.style.display = "none";
     popupRemoveFriendBtn.style.display = "none";
     popup.style.display = "block";
+    document.body.classList.add("modal-open"); // Disable body scroll
     return;
   }
 
@@ -2326,6 +2981,7 @@ async function showUserInteractionPopup(
     );
     switchTab("profile"); // Automatically switch to profile tab
     popup.style.display = "none"; // Hide the interaction popup
+    document.body.classList.remove("modal-open"); // Re-enable body scroll
     return;
   }
 
@@ -2341,6 +2997,7 @@ async function showUserInteractionPopup(
     popupAddFriendBtn.style.display = "none";
     popupRemoveFriendBtn.style.display = "none";
     popup.style.display = "block";
+    document.body.classList.add("modal-open"); // Disable body scroll
     return;
   }
 
@@ -2421,28 +3078,29 @@ async function showUserInteractionPopup(
 
   newPopupChatBtn.addEventListener("click", () => {
     console.log("Chat button clicked for:", targetUserId);
-    startConversation(targetUserId, targetUserName);
-    popup.style.display = "none";
+    // Directly call startConversation without opening a modal
+    startConversation(targetUserId, targetUserName, targetPhotoURL);
+    popup.style.display = "none"; // Hide the user interaction popup
+    document.body.classList.remove("modal-open"); // Re-enable body scroll
   });
 
-  // Attach event listener for Add Friend / Accept button
-  if (!isFriend && !isRequestSent) {
-    // Only attach if it's genuinely an "Add Friend" scenario or "Accept" scenario
-    newPopupAddFriendBtn.addEventListener("click", async () => {
-      if (isRequestReceived) {
-        console.log("Accept friend request button clicked for:", targetUserId);
-        await acceptFriendRequest(
-          `${targetUserId}_${currentUser.uid}`,
-          targetUserId,
-          targetUserName
-        );
-      } else {
-        console.log("Send friend request button clicked for:", targetUserId);
-        await sendFriendRequest(targetUserId);
-      }
-      popup.style.display = "none";
-    });
-  }
+  // Attach event listener for Add Friend / Accept button unconditionally
+  newPopupAddFriendBtn.addEventListener("click", async () => {
+    if (newPopupAddFriendBtn.classList.contains("accept-btn")) {
+      // Check the class on the NEW button
+      console.log("Accept friend request button clicked for:", targetUserId);
+      await acceptFriendRequest(
+        `${targetUserId}_${currentUser.uid}`,
+        targetUserId,
+        targetUserName
+      );
+    } else {
+      console.log("Send friend request button clicked for:", targetUserId);
+      await sendFriendRequest(targetUserId);
+    }
+    popup.style.display = "none";
+    document.body.classList.remove("modal-open"); // Re-enable body scroll
+  });
 
   newPopupRemoveFriendBtn.addEventListener("click", () => {
     console.log("Remove friend button clicked for:", targetUserId);
@@ -2451,6 +3109,7 @@ async function showUserInteractionPopup(
       async () => {
         await removeFriend(targetUserId);
         popup.style.display = "none";
+        document.body.classList.remove("modal-open"); // Re-enable body scroll
       }
     );
   });
@@ -2458,7 +3117,9 @@ async function showUserInteractionPopup(
   newPopupCloseBtn.addEventListener("click", () => {
     console.log("Close button clicked.");
     popup.style.display = "none";
+    document.body.classList.remove("modal-open"); // Re-enable body scroll
   });
 
   popup.style.display = "block";
+  document.body.classList.add("modal-open"); // Disable body scroll
 }

@@ -161,7 +161,7 @@ Skill 3 - Crafting: Right-click Crafting Table
           },
         ],
         videos: [
-          "https://www.youtube.com/watch?v=4uA5U38iYgQ&t=5s", // YouTube embed link
+          "https://www.youtube.com/embed/4uA5U38iYgQ?si=VTaxyvpln_M4jPFx", // YouTube embed link
         ],
         changelog: {
           vi: `
@@ -215,7 +215,7 @@ Skill 3 - Crafting: Right-click Crafting Table
     // The top-level image, video, file can be considered as the latest version's default or a general overview.
     // Specific versions will have their own details.
     image: "images/quests/quest-system.png",
-    video: "https://www.youtube.com/watch?v=662yrKIFmq4",
+    video: "https://www.youtube.com/embed/662yrKIFmq4?si=M2bzUc6rJKr8EJ_o",
 
     versions: [
       {
@@ -239,7 +239,7 @@ Skill 3 - Crafting: Right-click Crafting Table
           },
         ],
         videos: [
-          "https://www.youtube.com/watch?v=662yrKIFmq4", // YouTube embed link
+          "https://www.youtube.com/embed/bnSMqxUJccY?si=JmnfjmdXhCZSIiij", // YouTube embed link
         ],
         changelog: {
           vi: `
@@ -307,7 +307,7 @@ Quest System - Version 1.0.0 - Changelog
           },
         ],
         videos: [
-          "https://www.youtube.com/watch?v=662yrKIFmq4&t=81s", // YouTube embed link
+          "https://www.youtube.com/embed/662yrKIFmq4?si=M2bzUc6rJKr8EJ_o", // YouTube embed link
         ],
         changelog: {
           vi: `
@@ -420,6 +420,8 @@ Quest System - Version 1.0.0 - Changelog
       // ==============================================================================================================
     ],
   },
+
+  {},
   // Add
 ];
 
