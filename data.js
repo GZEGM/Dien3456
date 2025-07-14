@@ -421,8 +421,58 @@ Quest System - Version 1.0.0 - Changelog
     ],
   },
 
-  {},
   // Add
+  {
+    id: 3,
+    title: {
+      vi: "Chest Spawner",
+      en: "Chest Spawner",
+    },
+    description: {
+      vi: "Hồi sinh/Tái sinh vật phẩm trong rương cho Minecraft Bedrock.",
+      en: "Spawn/Respawn item in chest for Minecraft Bedrock.",
+    },
+    image: "images/chest_spawner/cs_v1_m2.png",
+    video: "https://www.youtube.com/embed/IjODNOW32zg?si=UTZIJbqG1nCBoOtR",
+    versions: [
+      {
+        versionName: "1.0.1",
+        releaseDate: "6/7/2025",
+        title: {
+          vi: "Hệ Thống Kỹ Năng v1.0.1",
+          en: "Skill System v1.0.1",
+        },
+        description: {
+          vi: "Addon này cho phép quản trị viên tạo và quản lý các spawner rương tùy chỉnh tự động điền lại vật phẩm theo thời gian, cung cấp các tùy chọn ngẫu nhiên hóa và hồi sinh khác nhau. Hỗ trợ Minecraft Bedrock 1.21.90+.",
+          en: "This addon allows admins to create and manage custom chest spawners that automatically refill with items over time, offering various randomization and respawn options.Support Minecraft Bedrock 1.21.90+.",
+        },
+        images: [
+          {
+            src: "images/chest_spawner/cs_v1_m1.png",
+            captions: {
+              vi: "Trước",
+              en: "Before",
+            },
+          },
+          {
+            src: "images/chest_spawner/cs_v1_m2.png",
+            captions: {
+              vi: "Sau",
+              en: "After",
+            },
+          },
+        ],
+        videos: [
+          "https://www.youtube.com/embed/IjODNOW32zg?si=UTZIJbqG1nCBoOtR",
+        ],
+        changelog: {
+          vi: '-\n- Changelog Addon Chest Spawner v1.0.0\n\nCơ chế hoạt động\n\n-   Công cụ đặc biệt: Gậy "Chest Spawner Tool" để cấu hình.\n-   Lưu trữ: Cấu hình rương và cài đặt addon được lưu trữ toàn cầu.\n-   Khôi phục khối: Tự động khôi phục các khối rương bị hỏng hoặc thiếu.\n-   Không thể phá hủy: Tùy chọn làm cho rương không thể bị phá vỡ.\n-   Theo dõi thời gian: Ghi lại thời gian mở rương lần cuối cho các chế độ hồi sinh cụ thể.\n\nChế độ & Cài đặt\n\nCấu hình rương\n\n-   Thời gian hồi sinh: Đặt khoảng thời gian hồi sinh (giây).\n-   Loại hồi sinh: "Mọi lúc" hoặc "Sau lần mở đầu tiên".\n-   Vị trí vật phẩm: "Cố định" hoặc "Ngẫu nhiên" các ô.\n-   Ngẫu nhiên hóa ô: Bật/tắt điền ô ngẫu nhiên.\n-   Ngẫu nhiên hóa số lượng: Bật/tắt ngẫu nhiên số lượng vật phẩm mỗi ô.\n-   Không thể phá hủy: Làm cho rương không thể bị phá hủy.\n\nCài đặt Addon:\n\n-   ID gậy đặc biệt: Tùy chỉnh vật phẩm công cụ.\n-   Lore gậy đặc biệt: Tùy chỉnh mô tả công cụ.\n-   Chế độ gỡ lỗi: Bật/tắt ghi nhật ký chi tiết.\n\nLệnh\n\n-   /cs menu :scroll:: Mở menu chính (quản lý rương, cài đặt).\n-   /cs item :magic_wand:: Cung cấp "Công cụ hồi sinh rương".\n-   /cs debug :lady_beetle:: Xem/xóa nhật ký gỡ lỗi.\n\nTương tác\n\n-   Cấu hình/Quản lý: Nhấp chuột phải vào rương bằng "Công cụ hồi sinh rương".\n-   Tạm dừng Spawner: Lén lút + Nhấp chuột phải vào rương đã cấu hình bằng công cụ.\n-   Mở rương: Mở bình thường sẽ cập nhật thời gian mở lần cuối cho các chế độ liên quan.\n          ',
+          en: '\n- Chest Spawner Addon Changelog v1.0.0\n\nMechanics\n\n-   Special Tool: "Chest Spawner Tool" stick for configuration.\n-   Persistence: Chest configs and addon settings save globally.\n-   Block Restoration: Auto-restores broken or missing chest blocks.\n-   Indestructible: Option to make chests unbreakable.\n-   Time Tracking: Records last opened time for specific respawn modes.\n\nModes & Settings\n\nChest Configuration\n\n-   Respawn Time: Set respawn interval (seconds).\n-   Respawn Type: "Every Time" or "After First Open".\n-   Item Position: "Fixed" or "Random" slots.\n-   Randomize Slots: Toggle random slot filling.\n-   Randomize Quantity: Toggle random item quantities per slot.\n-   Indestructible: Make the chest indestructible.\n\nAddon Settings:\n\n-   Special Stick ID: Customize tool item.\n-   Special Stick Lore: Customize tool description.\n-   Debug Mode: Enable/disable detailed logging.\n\nCommands\n\n-   /cs menu :scroll:: Opens main menu (manage chests, settings).\n-   /cs item :magic_wand:: Gives "Chest Spawner Tool".\n-   /cs debug :lady_beetle:: View/clear debug logs.\n\nInteractions\n\n-   Configure/Manage: Right-click chest with "Chest Spawner Tool".\n-   Pause Spawner: Sneak + Right-click configured chest with tool.\n-   Open Chest: Normal opening updates last opened time for relevant modes.\n          ',
+        },
+        file: "addons/Chest Spawner 1.21.90 - 1.0.0.zip",
+      },
+    ],
+  },
 ];
 
 // Translations for general UI elements
