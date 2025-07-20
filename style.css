@@ -1,0 +1,1540 @@
+/* style.css */
+
+/* Định nghĩa biến màu cho chế độ tối (mặc định) */
+:root {
+  --primary-color: #00e676; /* Xanh lá cây rực rỡ */
+  --primary-hover-color: #00c853; /* Xanh lá cây đậm hơn khi hover */
+  --secondary-color: #f2f2f2; /* Xám nhạt */
+  --text-color: #333; /* Màu chữ chính */
+  --text-color-light: #666; /* Màu chữ nhạt hơn */
+  --background-color: #ffffff; /* Màu nền chính */
+  --secondary-bg-color: #f9f9f9; /* Màu nền phụ (ví dụ: cho khung chat, danh sách bạn bè) */
+  --card-bg-color: #ffffff; /* Màu nền thẻ */
+  --border-color: #ddd; /* Màu đường viền */
+  --input-bg-color: #f0f0f0; /* Màu nền input */
+  --shadow: 0 4px 12px rgba(0, 0, 0, 0.3); /* Đổ bóng */
+  --heading-color: #333; /* Màu tiêu đề */
+
+  /* Biến màu cụ thể cho chế độ tối (sẽ được áp dụng khi body có class .dark-mode) */
+  --dark-primary: #00e676; /* Xanh lá cây rực rỡ */
+  --dark-primary-hover: #00c853; /* Xanh lá cây đậm hơn khi hover */
+  --dark-secondary-text: #b0b3b8; /* Chữ phụ nhạt hơn trong dark mode */
+  --dark-background: #18191a; /* Nền tối */
+  --dark-secondary-bg: #242526; /* Nền tối hơi sáng hơn cho các phần */
+  --dark-card-bg: #242526; /* Nền thẻ trong dark mode */
+  --dark-border: #3a3b3c; /* Đường viền trong dark mode */
+  --dark-input-bg: #3a3b3c; /* Nền input trong dark mode */
+  --dark-text: #e4e6eb; /* Chữ sáng trong dark mode */
+  --dark-heading: #e4e6eb; /* Tiêu đề trong dark mode */
+  --dark-modal-bg: #242526; /* Nền modal trong dark mode */
+  --hover-bg-color: rgba(0, 0, 0, 0.05); /* Màu nền khi hover (chế độ sáng) */
+}
+
+/* Áp dụng biến màu cho chế độ tối khi body có class .dark-mode */
+body.dark-mode {
+  --primary-color: var(--dark-primary);
+  --primary-hover-color: var(--dark-primary-hover);
+  --secondary-color: var(--dark-secondary-bg);
+  --text-color: var(--dark-text);
+  --text-color-light: var(--dark-secondary-text);
+  --background-color: var(--dark-background);
+  --secondary-bg-color: var(--dark-secondary-bg);
+  --card-bg-color: var(--dark-card-bg);
+  --border-color: var(--dark-border);
+  --input-bg-color: var(--dark-input-bg);
+  --shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
+  --heading-color: var(--dark-heading);
+  --dark-modal-bg: #3a3b3c; /* Nền modal tối hơn */
+  --hover-bg-color: rgba(
+    255,
+    255,
+    255,
+    0.08
+  ); /* Màu nền khi hover (chế độ tối) */
+}
+
+/* Kiểu dáng chung cho body */
+body {
+  font-family: "Inter", sans-serif; /* Font chữ */
+  margin: 0;
+  padding: 0;
+  background-color: var(--background-color); /* Màu nền từ biến */
+  color: var(--text-color); /* Màu chữ từ biến */
+  transition: background-color 0.3s ease, color 0.3s ease; /* Hiệu ứng chuyển đổi mượt mà */
+  line-height: 1.6;
+}
+
+/* Header */
+header {
+  background-color: var(--dark-secondary-bg); /* Màu nền từ biến */
+  color: white; /* Màu chữ */
+  padding: 15px 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap; /* Cho phép xuống dòng trên màn hình nhỏ */
+  gap: 15px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+}
+
+header h1 {
+  margin: 0;
+  font-size: 1.8em;
+}
+
+header h1 a {
+  color: white; /* Màu chữ liên kết */
+  text-decoration: none;
+  transition: color 0.3s ease;
+}
+
+header h1 a:hover {
+  color: var(--primary-hover-color); /* Màu khi hover */
+}
+
+header nav {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  flex-wrap: wrap;
+}
+
+/* Thêm hiệu ứng hover cho các liên kết điều hướng */
+header nav .nav-link {
+  color: white; /* Màu chữ liên kết */
+  text-decoration: none;
+  padding: 8px 12px;
+  border-radius: 8px;
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+header nav .nav-link:hover {
+  background-color: rgba(255, 255, 255, 0.2); /* Màu nền khi hover */
+  color: var(--primary-color); /* Màu chữ thay đổi khi hover */
+}
+
+.header-controls {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.icon-btn {
+  background: none;
+  border: none;
+  color: white; /* Màu icon */
+  font-size: 1.2em;
+  cursor: pointer;
+  padding: 8px;
+  border-radius: 8px;
+  transition: background-color 0.3s ease, color 0.3s ease, transform 0.2s ease; /* Thêm transform */
+}
+
+.icon-btn:hover {
+  background-color: rgba(255, 255, 255, 0.2); /* Màu nền khi hover */
+  color: var(--primary-color); /* Đổi màu icon thành màu xanh khi hover */
+  transform: translateY(-2px) scale(1.05); /* Hiệu ứng nổi và phóng to nhẹ */
+}
+
+/* Dropdown cho bộ chọn ngôn ngữ */
+.dropdown {
+  position: relative;
+  display: inline-block;
+}
+
+.dropbtn {
+  background: none;
+  border: none;
+  color: white; /* Màu icon */
+  font-size: 1.2em;
+  cursor: pointer;
+  padding: 8px;
+  border-radius: 8px;
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+.dropbtn:hover {
+  background-color: rgba(255, 255, 255, 0.2); /* Màu nền khi hover */
+  color: white;
+}
+
+.dropdown-content {
+  display: none;
+  position: absolute;
+  background-color: var(--card-bg-color); /* Màu nền từ biến */
+  min-width: 120px;
+  box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.4);
+  z-index: 1;
+  border-radius: 8px;
+  overflow: hidden;
+  right: 0; /* Căn chỉnh dropdown sang phải */
+}
+
+.dropdown-content a {
+  color: var(--text-color); /* Màu chữ từ biến */
+  padding: 12px 16px;
+  text-decoration: none;
+  display: block;
+  transition: background-color 0.3s ease;
+}
+
+.dropdown-content a:hover {
+  background-color: var(--hover-bg-color); /* Màu nền khi hover */
+  color: var(--primary-color); /* Màu chữ khi hover */
+}
+
+.dropdown:hover .dropdown-content {
+  display: block;
+}
+
+/* Dropdown hồ sơ người dùng */
+.user-profile-menu {
+  position: relative;
+  display: inline-block;
+}
+
+.user-avatar {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 2px solid white; /* Viền trắng */
+  transition: border-color 0.3s ease;
+}
+
+.user-profile-menu:hover .user-avatar {
+  border-color: rgba(255, 255, 255, 0.5); /* Viền nhạt hơn khi hover */
+}
+
+.user-dropdown-content {
+  display: none;
+  position: absolute;
+  background-color: var(--card-bg-color); /* Màu nền từ biến */
+  min-width: 200px;
+  box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.4);
+  z-index: 1;
+  border-radius: 8px;
+  overflow: hidden;
+  right: 0;
+  padding: 15px;
+  text-align: center;
+}
+
+.user-dropdown-content p {
+  margin: 5px 0;
+  color: var(--text-color); /* Màu chữ từ biến */
+}
+
+.user-dropdown-content .logout-btn {
+  background-color: var(--primary-color); /* Màu nền từ biến */
+  color: #fff;
+  border: none;
+  padding: 8px 15px;
+  border-radius: 8px;
+  cursor: pointer;
+  margin-top: 10px;
+  transition: background-color 0.3s ease;
+}
+
+.user-dropdown-content .logout-btn:hover {
+  background-color: var(--primary-hover-color); /* Màu khi hover */
+}
+
+/* Nội dung chính */
+main {
+  padding: 20px;
+  max-width: 1200px;
+  margin: 20px auto;
+  background-color: var(--background-color); /* Màu nền từ biến */
+  border-radius: 10px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+}
+
+/* Thanh tìm kiếm */
+.search-container {
+  position: relative;
+  margin-bottom: 30px;
+  display: flex;
+  align-items: center;
+}
+
+.search-input {
+  width: calc(100% - 24px); /* Account for padding */
+  padding: 12px;
+  padding-left: 40px; /* Padding trái cho icon */
+  border: 1px solid var(--border-color); /* Màu viền từ biến */
+  border-radius: 8px;
+  background-color: var(--input-bg-color); /* Màu nền từ biến */
+  color: var(--text-color); /* Màu chữ từ biến */
+  font-size: 1em;
+  transition: border-color 0.3s ease, background-color 0.3s ease;
+}
+
+.search-input::placeholder {
+  color: var(--text-color-light); /* Màu placeholder từ biến */
+}
+
+.search-input:focus {
+  border-color: var(--primary-color); /* Màu viền khi focus */
+  outline: none;
+  box-shadow: 0 0 0 2px rgba(76, 175, 80, 0.3); /* Đổ bóng khi focus */
+}
+
+.search-icon {
+  position: absolute;
+  left: 15px;
+  color: var(--text-color-light); /* Màu icon từ biến */
+  font-size: 1em;
+}
+
+/* Danh sách Addon */
+#addonList {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  max-width: 700px;
+  margin: 20px auto;
+}
+
+.card {
+  background-color: var(--card-bg-color); /* Màu nền từ biến */
+  border-radius: 10px;
+  box-shadow: var(--shadow); /* Đổ bóng từ biến */
+  overflow: hidden;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  cursor: pointer;
+  display: flex;
+  flex-direction: row;
+  text-align: left;
+  align-items: center;
+  width: 100%;
+}
+
+.card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.4);
+}
+
+.card img {
+  width: 160px;
+  height: 120px;
+  object-fit: cover;
+  flex-shrink: 0;
+  border-bottom: none;
+  border-right: 1px solid var(--border-color); /* Màu viền từ biến */
+}
+
+.card .info {
+  padding: 15px;
+  flex-grow: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.card h3 {
+  margin-top: 0;
+  margin-bottom: 10px;
+  color: var(--primary-color); /* Màu chữ từ biến */
+  font-size: 1.3em;
+}
+
+.card p {
+  color: var(--text-color-light); /* Màu chữ từ biến */
+  font-size: 0.9em;
+  flex-grow: 1;
+}
+
+/* Trang chi tiết Addon */
+.addon-detail {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  padding: 20px;
+  background-color: var(--card-bg-color); /* Màu nền từ biến */
+  border-radius: 10px;
+  box-shadow: var(--shadow); /* Đổ bóng từ biến */
+}
+
+.addon-detail h2 {
+  color: var(--primary-color); /* Màu chữ từ biến */
+  font-size: 2em;
+  margin-bottom: 10px;
+  text-align: center;
+}
+
+.addon-detail p {
+  color: var(--text-color); /* Màu chữ từ biến */
+  font-size: 1.2em;
+  text-align: center;
+}
+
+.version-selector {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  margin-bottom: 20px;
+}
+
+.version-selector label {
+  color: var(--text-color-light); /* Màu chữ từ biến */
+  font-size: 1em;
+}
+
+.version-selector select {
+  padding: 8px 12px;
+  border-radius: 8px;
+  border: 1px solid var(--border-color); /* Màu viền từ biến */
+  background-color: var(--input-bg-color); /* Màu nền từ biến */
+  color: var(--text-color); /* Màu chữ từ biến */
+  font-size: 1em;
+  cursor: pointer;
+  transition: border-color 0.3s ease;
+}
+
+.version-selector select:focus {
+  border-color: var(--primary-color); /* Màu viền khi focus */
+  outline: none;
+  box-shadow: 0 0 0 2px rgba(76, 175, 80, 0.3); /* Đổ bóng khi focus */
+}
+
+.media-section {
+  margin-top: 20px;
+  text-align: center;
+}
+
+.media-section h3 {
+  color: var(--primary-color); /* Màu chữ từ biến */
+  margin-bottom: 15px;
+  font-size: 1.5em;
+}
+
+/* Thư viện ảnh (một ảnh mỗi hàng với chú thích) */
+.image-gallery {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  align-items: center;
+}
+
+.image-item {
+  width: 100%;
+  max-width: 600px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background-color: var(--input-bg-color); /* Màu nền từ biến */
+  padding: 15px;
+  border-radius: 10px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+}
+
+.image-item img {
+  width: 100%;
+  height: auto;
+  max-height: 300px;
+  object-fit: contain;
+  border-radius: 8px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+  margin-bottom: 10px;
+}
+
+.image-item p {
+  color: var(--text-color-light); /* Màu chữ từ biến */
+  font-size: 1.2em;
+  text-align: center;
+  margin: 0;
+  padding: 0 10px;
+}
+
+.video-gallery {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 15px;
+  justify-content: center;
+}
+
+.video-gallery iframe {
+  width: 100%;
+  height: 250px;
+  border-radius: 8px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+}
+
+.changelog-section {
+  margin-top: 20px;
+  background-color: var(--input-bg-color); /* Màu nền từ biến */
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: inset 0 0 5px rgba(0, 0, 0, 0.2);
+}
+
+.changelog-section h3 {
+  color: var(--primary-color); /* Màu chữ từ biến */
+  margin-bottom: 10px;
+  font-size: 1.5em;
+  text-align: center;
+}
+
+.changelog-section pre {
+  white-space: pre-wrap;
+  word-wrap: break-word;
+  color: var(--text-color); /* Màu chữ từ biến */
+  font-family: monospace;
+  font-size: 2em;
+  max-height: 300px;
+  overflow-y: auto;
+  padding: 10px;
+  border: 1px solid var(--border-color); /* Màu viền từ biến */
+  border-radius: 5px;
+  text-align: left;
+}
+
+.btn {
+  display: block;
+  width: fit-content;
+  margin: 30px auto 0;
+  padding: 12px 25px;
+  background-color: var(--primary-color); /* Màu nền từ biến */
+  color: #fff;
+  text-decoration: none;
+  border-radius: 8px;
+  transition: background-color 0.3s ease, transform 0.2s ease;
+  font-size: 1.1em;
+  font-weight: bold;
+  text-align: center;
+  border: none;
+  cursor: pointer;
+}
+
+.btn:hover {
+  background-color: var(--primary-hover-color); /* Màu khi hover */
+  transform: translateY(-2px);
+}
+
+/* Modal (Popup chung) */
+.modal {
+  display: none; /* Ẩn mặc định */
+  position: fixed;
+  z-index: 100;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  overflow: auto;
+  background-color: rgba(0, 0, 0, 0.6); /* Nền đen có độ trong suốt */
+  backdrop-filter: blur(5px); /* Hiệu ứng làm mờ nền */
+  -webkit-backdrop-filter: blur(5px); /* Hỗ trợ Safari */
+}
+
+.modal-content {
+  background-color: var(--secondary-bg-color); /* Màu nền từ biến */
+  margin: 10% auto;
+  padding: 30px;
+  border: 1px solid var(--border-color); /* Màu viền từ biến */
+  border-radius: 12px;
+  width: 50%;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.4);
+  position: relative;
+  color: var(--text-color); /* Màu chữ từ biến */
+}
+
+.close-button {
+  color: var(--text-color-light); /* Màu chữ từ biến */
+  position: absolute;
+  top: 15px;
+  right: 25px;
+  font-size: 28px;
+  font-weight: bold;
+  transition: color 0.3s ease;
+}
+
+.close-button:hover,
+.close-button:focus {
+  color: var(--primary-color); /* Màu khi hover/focus */
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.modal-content h2 {
+  color: var(--primary-color); /* Màu chữ từ biến */
+  text-align: center;
+  margin-bottom: 25px;
+  font-size: 1.8em;
+}
+
+.setting-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 20px;
+  padding: 10px 0;
+  border-bottom: 1px solid var(--border-color); /* Màu viền từ biến */
+}
+
+.setting-item:last-child {
+  border-bottom: none;
+}
+
+.setting-item label {
+  font-size: 1.1em;
+  color: var(--text-color); /* Màu chữ từ biến */
+  margin-right: 15px;
+}
+
+.setting-item select {
+  padding: 8px 12px;
+  border-radius: 8px;
+  border: 1px solid var(--border-color); /* Màu viền từ biến */
+  background-color: var(--input-bg-color); /* Màu nền từ biến */
+  color: var(--text-color); /* Màu chữ từ biến */
+  font-size: 1em;
+  cursor: pointer;
+  transition: border-color 0.3s ease;
+}
+
+.setting-item select:focus {
+  border-color: var(--primary-color); /* Màu viền khi focus */
+  outline: none;
+  box-shadow: 0 0 0 2px rgba(76, 175, 80, 0.3); /* Đổ bóng khi focus */
+}
+
+.theme-options {
+  display: flex;
+  gap: 10px;
+}
+
+.theme-btn {
+  background-color: var(--input-bg-color); /* Màu nền từ biến */
+  color: var(--text-color-light); /* Màu chữ từ biến */
+  border: 1px solid var(--border-color); /* Màu viền từ biến */
+  padding: 10px 15px;
+  border-radius: 8px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  transition: background-color 0.3s ease, color 0.3s ease,
+    border-color 0.3s ease;
+}
+
+.theme-btn:hover {
+  background-color: rgba(76, 175, 80, 0.1); /* Màu nền khi hover */
+  color: var(--primary-color); /* Màu chữ khi hover */
+  border-color: var(--primary-color); /* Màu viền khi hover */
+}
+
+.theme-btn.active {
+  background-color: var(--primary-color); /* Màu nền khi active */
+  color: #fff;
+  border-color: var(--primary-color); /* Màu viền khi active */
+}
+
+.theme-btn.active:hover {
+  background-color: var(--primary-hover-color); /* Màu khi hover và active */
+  color: #fff;
+  border-color: var(--primary-hover-color);
+}
+
+/* Nút cuộn lên đầu trang */
+#scrollToTopBtn {
+  display: none; /* Ẩn mặc định */
+  position: fixed;
+  bottom: 30px;
+  right: 30px;
+  z-index: 99;
+  border: none;
+  outline: none;
+  background-color: var(--primary-color); /* Màu nền từ biến */
+  color: white;
+  cursor: pointer;
+  padding: 15px;
+  border-radius: 50%;
+  font-size: 18px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
+  transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+#scrollToTopBtn:hover {
+  background-color: var(--primary-hover-color); /* Màu khi hover */
+  transform: translateY(-2px);
+}
+
+/* Kiểu dáng trang xác thực (auth.html) */
+.auth-page {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  background-color: var(--background-color); /* Màu nền từ biến */
+  padding: 20px;
+  box-sizing: border-box;
+}
+
+.auth-container {
+  background-color: var(--card-bg-color); /* Màu nền từ biến */
+  padding: 40px;
+  border-radius: 12px;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.4);
+  width: 100%;
+  max-width: 450px;
+  text-align: center;
+}
+
+.auth-form-card h2 {
+  color: var(--primary-color); /* Màu chữ từ biến */
+  margin-bottom: 25px;
+  font-size: 2em;
+}
+
+.input-group {
+  margin-bottom: 20px;
+  text-align: left;
+}
+
+.input-group label {
+  display: block;
+  margin-bottom: 8px;
+  color: var(--text-color); /* Màu chữ từ biến */
+  font-size: 1.05em;
+}
+
+.input-group input[type="email"],
+.input-group input[type="password"],
+.input-group input[type="text"] {
+  width: calc(100% - 24px);
+  padding: 12px;
+  border: 1px solid var(--border-color); /* Màu viền từ biến */
+  border-radius: 8px;
+  background-color: var(--input-bg-color); /* Màu nền từ biến */
+  color: var(--text-color); /* Màu chữ từ biến */
+  font-size: 1em;
+  transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.input-group input[type="email"]::placeholder,
+.input-group input[type="password"]::placeholder,
+.input-group input[type="text"]::placeholder {
+  color: var(--text-color-light); /* Màu placeholder từ biến */
+}
+
+.input-group input[type="email"]:focus,
+.input-group input[type="password"]:focus,
+.input-group input[type="text"]:focus {
+  border-color: var(--primary-color); /* Màu viền khi focus */
+  outline: none;
+  box-shadow: 0 0 0 2px rgba(76, 175, 80, 0.3); /* Đổ bóng khi focus */
+}
+
+.auth-btn {
+  width: 100%;
+  padding: 12px 20px;
+  font-size: 1.1em;
+  margin-top: 15px;
+}
+
+.google-btn {
+  background-color: #db4437; /* Màu đỏ của Google */
+  margin-top: 20px;
+  width: 100%;
+  padding: 12px 20px;
+  font-size: 1.1em;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  color: #fff;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  border: none;
+}
+
+.google-btn:hover {
+  background-color: #c0392b;
+}
+
+.google-btn i {
+  font-size: 1.2em;
+}
+
+.auth-toggle-text {
+  margin-top: 25px;
+  color: var(--text-color-light); /* Màu chữ từ biến */
+}
+
+.auth-toggle-text a {
+  color: var(--primary-color); /* Màu chữ từ biến */
+  text-decoration: none;
+  font-weight: bold;
+  transition: color 0.3s ease;
+}
+
+.auth-toggle-text a:hover {
+  color: var(--primary-hover-color); /* Màu khi hover */
+}
+
+.auth-message {
+  padding: 10px 15px;
+  margin-bottom: 20px;
+  border-radius: 8px;
+  text-align: center;
+  font-weight: bold;
+  display: none; /* Ẩn mặc định */
+}
+
+.auth-message.error {
+  background-color: rgba(255, 77, 77, 0.2);
+  color: #ff4d4d; /* Màu chữ lỗi */
+  border: 1px solid #ff4d4d;
+}
+
+.auth-message.success {
+  background-color: rgba(76, 175, 80, 0.2);
+  color: #4caf50; /* Màu chữ thành công */
+  border: 1px solid #4caf50;
+}
+
+/* Kiểu dáng trang diễn đàn (forum.html) */
+.forum-main {
+  max-width: 900px;
+  margin: 20px auto;
+  padding: 20px;
+  background-color: var(--background-color); /* Màu nền từ biến */
+  border-radius: 10px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+}
+
+/* Thanh điều hướng tab */
+.tab-container {
+  display: flex;
+  margin-bottom: 20px;
+  border-bottom: 1px solid var(--border-color); /* Màu viền từ biến */
+  position: relative; /* Cho animation trượt */
+}
+
+.tab-button {
+  background-color: transparent;
+  border: none;
+  padding: 15px 20px;
+  cursor: pointer;
+  font-size: 1.1em;
+  color: var(--text-color-light); /* Màu chữ từ biến */
+  transition: color 0.3s ease; /* Chỉ chuyển màu chữ */
+  flex-grow: 1;
+  text-align: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  position: relative; /* Cho animation trượt */
+  overflow: hidden; /* Đảm bảo thanh trượt không tràn ra ngoài */
+}
+
+/* Thanh trượt cho tab active */
+.tab-button.active::after {
+  content: "";
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 3px;
+  background-color: var(--primary-color);
+  animation: slideIn 0.3s forwards; /* Animation trượt vào */
+}
+
+@keyframes slideIn {
+  from {
+    transform: translateX(-100%);
+  }
+  to {
+    transform: translateX(0);
+  }
+}
+
+.tab-button:hover:not(.active) {
+  color: var(--text-color); /* Màu chữ khi hover */
+}
+
+.tab-content {
+  display: none; /* Ẩn mặc định */
+  padding: 20px 0;
+}
+
+.tab-content.active {
+  display: block;
+}
+
+.new-post-section,
+.forum-posts-section,
+.messages-section,
+.find-users-section,
+.user-profile-section {
+  background-color: var(
+    --background-color
+  ); /* Đã thay đổi để khớp với màu nền chính */
+  padding: 25px;
+  border-radius: 10px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+  margin-bottom: 25px;
+}
+
+.new-post-section h2,
+.forum-posts-section h2,
+.messages-section h2,
+.find-users-section h2,
+.user-profile-section h2 {
+  color: var(--primary-color); /* Màu chữ từ biến */
+  margin-top: 0;
+  margin-bottom: 20px;
+  font-size: 1.8em;
+  text-align: center;
+}
+
+#postContent,
+#postImageUrl,
+.comment-content,
+#findUserSearchInput,
+#profileDescription {
+  width: calc(100% - 24px);
+  padding: 12px;
+  margin-bottom: 15px;
+  border: 1px solid var(--border-color); /* Màu viền từ biến */
+  border-radius: 8px;
+  background-color: var(--input-bg-color); /* Màu nền từ biến */
+  color: var(--text-color); /* Màu chữ từ biến */
+  font-size: 1em;
+  resize: vertical;
+  transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+#postContent:focus,
+#postImageUrl:focus,
+.comment-content:focus,
+#findUserSearchInput:focus,
+#profileDescription:focus {
+  border-color: var(--primary-color); /* Màu viền khi focus */
+  outline: none;
+  box-shadow: 0 0 0 2px rgba(76, 175, 80, 0.3); /* Đổ bóng khi focus */
+}
+
+#postContent::placeholder,
+#postImageUrl::placeholder,
+.comment-content::placeholder,
+#findUserSearchInput::placeholder,
+#profileDescription::placeholder {
+  color: var(--text-color-light); /* Màu placeholder từ biến */
+}
+
+#createPostBtn {
+  width: auto;
+  padding: 10px 20px;
+  font-size: 1em;
+  margin: 0 auto;
+  display: block;
+}
+
+#createPostBtn:disabled {
+  background-color: #555;
+  cursor: not-allowed;
+}
+
+.forum-post-card {
+  background-color: var(--secondary-bg-color); /* Màu nền từ biến */
+  padding: 20px;
+  border-radius: 10px;
+  margin-bottom: 15px;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.2);
+  position: relative; /* Quan trọng cho nút 3 chấm */
+}
+
+.post-header {
+  display: flex;
+  align-items: center;
+  margin-bottom: 15px;
+}
+
+.post-author-avatar {
+  width: 45px;
+  height: 45px;
+  border-radius: 50%;
+  object-fit: cover;
+  margin-right: 15px;
+  border: 2px solid var(--primary-color); /* Màu viền từ biến */
+  cursor: pointer;
+}
+
+.post-info {
+  display: flex;
+  flex-direction: column;
+  flex-grow: 1;
+}
+
+.post-author-name {
+  font-weight: bold;
+  color: var(--primary-color); /* Màu chữ từ biến */
+  font-size: 1.1em;
+}
+
+.post-timestamp {
+  font-size: 0.85em;
+  color: var(--text-color-light); /* Màu chữ từ biến */
+}
+
+.post-options-btn {
+  position: absolute; /* Vị trí tuyệt đối */
+  top: 15px; /* Cách trên 15px */
+  right: 15px; /* Cách phải 15px */
+  background: none;
+  border: none;
+  font-size: 1.2em;
+  color: var(--text-color-light);
+  cursor: pointer;
+  padding: 5px;
+  border-radius: 50%;
+  transition: background-color 0.2s ease, color 0.2s ease;
+}
+
+.post-options-btn:hover {
+  background-color: var(--hover-bg-color);
+  color: var(--primary-color);
+}
+
+.post-content p {
+  color: var(--text-color); /* Màu chữ từ biến */
+  margin-bottom: 15px;
+  white-space: pre-wrap;
+  word-wrap: break-word;
+}
+
+.post-image {
+  max-width: 100%;
+  height: auto;
+  border-radius: 8px;
+  margin-top: 10px;
+  display: block;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+}
+
+.post-actions {
+  margin-top: 15px;
+  text-align: right;
+}
+
+.toggle-comments-btn {
+  background-color: var(--input-bg-color); /* Màu nền từ biến */
+  color: var(--text-color); /* Màu chữ từ biến */
+  border: none;
+  padding: 8px 15px;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.toggle-comments-btn:hover {
+  background-color: var(--hover-bg-color); /* Màu khi hover */
+}
+
+.comments-section {
+  margin-top: 20px;
+  padding-top: 15px;
+  border-top: 1px solid var(--border-color); /* Màu viền từ biến */
+}
+
+.comments-list {
+  margin-bottom: 15px;
+}
+
+.comment-item {
+  display: flex;
+  align-items: flex-start;
+  margin-bottom: 10px;
+  background-color: var(--input-bg-color); /* Màu nền từ biến */
+  padding: 10px;
+  border-radius: 8px;
+  position: relative; /* Quan trọng cho nút 3 chấm */
+}
+
+.comment-author-avatar {
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  object-fit: cover;
+  margin-right: 10px;
+  border: 1px solid var(--primary-color); /* Màu viền từ biến */
+  cursor: pointer;
+}
+
+.comment-content-wrapper {
+  flex-grow: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.comment-author-name {
+  font-weight: bold;
+  color: var(--primary-color); /* Màu chữ từ biến */
+  font-size: 0.95em;
+}
+
+.comment-text {
+  color: var(--text-color); /* Màu chữ từ biến */
+  font-size: 0.9em;
+  margin-top: 2px;
+  white-space: pre-wrap;
+  word-wrap: break-word;
+}
+
+.comment-timestamp {
+  font-size: 0.75em;
+  color: var(--text-color-light); /* Màu chữ từ biến */
+  margin-top: 5px;
+  text-align: right;
+}
+
+.comment-options-btn {
+  position: absolute; /* Vị trí tuyệt đối */
+  top: 8px; /* Cách trên 8px */
+  right: 8px; /* Cách phải 8px */
+  background: none;
+  border: none;
+  font-size: 1em;
+  color: var(--text-color-light);
+  cursor: pointer;
+  padding: 3px;
+  border-radius: 50%;
+  transition: background-color 0.2s ease, color 0.2s ease;
+}
+
+.comment-options-btn:hover {
+  background-color: var(--hover-bg-color);
+  color: var(--primary-color);
+}
+
+.comment-input-area {
+  display: flex;
+  gap: 10px;
+  margin-top: 15px;
+}
+
+.comment-input-area .comment-content {
+  flex-grow: 1;
+  margin-bottom: 0;
+}
+
+.comment-input-area .comment-btn {
+  width: fit-content;
+  padding: 8px 15px;
+  font-size: 0.9em;
+  margin-top: 0;
+}
+
+#createPostBtn:disabled {
+  background-color: #555;
+  cursor: not-allowed;
+}
+
+.forum-message {
+  padding: 10px 15px;
+  margin-bottom: 20px;
+  border-radius: 8px;
+  text-align: center;
+  font-weight: bold;
+  display: none;
+}
+
+.forum-message.error {
+  background-color: rgba(255, 77, 77, 0.2);
+  color: #ff4d4d;
+  border: 1px solid #ff4d4d;
+}
+
+.forum-message.success {
+  background-color: rgba(76, 175, 80, 0.2);
+  color: #4caf50;
+  border: 1px solid #4caf50;
+}
+
+.no-posts-message,
+.no-friends-message,
+.no-requests-message,
+.no-users-found-message,
+.no-conversations-message,
+.no-comments-message {
+  text-align: center;
+  color: var(--text-color-light);
+  margin-top: 20px;
+  font-style: italic;
+}
+
+/* Chat Modal Specific Styles */
+.chat-modal-content {
+  display: flex;
+  flex-direction: column;
+  height: 90%; /* Chiều cao cố định cho modal chat */
+  max-height: 800px; /* Chiều cao tối đa */
+  width: 90%;
+  max-width: 800px;
+  background-color: var(--background-color); /* Màu nền từ biến */
+  border-radius: 10px;
+  overflow: hidden;
+}
+
+#chatUserSearchInput {
+  width: 100%;
+  padding: 10px;
+  margin-bottom: 15px;
+  border: 1px solid var(--border-color); /* Màu viền từ biến */
+  border-radius: 5px;
+  background-color: var(--input-bg-color); /* Màu nền từ biến */
+  color: var(--text-color); /* Màu chữ từ biến */
+}
+
+#chatSearchResults {
+  flex-grow: 1;
+  overflow-y: auto; /* Cho phép cuộn */
+  border: 1px solid var(--border-color); /* Màu viền từ biến */
+  border-radius: 5px;
+  padding: 10px;
+  background-color: var(--secondary-bg-color); /* Màu nền từ biến */
+}
+
+.chat-search-result-item {
+  display: flex;
+  align-items: center;
+  padding: 10px;
+  border-bottom: 1px solid var(--border-color); /* Màu viền từ biến */
+  cursor: pointer;
+}
+
+.chat-search-result-item:last-child {
+  border-bottom: none;
+}
+
+.chat-search-result-item img {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  margin-right: 10px;
+  object-fit: cover;
+}
+
+.chat-search-result-item span {
+  flex-grow: 1;
+  font-weight: bold;
+  color: var(--text-color); /* Màu chữ từ biến */
+}
+
+.chat-search-result-item .start-chat-btn {
+  background-color: var(--primary-color); /* Màu nền từ biến */
+  color: white;
+  border: none;
+  padding: 8px 12px;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.chat-search-result-item .start-chat-btn:hover {
+  background-color: var(--primary-hover-color); /* Màu khi hover */
+}
+
+#currentChatRecipientName {
+  text-align: center;
+  margin-bottom: 15px;
+  color: var(--text-color); /* Màu chữ từ biến */
+}
+
+.chat-messages {
+  flex-grow: 1;
+  overflow-y: auto; /* Cho phép cuộn */
+  padding: 10px;
+  border: 1px solid var(--border-color); /* Màu viền từ biến */
+  border-radius: 5px;
+  background-color: var(--secondary-bg-color); /* Màu nền từ biến */
+  margin-bottom: 15px;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Kiểu dáng tin nhắn chat giống Zalo */
+.chat-message {
+  display: flex;
+  align-items: flex-end; /* Căn chỉnh bong bóng xuống dưới */
+  margin-bottom: 8px;
+  max-width: 100%;
+  position: relative; /* Thêm position relative cho nút 3 chấm */
+}
+
+.chat-message.my-message {
+  justify-content: flex-end; /* Tin nhắn của tôi căn phải */
+}
+
+.chat-message.other-message {
+  justify-content: flex-start; /* Tin nhắn của người khác căn trái */
+}
+
+.chat-avatar {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  object-fit: cover;
+  margin-right: 8px;
+  flex-shrink: 0;
+}
+
+.chat-message.my-message .chat-avatar {
+  display: none; /* Ẩn avatar của chính mình */
+}
+
+.message-bubble {
+  max-width: 70%;
+  padding: 10px 14px;
+  border-radius: 18px;
+  position: relative;
+  word-wrap: break-word;
+  font-size: 0.95em;
+  line-height: 1.4;
+  box-shadow: 0 1px 1px rgba(0, 0, 0, 0.1);
+}
+
+.chat-message.my-message .message-bubble {
+  background-color: #0084ff; /* Màu xanh Zalo */
+  color: white;
+  border-bottom-right-radius: 4px; /* Góc nhọn */
+}
+
+.chat-message.other-message .message-bubble {
+  background-color: #e4e6eb; /* Xám nhạt cho người khác */
+  color: #333;
+  border-bottom-left-radius: 4px; /* Góc nhọn */
+}
+
+/* Điều chỉnh bong bóng tin nhắn cho chế độ tối */
+body.dark-mode .chat-message.other-message .message-bubble {
+  background-color: #3a3b3c; /* Xám đậm hơn cho người khác trong dark mode */
+  color: #e4e6eb;
+}
+
+.message-bubble .sender-name {
+  font-weight: bold;
+  margin-bottom: 2px;
+  display: block;
+  font-size: 0.75em;
+  color: rgba(255, 255, 255, 0.8); /* Cho tin nhắn của tôi */
+}
+
+.chat-message.other-message .message-bubble .sender-name {
+  color: #606770; /* Xám đậm hơn cho tên người khác */
+}
+
+body.dark-mode .chat-message.other-message .message-bubble .sender-name {
+  color: #b0b3b8; /* Xám nhạt hơn cho tên người khác trong dark mode */
+}
+
+.message-bubble .message-text {
+  margin: 0;
+  padding: 0;
+}
+
+.message-bubble .message-timestamp {
+  display: block;
+  font-size: 0.65em;
+  text-align: right;
+  margin-top: 4px;
+  color: rgba(255, 255, 255, 0.7); /* Cho tin nhắn của tôi */
+}
+
+.chat-message.other-message .message-bubble .message-timestamp {
+  color: #606770; /* Xám đậm hơn cho timestamp người khác */
+}
+
+body.dark-mode .chat-message.other-message .message-bubble .message-timestamp {
+  color: #b0b3b8; /* Xám nhạt hơn cho timestamp người khác trong dark mode */
+}
+
+/* New: Message options button for chat messages */
+.chat-message .message-options-btn {
+  background: none;
+  border: none;
+  font-size: 0.8em;
+  cursor: pointer;
+  padding: 3px;
+  border-radius: 50%;
+  transition: background-color 0.3s ease;
+  position: absolute;
+  top: 50%; /* Center vertically */
+  transform: translateY(-50%); /* Adjust for vertical centering */
+  z-index: 1; /* Ensure it's above the bubble */
+  opacity: 0; /* Hidden by default */
+  pointer-events: none; /* Disable interaction when hidden */
+}
+
+.chat-message.my-message .message-options-btn {
+  left: -20px; /* Điều chỉnh vị trí nút 3 chấm sát hơn cho tin nhắn của tôi */
+  color: rgba(255, 255, 255, 0.7);
+}
+
+.chat-message.other-message .message-options-btn {
+  right: -20px; /* Điều chỉnh vị trí nút 3 chấm sát hơn cho tin nhắn của người khác */
+  color: var(--text-color-light);
+}
+
+.chat-message:hover .message-options-btn {
+  opacity: 1; /* Show on hover */
+  pointer-events: auto; /* Enable interaction on hover */
+}
+
+/* Styles for edited/recalled messages */
+.message-bubble.edited .message-text,
+.message-bubble.recalled .message-text {
+  font-style: italic;
+  color: var(--text-color-light);
+}
+
+.message-bubble.recalled {
+  background-color: var(--input-bg-color); /* Neutral background */
+  color: var(--text-color-light);
+}
+
+.chat-message.my-message .message-bubble.recalled {
+  background-color: #6c757d; /* Grey for my recalled messages */
+}
+
+.chat-message.other-message .message-bubble.recalled {
+  background-color: #6c757d; /* Grey for other recalled messages */
+}
+
+.chat-input-area {
+  display: flex;
+  align-items: center; /* Căn giữa theo chiều dọc */
+  gap: 10px;
+  padding: 15px;
+  border-top: 1px solid var(--border-color);
+  background-color: var(--secondary-bg-color);
+}
+
+#chatMessageInput {
+  flex-grow: 1;
+  padding: 10px 15px;
+  border: 1px solid var(--border-color);
+  border-radius: 22px;
+  background-color: var(--input-bg-color);
+  color: var(--text-color);
+  font-size: 1em;
+  margin: 0; /* Đảm bảo không có margin gây lệch */
+}
+
+#sendChatBtn {
+  background-color: #0084ff;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 22px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  font-weight: bold;
+  margin: 0; /* Đảm bảo không có margin gây lệch */
+}
+
+#sendChatBtn:hover {
+  background-color: #006bb3;
+}
+
+.chat-main-content .no-chat-selected-message {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  color: var(--text-color-light);
+  font-size: 1.2em;
+  text-align: center;
+}
+
+/* Responsive adjustments for chat layout */
+@media (max-width: 768px) {
+  .messages-section {
+    flex-direction: column;
+    height: auto; /* Allow height to adjust */
+    min-height: calc(100vh - 180px);
+  }
+
+  .conversations-sidebar {
+    flex: none;
+    width: 100%;
+    border-right: none;
+    border-bottom: 1px solid var(--border-color);
+    max-height: 250px; /* Limit height of conversation list on mobile */
+  }
+
+  .chat-main-content {
+    flex: 1;
+  }
+
+  /* Hide chat content when sidebar is visible on mobile */
+  .chat-main-content.hidden-on-mobile {
+    display: none;
+  }
+
+  /* Show sidebar when chat content is hidden on mobile */
+  .messages-section.sidebar-visible .conversations-sidebar {
+    display: flex;
+  }
+}
+
+/* Friends Tab Styling */
+.friends-section {
+  display: flex;
+  height: calc(100vh - 120px); /* Adjust height for main content area */
+  background-color: var(--dark-card-bg);
+  border-radius: 10px;
+  box-shadow: var(--shadow);
+  overflow: hidden;
+}
+
+.friends-sidebar {
+  flex: 0 0 250px; /* Fixed width for sidebar */
+  background-color: var(--secondary-bg-color);
+  border-right: 1px solid var(--border-color);
+  display: flex;
+  flex-direction: column;
+  padding: 15px 0; /* Add vertical padding */
+  gap: 10px; /* Space between buttons */
+}
+
+.friends-sidebar-button {
+  background: none;
+  border: none;
+  color: var(--text-color);
+  padding: 12px 20px;
+  text-align: left;
+  font-size: 1.1em;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  transition: background-color 0.2s ease, color 0.2s ease;
+  border-radius: 8px; /* Rounded corners for buttons */
+  margin: 0 10px; /* Horizontal margin to make them float a bit */
+}
+
+.friends-sidebar-button:hover {
+  background-color: var(--hover-bg-color);
+}
+
+.friends-sidebar-button.active {
+  background-color: var(--primary-color);
+  color: white;
+  font-weight: bold;
+}
+
+.friends-sidebar-button.active:hover {
+  background-color: var(--primary-hover-color);
+}
+
+.friends-main-content {
+  flex-grow: 1;
+  padding: 20px;
+  overflow-y: auto; /* Enable scrolling for main content */
+}

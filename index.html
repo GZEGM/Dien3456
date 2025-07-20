@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="vi">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title id="pageTitle">📦 Thư viện Addon MCPE</title>
+    <link rel="stylesheet" href="style.css" />
+    <!-- Font Awesome for icons -->
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"
+    />
+  </head>
+  <body>
+    <header>
+      <h1><a href="index.html" id="headerTitle">🧩 MCPE Addons</a></h1>
+      <nav>
+        <!-- Đã thêm class "nav-link" vào đây -->
+        <a href="index.html" id="navHome" class="nav-link">Trang chủ</a>
+        <a href="forum.html" id="navForum" class="nav-link">Diễn đàn</a>
+        <div class="header-controls">
+          <!-- Language Selector -->
+          <div class="dropdown">
+            <button class="dropbtn" id="langBtn">
+              <i class="fas fa-globe"></i>
+            </button>
+            <div class="dropdown-content">
+              <a href="#" data-lang="vi">Tiếng Việt</a>
+              <a href="#" data-lang="en">English</a>
+            </div>
+          </div>
+          <!-- Theme Toggle -->
+          <button id="themeToggle" class="icon-btn">
+            <i class="fas fa-sun"></i>
+          </button>
+          <!-- Social Media Icons -->
+          <a
+            href="https://www.youtube.com/@dien3456"
+            target="_blank"
+            class="icon-btn"
+          >
+            <i class="fab fa-youtube"></i>
+          </a>
+          <a
+            href="https://discord.gg/P2BBa5JpHr"
+            target="_blank"
+            class="icon-btn"
+          >
+            <i class="fab fa-discord"></i>
+          </a>
+          <!-- Settings Button -->
+          <button id="settingsBtn" class="icon-btn">
+            <i class="fas fa-cog"></i>
+          </button>
+          <!-- User Profile/Logout -->
+          <div class="user-profile-menu">
+            <button id="userProfileBtn" class="icon-btn">
+              <img
+                id="userAvatar"
+                src="https://placehold.co/40x40/333333/FFFFFF?text=U"
+                alt="User Avatar"
+                class="user-avatar"
+              />
+            </button>
+            <div class="user-dropdown-content">
+              <p id="userNameDisplay">Chào mừng, Khách</p>
+              <p id="userIdDisplay">ID: Đang tải...</p>
+              <button id="logoutBtn" class="btn logout-btn">Đăng xuất</button>
+            </div>
+          </div>
+        </div>
+      </nav>
+    </header>
+
+    <main>
+      <div class="search-container">
+        <input
+          type="text"
+          id="addonSearch"
+          placeholder="Tìm kiếm addon..."
+          class="search-input"
+        />
+        <i class="fas fa-search search-icon"></i>
+      </div>
+
+      <div id="addonList"></div>
+    </main>
+
+    <!-- Settings Modal -->
+    <div id="settingsModal" class="modal">
+      <div class="modal-content">
+        <span class="close-button" id="closeSettingsModal">&times;</span>
+        <h2 id="settingsModalTitle">Cài đặt</h2>
+
+        <div class="setting-item">
+          <label for="modalLangSelect" id="modalLangLabel">Ngôn ngữ:</label>
+          <select id="modalLangSelect">
+            <option value="vi">Tiếng Việt</option>
+            <option value="en">English</option>
+          </select>
+        </div>
+
+        <div class="setting-item">
+          <label id="modalThemeLabel">Chủ đề:</label>
+          <div class="theme-options">
+            <button id="modalThemeDark" class="theme-btn">
+              <i class="fas fa-moon"></i>
+              <span id="modalThemeDarkText">Chế độ Tối</span>
+            </button>
+            <button id="modalThemeLight" class="theme-btn">
+              <i class="fas fa-sun"></i>
+              <span id="modalThemeLightText">Chế độ Sáng</span>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Scroll to Top Button -->
+    <button id="scrollToTopBtn" title="Go to top">
+      <i class="fas fa-arrow-up"></i>
+    </button>
+
+    <script src="data.js"></script>
+    <script type="module" src="script.js"></script>
+  </body>
+</html>

@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="vi">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title id="pageTitle">Đăng nhập / Đăng ký</title>
+    <link rel="stylesheet" href="style.css" />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"
+    />
+  </head>
+  <body class="auth-page">
+    <!-- Removed the entire header section as requested -->
+
+    <main class="auth-container">
+      <div class="auth-form-card">
+        <h2 id="authTitle">Đăng nhập</h2>
+        <!-- Default title is Login -->
+        <div id="message" class="auth-message"></div>
+
+        <form id="loginForm">
+          <!-- Visible by default -->
+          <div class="input-group">
+            <label for="loginEmail">Email:</label>
+            <input
+              type="email"
+              id="loginEmail"
+              placeholder="Nhập email của bạn"
+              required
+            />
+          </div>
+          <div class="input-group">
+            <label for="loginPassword">Mật khẩu:</label>
+            <input
+              type="password"
+              id="loginPassword"
+              placeholder="Nhập mật khẩu của bạn"
+              required
+            />
+          </div>
+          <button type="submit" class="btn auth-btn" id="emailLoginBtn">
+            Đăng nhập
+          </button>
+        </form>
+
+        <form id="registerForm" style="display: none">
+          <!-- Hidden by default -->
+          <div class="input-group">
+            <label for="registerDisplayName">Tên hiển thị (tùy chọn):</label>
+            <input
+              type="text"
+              id="registerDisplayName"
+              placeholder="Nhập tên hiển thị của bạn"
+            />
+          </div>
+          <div class="input-group">
+            <label for="registerEmail">Email:</label>
+            <input
+              type="email"
+              id="registerEmail"
+              placeholder="Nhập email của bạn"
+              required
+            />
+          </div>
+          <div class="input-group">
+            <label for="registerPassword">Mật khẩu:</label>
+            <input
+              type="password"
+              id="registerPassword"
+              placeholder="Tạo mật khẩu (ít nhất 6 ký tự)"
+              required
+            />
+          </div>
+          <button type="submit" class="btn auth-btn" id="registerBtn">
+            Đăng ký
+          </button>
+        </form>
+
+        <button id="googleLoginBtn" class="btn google-btn">
+          <i class="fab fa-google"></i> Đăng nhập với Google
+        </button>
+
+        <button id="anonLoginBtn" class="btn guest-btn">
+          Đăng nhập với tư cách Khách
+        </button>
+
+        <!-- Toggle text for login form (visible when login form is active) -->
+        <p class="auth-toggle-text" id="noAccountText">
+          Bạn chưa có tài khoản?
+          <a href="#" id="toggleToRegister" style="color: var(--primary)"
+            >Đăng ký ngay!</a
+          >
+        </p>
+        <!-- Toggle text for register form (visible when register form is active) -->
+        <p class="auth-toggle-text" id="haveAccountText" style="display: none">
+          Bạn đã có tài khoản?
+          <a href="#" id="toggleToLogin" style="color: var(--primary)"
+            >Đăng nhập ngay!</a
+          >
+        </p>
+      </div>
+    </main>
+    <script src="data.js"></script>
+    <script type="module" src="auth.js"></script>
+  </body>
+</html>
