@@ -9,6 +9,8 @@ import {
   onAuthStateChanged,
   signInAnonymously,
   updateProfile,
+  sendEmailVerification,
+  sendPasswordResetEmail, // Import sendPasswordResetEmail
 } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
 import {
   getFirestore,
@@ -17,21 +19,18 @@ import {
 } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
 
 // Global variables for language and theme
-// Sửa dòng khởi tạo currentLanguage
-let currentLanguage =
-  (localStorage.getItem("language") || "en") in translations
-    ? localStorage.getItem("language") || "en"
-    : "en";
+// For this request, we'll enforce English only for auth.js
+let currentLanguage = "en"; // Hardcode to English as requested
 let currentTheme = localStorage.getItem("theme") || "dark";
 
-// Firebase configuration (Cần khớp với Project Firebase của bạn)
+// Firebase configuration (Must match your Firebase Project)
 const firebaseConfig = {
   apiKey: "AIzaSyByxU2b9nfT9XvDUKGYG6qMPxq-Lt2h2YI",
   authDomain: "dienkon-addon.firebaseapp.com",
   projectId: "dienkon-addon",
-  storageBucket: "dienkon-addon.firebasestorage.app",
+  storageBucket: "dienkon-addon.firebaseapp.com",
   messagingSenderId: "222007544409",
-  appId: "1:222007544409:web:e5bd9965f3da46c8013f48", // Đảm bảo appId này CHÍNH XÁC
+  appId: "1:222007544409:web:e5bd9965f3da46c8013f48", // Ensure this appId is EXACT
   measurementId: "G-P00YDS3E58",
 };
 
@@ -53,48 +52,15 @@ const messageDiv = document.getElementById("message");
 const anonLoginBtn = document.getElementById("anonLoginBtn");
 const noAccountText = document.getElementById("noAccountText");
 const haveAccountText = document.getElementById("haveAccountText");
+// New elements for password reset
+const forgotPasswordLink = document.getElementById("forgotPasswordLink"); // Assuming you add this to auth.html
+const resetPasswordModal = document.getElementById("resetPasswordModal"); // Assuming you add this modal
+const resetEmailInput = document.getElementById("resetEmailInput"); // Assuming input for reset email
+const sendResetEmailBtn = document.getElementById("sendResetEmailBtn"); // Button to send reset email
+const closeResetModalBtn = document.getElementById("closeResetModal"); // Close button for the modal
 
-// Language and Theme setup (same as forum.js for consistency)
+// Language setup (English only as requested)
 const authTranslations = {
-  vi: {
-    login: "Đăng nhập",
-    register: "Đăng ký",
-    emailPlaceholder: "Email",
-    passwordPlaceholder: "Mật khẩu",
-    namePlaceholder: "Tên hiển thị (tùy chọn)",
-    emailLogin: "Đăng nhập bằng Email",
-    googleLogin: "Đăng nhập bằng Google",
-    registerBtn: "Đăng ký tài khoản mới",
-    haveAccount: "Đã có tài khoản?",
-    noAccount: "Chưa có tài khoản?",
-    registerNow: "Đăng ký ngay!",
-    loginNow: "Đăng nhập ngay!",
-    welcome: "Chào mừng bạn",
-    loginSuccess: "Đăng nhập thành công! Đang chuyển hướng...",
-    registerSuccess: "Đăng ký thành công! Đang chuyển hướng...",
-    logoutSuccess: "Đăng xuất thành công!",
-    autoLoginFailed:
-      "Không thể tự động đăng nhập. Vui lòng đăng nhập thủ công.",
-    emailError: "Vui lòng nhập email hợp lệ.",
-    passwordError: "Mật khẩu phải có ít nhất 6 ký tự.",
-    loginFailed: "Đăng nhập thất bại: ",
-    registerFailed: "Đăng ký thất bại: ",
-    error: "Lỗi: ",
-    googleLoginFailed: "Đăng nhập Google thất bại: ",
-    welcomeAnon: "Chào mừng, Khách!",
-    anonLogin: "Đăng nhập với tư cách Khách",
-    anonLoginSuccess: "Đăng nhập ẩn danh thành công! Đang chuyển hướng...",
-    language: "Ngôn ngữ",
-    theme: "Chủ đề",
-    darkMode: "Chế độ Tối",
-    lightMode: "Chế độ Sáng",
-    settings: "Cài đặt",
-    close: "Đóng",
-    home: "Trang chủ",
-    forum: "Diễn đàn",
-    userAvatarAlt: "Ảnh đại diện người dùng",
-    logout: "Đăng xuất",
-  },
   en: {
     login: "Login",
     register: "Register",
@@ -110,7 +76,8 @@ const authTranslations = {
     loginNow: "Login now!",
     welcome: "Welcome",
     loginSuccess: "Login successful! Redirecting...",
-    registerSuccess: "Registration successful! Redirecting...",
+    registerSuccess:
+      "Your account has been created. Please check your email to verify and complete registration.",
     logoutSuccess: "Logout successful!",
     autoLoginFailed: "Automatic login failed. Please log in manually.",
     emailError: "Please enter a valid email.",
@@ -122,12 +89,23 @@ const authTranslations = {
     welcomeAnon: "Welcome, Guest!",
     anonLogin: "Login as Guest",
     anonLoginSuccess: "Anonymous login successful! Redirecting...",
+    emailNotVerified:
+      "Your email is not verified. Please check your inbox for a verification link.",
+    verificationEmailSent:
+      "Verification email sent! Please check your inbox (and spam folder).",
+    passwordResetEmailSent:
+      "Password reset email sent! Please check your inbox (and spam folder).",
+    passwordResetFailed: "Password reset failed: ",
+    forgotPassword: "Forgot Password?",
+    resetPasswordTitle: "Reset Password",
+    sendResetLink: "Send Reset Link",
+    close: "Close",
+    // These might be needed for consistency, though auth.js doesn't directly use them for UI in the auth flow
     language: "Language",
     theme: "Theme",
     darkMode: "Dark Mode",
     lightMode: "Light Mode",
     settings: "Settings",
-    close: "Close",
     home: "Home",
     forum: "Forum",
     userAvatarAlt: "User Avatar",
@@ -135,18 +113,19 @@ const authTranslations = {
   },
 };
 
+// Function to apply theme (kept for consistency with addon.js)
 function applyTheme(theme) {
   document.body.classList.remove("dark-mode", "light-mode");
   document.body.classList.add(`${theme}-mode`);
 }
 
+// Function to update UI text based on language (now always English)
 function updateUIText() {
   const headerTitle = document.getElementById("headerTitle");
   if (headerTitle) {
-    headerTitle.textContent = "Dienkon Addon"; // Updated
+    headerTitle.textContent = "Dienkon Addon";
   }
 
-  // Update auth form based on which form is currently visible
   if (authTitle) {
     authTitle.textContent =
       loginForm && loginForm.style.display === "block"
@@ -207,6 +186,21 @@ function updateUIText() {
   if (toggleToLoginLink) {
     toggleToLoginLink.textContent = authTranslations[currentLanguage].loginNow;
   }
+  // Update password reset modal text
+  if (document.getElementById("forgotPasswordLink")) {
+    document.getElementById("forgotPasswordLink").textContent =
+      authTranslations[currentLanguage].forgotPassword;
+  }
+  if (resetPasswordModal) {
+    document.getElementById("resetPasswordModalTitle").textContent =
+      authTranslations[currentLanguage].resetPasswordTitle;
+    document.getElementById("resetEmailInput").placeholder =
+      authTranslations[currentLanguage].emailPlaceholder;
+    document.getElementById("sendResetEmailBtn").textContent =
+      authTranslations[currentLanguage].sendResetLink;
+    document.getElementById("closeResetModal").textContent =
+      authTranslations[currentLanguage].close;
+  }
 }
 
 // Function to show messages
@@ -234,19 +228,108 @@ function redirectToPreviousPage() {
     localStorage.removeItem("redirectAfterLogin");
     window.location.href = storedUrl;
   } else {
-    window.location.href = "forum.html"; // Default redirect if no specific page was stored
+    window.location.href = "index.html"; // Default redirect if no specific page was stored
   }
 }
+
+// --- START Discord Notification Function ---
+const DISCORD_WEBHOOK_URL =
+  "https://discord.com/api/webhooks/1397090922818310206/iIBWjVnMlaDozLfnzy4vctvEcUXiefGj11vuIdEmZ2Rv0OrXp57Q0V3hLdcUn8NLUOU3";
+
+async function sendDiscordNotification(username, eventType, details = {}) {
+  console.log(
+    "Attempting to send Discord notification to:",
+    DISCORD_WEBHOOK_URL
+  );
+
+  if (
+    !DISCORD_WEBHOOK_URL ||
+    DISCORD_WEBHOOK_URL === "YOUR_DISCORD_WEBHOOK_URL_HERE"
+  ) {
+    console.warn(
+      "Discord Webhook URL is not configured. Skipping notification."
+    );
+    return;
+  }
+
+  let description = "";
+  let color = 0; // Default color (black)
+
+  if (eventType === "login") {
+    description = `User **${username}** has logged in to the website.`;
+    color = 3066993; // Green for success
+    if (details.email) {
+      description += `\nEmail: \`${details.email}\``;
+    }
+    if (details.uid) {
+      description += `\nID: \`${details.uid}\``;
+    }
+    if (details.loginType) {
+      description += `\nLogin Type: \`${details.loginType}\``;
+    }
+    if (details.emailVerified !== undefined) {
+      description += `\nEmail Verified: \`${details.emailVerified}\``;
+    }
+  } else if (eventType === "register") {
+    description = `New user **${username}** has registered an account.`;
+    color = 3447003; // Blue for new registration
+    if (details.email) {
+      description += `\nEmail: \`${details.email}\``;
+    }
+    if (details.uid) {
+      description += `\nID: \`${details.uid}\``;
+    }
+    if (details.emailVerified !== undefined) {
+      description += `\nEmail Verified: \`${details.emailVerified}\``;
+    }
+  }
+
+  const payload = {
+    embeds: [
+      {
+        title: `Website Activity Notification`,
+        description: description,
+        color: color,
+        timestamp: new Date().toISOString(),
+        footer: {
+          text: "Dienkon Addons",
+        },
+      },
+    ],
+  };
+
+  try {
+    const response = await fetch(DISCORD_WEBHOOK_URL, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(payload),
+    });
+
+    if (!response.ok) {
+      const errorText = await response.text();
+      console.error(
+        `Failed to send Discord notification: ${response.status} ${response.statusText}. Response: ${errorText}`
+      );
+    } else {
+      console.log("Discord notification sent successfully.");
+    }
+  } catch (error) {
+    console.error("Error sending Discord notification:", error);
+  }
+}
+// --- END Discord Notification Function ---
 
 // Event listeners
 document.addEventListener("DOMContentLoaded", () => {
   applyTheme(currentTheme);
-  updateUIText(); // Initial UI text update based on default English and login form
+  updateUIText();
 
   // Email/Password Login
   if (emailLoginBtn) {
     emailLoginBtn.addEventListener("click", async (e) => {
-      e.preventDefault(); // Prevent default form submission
+      e.preventDefault();
       console.log("Email Login button clicked.");
       hideMessage();
       const email = document.getElementById("loginEmail")?.value;
@@ -266,15 +349,69 @@ document.addEventListener("DOMContentLoaded", () => {
       }
 
       try {
-        await signInWithEmailAndPassword(auth, email, password);
+        const userCredential = await signInWithEmailAndPassword(
+          auth,
+          email,
+          password
+        );
+        const user = userCredential.user;
+
+        // Check if email is verified
+        if (!user.emailVerified) {
+          showMessage(authTranslations[currentLanguage].emailNotVerified, true);
+
+          // Optionally, you can send a verification email again
+          await sendEmailVerification(user);
+
+          // Sign out unverified user
+          await auth.signOut();
+          return;
+        }
+
+        // If email is verified, save/update user data to Firestore
+        await setDoc(
+          doc(
+            db,
+            `artifacts/${firebaseConfig.appId}/public/data/users`,
+            user.uid
+          ),
+          {
+            uid: user.uid,
+            displayName: user.displayName || user.email,
+            email: user.email,
+            photoURL: user.photoURL || "",
+            createdAt: user.metadata.creationTime,
+            lastLoginAt: user.metadata.lastSignInTime,
+            emailVerified: user.emailVerified, // Should be true here
+          },
+          { merge: true }
+        );
+
         showMessage(authTranslations[currentLanguage].loginSuccess, false);
-        setTimeout(redirectToPreviousPage, 1500);
+        // Ensure Discord notification is sent before redirecting
+        await sendDiscordNotification(
+          user.displayName || user.email || "Guest",
+          "login",
+          {
+            email: user.email,
+            uid: user.uid,
+            loginType: "Email/Password",
+            emailVerified: user.emailVerified,
+          }
+        );
+        // setTimeout(redirectToPreviousPage, 10000); // 10-second delay
       } catch (error) {
         console.error("Error logging in:", error);
         showMessage(
           authTranslations[currentLanguage].loginFailed + error.message,
           true
         );
+        const forgotPasswordLinkP = document.querySelector(
+          ".forgot-password-link"
+        );
+        if (forgotPasswordLinkP) {
+          forgotPasswordLinkP.style.display = "block";
+        }
       }
     });
   } else {
@@ -290,7 +427,7 @@ document.addEventListener("DOMContentLoaded", () => {
       try {
         const result = await signInWithPopup(auth, provider);
         const user = result.user;
-        // Save user data to Firestore
+        // Google login inherently verifies email, so no explicit check needed here.
         await setDoc(
           doc(
             db,
@@ -304,11 +441,23 @@ document.addEventListener("DOMContentLoaded", () => {
             photoURL: user.photoURL,
             createdAt: user.metadata.creationTime,
             lastLoginAt: user.metadata.lastSignInTime,
+            emailVerified: user.emailVerified, // Will be true for Google accounts
           },
           { merge: true }
         );
         showMessage(authTranslations[currentLanguage].loginSuccess, false);
-        setTimeout(redirectToPreviousPage, 1500);
+        // Ensure Discord notification is sent before redirecting
+        await sendDiscordNotification(
+          user.displayName || user.email || "Guest",
+          "login",
+          {
+            email: user.email,
+            uid: user.uid,
+            loginType: "Google",
+            emailVerified: user.emailVerified,
+          }
+        );
+        // setTimeout(redirectToPreviousPage, 10000); // 10-second delay
       } catch (error) {
         console.error("Error with Google login:", error);
         showMessage(
@@ -324,7 +473,7 @@ document.addEventListener("DOMContentLoaded", () => {
   // Email/Password Register
   if (registerBtn) {
     registerBtn.addEventListener("click", async (e) => {
-      e.preventDefault(); // Prevent default form submission
+      e.preventDefault();
       console.log("Register button clicked.");
       hideMessage();
       const email = document.getElementById("registerEmail")?.value;
@@ -352,31 +501,30 @@ document.addEventListener("DOMContentLoaded", () => {
         );
         const user = userCredential.user;
 
-        // Update user profile with display name
         if (displayName) {
           await updateProfile(user, { displayName: displayName });
         }
 
-        // Save user data to Firestore
-        await setDoc(
-          doc(
-            db,
-            `artifacts/${firebaseConfig.appId}/public/data/users`,
-            user.uid
-          ),
-          {
-            uid: user.uid,
-            displayName: displayName || user.email,
-            email: user.email,
-            photoURL: user.photoURL || "",
-            createdAt: user.metadata.creationTime,
-            lastLoginAt: user.metadata.lastSignInTime,
-          },
-          { merge: true }
-        );
+        // Send email verification
+        await sendEmailVerification(user);
+
+        // Sign out the user immediately after registration so they have to verify their email to log in.
+        await auth.signOut();
 
         showMessage(authTranslations[currentLanguage].registerSuccess, false);
-        setTimeout(redirectToPreviousPage, 1500);
+
+        // Ensure Discord notification is sent
+        await sendDiscordNotification(
+          displayName || user.email || "New User",
+          "register",
+          {
+            email: user.email,
+            uid: user.uid,
+            emailVerified: user.emailVerified, // Will be false at this point
+          }
+        );
+        // Do not redirect after registration with email verification
+        // User needs to verify email first.
       } catch (error) {
         console.error("Error registering:", error);
         showMessage(
@@ -397,7 +545,14 @@ document.addEventListener("DOMContentLoaded", () => {
       try {
         const userCredential = await signInAnonymously(auth);
         const user = userCredential.user;
-        // For anonymous users, you might still want to save a basic profile
+        console.log("Anonymous user logged in:", user);
+        // Ensure Discord notification is sent before redirecting
+        await sendDiscordNotification("Guest", "login", {
+          uid: user.uid,
+          loginType: "Anonymous",
+          emailVerified: user.emailVerified,
+        });
+
         await setDoc(
           doc(
             db,
@@ -406,15 +561,17 @@ document.addEventListener("DOMContentLoaded", () => {
           ),
           {
             uid: user.uid,
-            displayName: "Guest", // Default anonymous name is English
+            displayName: "Guest",
             photoURL: "",
             createdAt: user.metadata.creationTime,
             lastLoginAt: user.metadata.lastSignInTime,
           },
           { merge: true }
         );
+
         showMessage(authTranslations[currentLanguage].anonLoginSuccess, false);
-        setTimeout(redirectToPreviousPage, 1500);
+
+        // setTimeout(redirectToPreviousPage, 10000); // 10-second delay for anonymous login
       } catch (error) {
         console.error("Error signing in anonymously:", error);
         showMessage(authTranslations[currentLanguage].autoLoginFailed, true);
@@ -469,10 +626,76 @@ document.addEventListener("DOMContentLoaded", () => {
     console.warn("Toggle to Login link or related forms/title not found.");
   }
 
+  // Password Reset Logic
+  if (
+    forgotPasswordLink &&
+    resetPasswordModal &&
+    sendResetEmailBtn &&
+    closeResetModalBtn
+  ) {
+    forgotPasswordLink.addEventListener("click", (e) => {
+      e.preventDefault();
+      hideMessage();
+      resetPasswordModal.style.display = "flex"; // Use flex to center the modal
+    });
+
+    closeResetModalBtn.addEventListener("click", () => {
+      resetPasswordModal.style.display = "none";
+      resetEmailInput.value = ""; // Clear input on close
+    });
+
+    window.addEventListener("click", (event) => {
+      if (event.target === resetPasswordModal) {
+        resetPasswordModal.style.display = "none";
+        resetEmailInput.value = ""; // Clear input on close
+      }
+    });
+
+    sendResetEmailBtn.addEventListener("click", async () => {
+      hideMessage();
+      const email = resetEmailInput.value;
+      if (!email) {
+        showMessage(authTranslations[currentLanguage].emailError, true);
+        return;
+      }
+      try {
+        await sendPasswordResetEmail(auth, email);
+        showMessage(
+          authTranslations[currentLanguage].passwordResetEmailSent,
+          false
+        );
+        resetPasswordModal.style.display = "none";
+        resetEmailInput.value = "";
+      } catch (error) {
+        console.error("Error sending password reset email:", error);
+        showMessage(
+          authTranslations[currentLanguage].passwordResetFailed + error.message,
+          true
+        );
+      }
+    });
+  } else {
+    console.warn(
+      "Password reset elements not found. Ensure 'forgotPasswordLink', 'resetPasswordModal', 'resetEmailInput', 'sendResetEmailBtn', and 'closeResetModal' exist in your auth.html."
+    );
+  }
+
   // Initial authentication check on page load
   onAuthStateChanged(auth, (user) => {
     if (user) {
-      redirectToPreviousPage();
+      // If user is logged in via email/password but not verified, log them out
+      // Anonymous users and Google users are considered 'verified' for this purpose as per Firebase's internal handling
+      if (
+        user.providerData.some(
+          (provider) => provider.providerId === "password"
+        ) &&
+        !user.emailVerified
+      ) {
+        auth.signOut();
+        showMessage(authTranslations[currentLanguage].emailNotVerified, true);
+      } else {
+        setTimeout(redirectToPreviousPage, 3000);
+      }
     }
   });
 

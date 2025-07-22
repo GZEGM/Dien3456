@@ -4,13 +4,18 @@ import {
   getAuth,
   onAuthStateChanged,
   signOut,
-  // signInWithCustomToken, // Removed: Rely on Firebase session persistence
-  // signInAnonymously, // Removed: Rely on Firebase session persistence
 } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
-import { getFirestore } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+import {
+  getFirestore,
+  doc,
+  getDoc,
+  setDoc,
+  updateDoc,
+  increment, // Import increment to increase numeric values
+} from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
 
 // Global variables for language and theme
-// Sửa dòng khởi tạo currentLanguage
+// Fix currentLanguage initialization line
 let currentLanguage =
   (localStorage.getItem("language") || "en") in translations
     ? localStorage.getItem("language") || "en"
@@ -27,19 +32,84 @@ const firebaseConfig =
         apiKey: "AIzaSyByxU2b9nfT9XvDUKGYG6qMPxq-Lt2h2YI",
         authDomain: "dienkon-addon.firebaseapp.com",
         projectId: "dienkon-addon",
-        storageBucket: "dienkon-addon.firebasestorage.app",
+        storageBucket: "dienkon-addon.firebaseapp.com",
         messagingSenderId: "222007544409",
         appId: "1:222007544409:web:e5bd9965f3da46c8013f48",
         measurementId: "G-P00YDS3E58",
       };
 
-// Sử dụng appId từ cấu hình hardcoded hoặc từ biến toàn cục của Canvas
+// Use appId from hardcoded config or from Canvas global variable
 const appId = typeof __app_id !== "undefined" ? __app_id : firebaseConfig.appId;
 
 // Initialize Firebase
 const app = initializeApp(firebaseConfig);
 auth = getAuth(app);
 db = getFirestore(app);
+
+// --- START Discord Notification Function ---
+const DISCORD_WEBHOOK_URL =
+  "https://discord.com/api/webhooks/1397090922818310206/iIBWjVnMlaDozLfnzy4vctvEcUXiefGj11vuIdEmZ2Rv0OrXp57Q0V3hLdcUn8NLUOU3"; // Replace with your actual Discord Webhook URL
+
+async function sendDiscordNotification(username, eventType, details = {}) {
+  if (
+    !DISCORD_WEBHOOK_URL ||
+    DISCORD_WEBHOOK_URL === "YOUR_DISCORD_WEBHOOK_URL_HERE"
+  ) {
+    console.warn(
+      "Discord Webhook URL is not configured. Skipping notification."
+    );
+    return;
+  }
+
+  let description = "";
+  let color = 0; // Default color (black)
+
+  if (eventType === "addon_download") {
+    description = `User **${username}** downloaded addon **${details.addonName}**.`;
+    color = 3066993; // Light blue for download
+    if (details.uid) {
+      description += `\nUser ID: \`${details.uid}\``;
+    }
+    if (details.totalDownloads !== undefined) {
+      description += `\nTotal downloads for this addon: **${details.totalDownloads}**`;
+    }
+  }
+
+  const payload = {
+    embeds: [
+      {
+        title: `Website Activity Notification`,
+        description: description,
+        color: color,
+        timestamp: new Date().toISOString(),
+        footer: {
+          text: "Dienkon Addons",
+        },
+      },
+    ],
+  };
+
+  try {
+    const response = await fetch(DISCORD_WEBHOOK_URL, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(payload),
+    });
+
+    if (!response.ok) {
+      console.error(
+        `Failed to send Discord notification: ${response.status} ${response.statusText}`
+      );
+    } else {
+      console.log("Discord notification sent successfully.");
+    }
+  } catch (error) {
+    console.error("Error sending Discord notification:", error);
+  }
+}
+// --- END Discord Notification Function ---
 
 // Function to apply theme
 function applyTheme(theme) {
@@ -62,7 +132,7 @@ function updateUIText() {
   document.getElementById("pageTitle").textContent =
     translations[currentLanguage].addonDetails;
   document.getElementById("headerTitle").textContent =
-    translations[currentLanguage].mcpeAddons;
+    translations[currentLanguage].mcpeAddons; // Updated
   document.getElementById("navHome").textContent =
     translations[currentLanguage].home;
   document.getElementById("navForum").textContent =
@@ -107,7 +177,7 @@ function updateUIText() {
 }
 
 // Function to load addon details
-function loadAddonDetails() {
+async function loadAddonDetails() {
   const urlParams = new URLSearchParams(window.location.search);
   const addonId = parseInt(urlParams.get("id"));
   const addonDetailContent = document.getElementById("addonDetailContent");
@@ -128,6 +198,22 @@ function loadAddonDetails() {
 
     // Get the latest version by default
     const latestVersion = addon.versions[addon.versions.length - 1];
+
+    // Fetch download count from Firestore
+    let totalDownloads = 0;
+    try {
+      const downloadDocRef = doc(
+        db,
+        `artifacts/${appId}/public/data/addonDownloads`,
+        String(addonId)
+      );
+      const downloadDocSnap = await getDoc(downloadDocRef);
+      if (downloadDocSnap.exists()) {
+        totalDownloads = downloadDocSnap.data().totalDownloads || 0;
+      }
+    } catch (error) {
+      console.error("Error fetching download count:", error);
+    }
 
     // Build version options
     const versionOptions = addon.versions
@@ -188,11 +274,14 @@ function loadAddonDetails() {
           <pre>${latestVersion.changelog[currentLanguage]}</pre>
         </div>
 
-        <a href="${
-          latestVersion.file
-        }" class="btn" id="downloadButton" download>${
-      translations[currentLanguage].downloadAddon
-    }</a>
+        <div class="download-info">
+          <a href="${
+            latestVersion.file
+          }" class="btn" id="downloadButton" download data-addon-id="${addonId}" data-addon-name="${
+      latestVersion.title[currentLanguage]
+    }">${translations[currentLanguage].downloadAddon}</a>
+          <p id="downloadCountDisplay">Total Downloads: ${totalDownloads}</p>
+        </div>
       </section>
     `;
 
@@ -208,7 +297,80 @@ function loadAddonDetails() {
           (v) => v.versionName === selectedVersionName
         );
         if (selectedVersion) {
-          updateAddonContent(selectedVersion);
+          updateAddonContent(selectedVersion, addonId); // Pass addonId
+        }
+      });
+
+    // Add event listener for download button
+    document
+      .getElementById("downloadButton")
+      .addEventListener("click", async (e) => {
+        e.preventDefault(); // Prevent default download behavior initially
+
+        const addonId = e.currentTarget.dataset.addonId;
+        const addonName = e.currentTarget.dataset.addonName;
+        const downloadFileUrl = e.currentTarget.href; // Get the file URL from the href attribute
+
+        if (!currentUser) {
+          alert("Please log in to download the addon."); // Using alert for simplicity, but a custom modal would be better
+          return;
+        }
+
+        try {
+          const downloadDocRef = doc(
+            db,
+            `artifacts/${appId}/public/data/addonDownloads`,
+            addonId
+          );
+          await setDoc(
+            downloadDocRef,
+            {
+              totalDownloads: increment(1), // Increment download count by 1
+              lastDownloadedBy:
+                currentUser.displayName || currentUser.email || currentUser.uid,
+              lastDownloadedAt: new Date().toISOString(),
+            },
+            { merge: true }
+          ); // Use merge to only update given fields
+
+          // Get updated download count
+          const updatedDocSnap = await getDoc(downloadDocRef);
+          const updatedTotalDownloads = updatedDocSnap.exists()
+            ? updatedDocSnap.data().totalDownloads
+            : 0;
+
+          // Update UI
+          document.getElementById(
+            "downloadCountDisplay"
+          ).textContent = `Total downloads: ${updatedTotalDownloads}`;
+
+          // Send Discord notification
+          sendDiscordNotification(
+            currentUser.displayName || currentUser.email || currentUser.uid,
+            "addon_download",
+            {
+              addonName: addonName,
+              uid: currentUser.uid,
+              totalDownloads: updatedTotalDownloads,
+            }
+          );
+
+          // Programmatically trigger download after successful Firebase update
+          // Create a temporary anchor element and click it
+          const tempDownloadLink = document.createElement("a");
+          tempDownloadLink.href = downloadFileUrl;
+          tempDownloadLink.download = addonName + ".zip"; // Suggest a filename
+          document.body.appendChild(tempDownloadLink);
+          tempDownloadLink.click();
+          document.body.removeChild(tempDownloadLink);
+        } catch (error) {
+          console.error(
+            "Error updating download count or sending notification:",
+            error
+          );
+          alert(
+            "Error downloading addon or updating download count. Please try again."
+          );
         }
       });
   } else {
@@ -217,7 +379,8 @@ function loadAddonDetails() {
 }
 
 // Function to update addon content based on selected version
-function updateAddonContent(version) {
+async function updateAddonContent(version, addonId) {
+  // Added addonId parameter
   document.getElementById("addonTitle").textContent =
     version.title[currentLanguage];
   document.getElementById("addonDescription").textContent =
@@ -246,9 +409,30 @@ function updateAddonContent(version) {
 
   document.querySelector("#addonChangelog pre").textContent =
     version.changelog[currentLanguage];
-  document.getElementById("downloadButton").href = version.file;
-  document.getElementById("downloadButton").textContent =
-    translations[currentLanguage].downloadAddon;
+
+  const downloadButton = document.getElementById("downloadButton");
+  downloadButton.href = version.file;
+  downloadButton.textContent = translations[currentLanguage].downloadAddon;
+  downloadButton.dataset.addonName = version.title[currentLanguage]; // Update addon name for Discord notification
+
+  // Fetch and update download count for the specific addon (even if version changes)
+  let totalDownloads = 0;
+  try {
+    const downloadDocRef = doc(
+      db,
+      `artifacts/${appId}/public/data/addonDownloads`,
+      String(addonId)
+    );
+    const downloadDocSnap = await getDoc(downloadDocRef);
+    if (downloadDocSnap.exists()) {
+      totalDownloads = downloadDocSnap.data().totalDownloads || 0;
+    }
+  } catch (error) {
+    console.error("Error fetching download count for version update:", error);
+  }
+  document.getElementById(
+    "downloadCountDisplay"
+  ).textContent = `Total downloads: ${totalDownloads}`;
 }
 
 // Event Listeners
