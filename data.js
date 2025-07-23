@@ -621,6 +621,100 @@ Quest System - Version 1.0.0 - Changelog
       },
     ],
   },
+
+  // =========================================================================================================
+
+  {
+    id: 4,
+    title: {
+      vi: "Minigame Wordle",
+      en: "Minigame Wordle",
+    },
+    description: {
+      vi: "Đoán từ trong Minecraft Bedrock.",
+      en: "Quess the word.",
+    },
+    image: "images/wordle/wordle.png",
+    video: "not_Supported",
+    versions: [
+      {
+        versionName: "1.0.1",
+        releaseDate: "23/7/2025",
+        title: {
+          vi: "Wordle v1.0.1",
+          en: "Wordle v1.0.1",
+        },
+        description: {
+          vi: "Addon này cho phép quản trị viên tạo và quản lý các spawner rương tùy chỉnh tự động điền lại vật phẩm theo thời gian, cung cấp các tùy chọn ngẫu nhiên hóa và hồi sinh khác nhau. Hỗ trợ Minecraft Bedrock 1.21.90+.",
+          en: "Welcome to the major update of the Wordle Addon! Version v1.0.1 brings many new features, significantly improving user experience and customization capabilities.",
+        },
+        images: [
+          {
+            src: "images/wordle/1.0.1/command.png",
+            captions: {
+              vi: "Sử dụng lệnh để bắt đầu trò chơi.\n/wordle play để bắt đầu trò chơi.\n/wordle config để mở menu cấu hình.",
+              en: `Use the command to start the game.\n/wordle play to start the game.\n/wordle config to open the configuration menu.`,
+            },
+          },
+          {
+            src: "images/wordle/1.0.1/setting_1.png",
+            captions: {
+              vi: "Cấu hình trò chơi với các tùy chọn như số lần đoán, độ dài từ, và ngôn ngữ.",
+              en: "General Settings",
+            },
+          },
+          {
+            src: "images/wordle/1.0.1/setting_2.png",
+            captions: {
+              vi: "Cấu hình trò chơi với các tùy chọn như số lần đoán, độ dài từ, và ngôn ngữ.",
+              en: "General Settings",
+            },
+          },
+          {
+            src: "images/wordle/1.0.1/word_settings.png",
+            captions: {
+              vi: "Cài đặt từ",
+              en: "Word Settings",
+            },
+          },
+        ],
+        videos: [
+          "Not_Supported", // No video available
+        ],
+        changelog: {
+          vi: `Wordle Addon v1.0.1 Cập nhật
+- Cài đặt Bền vững: Tất cả cấu hình (cược, tiền, ngôn ngữ, v.v.) giờ đây được lưu trữ vĩnh viễn.
+- Quản lý Từ Linh hoạt:
+      - Thêm, chỉnh sửa, xóa từ cá nhân.
+      - Xem, tìm kiếm và xóa toàn bộ danh sách từ.
+      - Tự động bao gồm 100 từ mặc định khi cài đặt lần đầu. 
+- Cài đặt Chi tiết:
+    - Tùy chọn đặt số lần đoán (mặc định 5).
+    - Bật/tắt cược (mặc định bật) để chơi giải trí không có tiền cược.
+    - Hỗ trợ tiếng Anh và tiếng Việt.
+- Trải nghiệm Cải tiến:
+    - Hiển thị rõ ràng hơn các thông báo và lỗi.
+    - Tối ưu hóa mã.
+`,
+          en: `Wordle Addon v1.0.1 Update
+- Persistent Settings: All configurations (betting, money, language, etc.) are now saved permanently.
+- Flexible Word Management:
+     - Add, edit, delete individual words.
+     - View, search, and clear the entire word list.
+     - Automatically includes 100 default words on first install.
+ - Detailed Settings:
+    - Option to set number of chances (default 5).
+    - Toggle betting on/off (default on) for casual play without stakes.
+    - Supports English and Vietnamese.
+- Improved Experience:
+    - Clearer display of messages and errors.
+    - Optimized code.
+`,
+        },
+        file: "addons/Wordle - 1.0.1.zip",
+      },
+    ],
+  },
 ];
 
 // Translations for general UI elements
