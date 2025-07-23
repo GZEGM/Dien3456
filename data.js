@@ -646,7 +646,7 @@ Quest System - Version 1.0.0 - Changelog
         },
         description: {
           vi: "Addon này cho phép quản trị viên tạo và quản lý các spawner rương tùy chỉnh tự động điền lại vật phẩm theo thời gian, cung cấp các tùy chọn ngẫu nhiên hóa và hồi sinh khác nhau. Hỗ trợ Minecraft Bedrock 1.21.90+.",
-          en: "Welcome to the major update of the Wordle Addon! Version v1.0.1 brings many new features, significantly improving user experience and customization capabilities.",
+          en: "Welcome to the major update of the Wordle Addon! Version v1.0.1 brings many new features, significantly improving user experience and customization capabilities. Support Minecraft Bedrock 1.21.90+.",
         },
         images: [
           {
