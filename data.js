@@ -635,7 +635,7 @@ Quest System - Version 1.0.0 - Changelog
       en: "Quess the word.",
     },
     image: "images/wordle/wordle.png",
-    video: "not_Supported",
+    video: "https://www.youtube.com/embed/5qOM1TP4PhU?si=biGkJTCyxAcxewb1",
     versions: [
       {
         versionName: "1.0.1",
@@ -679,7 +679,7 @@ Quest System - Version 1.0.0 - Changelog
           },
         ],
         videos: [
-          "Not_Supported", // No video available
+          "https://www.youtube.com/embed/5qOM1TP4PhU?si=biGkJTCyxAcxewb1", // No video available
         ],
         changelog: {
           vi: `Wordle Addon v1.0.1 Cập nhật
@@ -712,6 +712,95 @@ Quest System - Version 1.0.0 - Changelog
 `,
         },
         file: "addons/Wordle - 1.0.1.zip",
+      },
+    ],
+  },
+
+  // ==========================================================================================================
+
+  {
+    id: 5,
+    title: {
+      vi: "Hệ Thống Rơi Vật Phẩm Mob",
+      en: "Mob Drop System",
+    },
+    description: {
+      vi: "Rơi vật phẩm tùy chỉnh từ mob.",
+      en: "Custome item drop from mob.",
+    },
+    image: "images/mob_drop/mob_drop.png",
+    video: "not_Supported",
+    versions: [
+      {
+        versionName: "1.0.1",
+        releaseDate: "23/7/2025",
+        title: {
+          vi: "Hệ Thống Rơi Vật Phẩm Mob v1.0.1",
+          en: "Mob Drop System v1.0.1",
+        },
+        description: {
+          vi: "Addon này là một công cụ mạnh mẽ cho phép bạn tùy chỉnh và quản lý hệ thống rơi vật phẩm từ các thực thể (mob) trong thế giới Minecraft của bạn. Với addon này, bạn có toàn quyền kiểm soát những mob sẽ rơi vật phẩm gì, cách chúng rơi, và các điều kiện kích hoạt những rơi này. Hỗ trợ Minecraft Bedrock 1.21.90+.",
+          en: "This addon is a powerful tool that allows you to customize and manage the item drop system from entities (mobs) within your Minecraft world. With this addon, you have full control over what mobs will drop, how they drop, and the conditions that trigger these drops. Support Minecraft Bedrock 1.21.90+.",
+        },
+        images: [
+          {
+            src: "images/mob_drop/1.0.1/create_entity.png",
+            captions: {
+              vi: "Tính năng mới khi tạo thực thể",
+              en: "New Feature when creating entity",
+            },
+          },
+          {
+            src: "images/mob_drop/1.0.1/ui.png",
+            captions: {
+              vi: "Giao diện",
+              en: "UI",
+            },
+          },
+          {
+            src: "images/mob_drop/1.0.1/drop.png",
+            captions: {
+              vi: "Giờ đây bạn có thể thêm vật phẩm, bảng điểm và lệnh để rơi từ thực thể.",
+              en: "Now you can add item, scoreboear and command to drop from entity.",
+            },
+          },
+          {
+            src: "images/mob_drop/1.0.1/duplicate.png",
+            captions: {
+              vi: "Giờ đây bạn có thể sao chép cấu hình rơi vật phẩm từ thực thể khác.",
+              en: "Duplicate Item Drop.",
+            },
+          },
+        ],
+        videos: [
+          "https://www.youtube.com/embed/rMfV9m1cnH4?si=27vrTaAdnhpSBSk_",
+        ],
+        changelog: {
+          vi: `Cập nhật Hệ Thống Rơi Vật Phẩm Mob v1.0.1 - Hỗ trợ 1.21.90+
+- Cài đặt Vật phẩm Mới - Giới thiệu tùy chọn addDirectlyToInventory để kiểm soát việc thêm trực tiếp vật phẩm vào kho đồ.
+
+- Các Loại Rơi Đa Dạng - Giờ đây hỗ trợ các loại rơi mới bao gồm vật phẩm, bảng điểm và thực thi lệnh.
+
+- Cải thiện Xử lý Kho Đồ - Thêm chức năng ưu tiên thêm vật phẩm vào kho đồ; nếu đầy, vật phẩm sẽ rơi xuống đất.
+
+- Nâng cao Logic Ưu Tiên Rơi - Cải thiện hệ thống ưu tiên rơi vật phẩm mob, cho phép cấu hình chi tiết hơn theo tên và thẻ.
+
+- Tính Năng Sao Chép - Cho phép sao chép cấu hình rơi vật phẩm mob hiện có.
+`,
+          en: `Mob Drop v1.0.1 Update - Support 1.21.90+
+
+- New Item Setting - Introduced addDirectlyToInventory option to control direct item addition to inventory.
+
+- Diverse Drop Types - Now supports new drop types including items, scoreboard, and command execution.
+
+- Improved Inventory Handling - Added a function that prioritizes adding items to inventory; if full, items will drop on the ground.
+
+- Enhanced Drop Priority Logic - Improved the mob drop priority system, allowing more detailed configuration by name and tag.
+
+- Duplication Feature - Enabled copying of existing mob drop configurations.
+`,
+        },
+        file: "addons/Custom Mob Drop - 1.21.90 - 1.0.1.zip",
       },
     ],
   },
