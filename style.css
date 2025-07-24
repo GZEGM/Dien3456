@@ -136,7 +136,7 @@ header nav .nav-link:hover {
   transform: translateY(-2px) scale(1.05); /* Hiệu ứng nổi và phóng to nhẹ */
 }
 
-/* Dropdown cho bộ chọn ngôn ngữ */
+/* Dropdown cho bộ chọn ngôn ngữ và Home */
 .dropdown {
   position: relative;
   display: inline-block;
@@ -153,6 +153,24 @@ header nav .nav-link:hover {
   transition: background-color 0.3s ease, color 0.3s ease;
 }
 
+/* Style for Home dropdown button to look like a nav-link */
+.dropdown .nav-link {
+  font-size: 1em; /* Adjust font size to match other nav links */
+  padding: 8px 12px;
+  display: flex; /* Allow icon to be next to text */
+  align-items: center;
+  gap: 5px; /* Space between text and icon */
+}
+
+/* Animation for the caret-down icon in Home dropdown */
+.dropdown .nav-link .fa-caret-down {
+  transition: transform 0.3s ease; /* Smooth transition for rotation */
+}
+
+.dropdown .nav-link:hover .fa-caret-down {
+  transform: rotate(180deg); /* Rotate the icon on hover */
+}
+
 .dropbtn:hover {
   background-color: rgba(255, 255, 255, 0.2); /* Màu nền khi hover */
   color: white;
@@ -167,7 +185,15 @@ header nav .nav-link:hover {
   z-index: 1;
   border-radius: 8px;
   overflow: hidden;
-  right: 0; /* Căn chỉnh dropdown sang phải */
+  /* Adjust positioning for the Home dropdown to align left with the button */
+  left: 0;
+  right: auto;
+}
+
+/* Specific adjustment for language dropdown to keep it on the right */
+.header-controls .dropdown .dropdown-content {
+  right: 0;
+  left: auto;
 }
 
 .dropdown-content a {

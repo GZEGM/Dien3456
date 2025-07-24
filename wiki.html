@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title id="pageTitle">📦 Thư viện Addon MCPE</title>
+    <title id="pageTitle">Dienkon Addons - Wiki</title>
     <link rel="stylesheet" href="style.css" />
     <!-- Font Awesome for icons -->
     <link
@@ -13,19 +13,22 @@
   </head>
   <body>
     <header>
-      <h1><a href="index.html" id="headerTitle">🧩 MCPE Addons</a></h1>
+      <h1><a href="index.html" id="headerTitle">Dienkon Addons</a></h1>
       <nav>
         <!-- Home Dropdown -->
         <div class="dropdown">
-          <button class="dropbtn nav-link" id="navHome">
-            Trang chủ <i class="fas fa-caret-down"></i>
+          <button class="dropbtn nav-link" id="homeDropdownBtn">
+            <i class="fas fa-home"></i> <span id="navHome">Trang chủ</span>
+            <i class="fas fa-caret-down"></i>
           </button>
-          <div class="dropdown-content" id="homeDropdownContent">
-            <a href="index.html">Trang chủ</a>
-            <a href="manifest.html">Manifest</a>
-            <a href="wiki.html">Wiki</a>
+          <div class="dropdown-content">
+            <a href="index.html" id="dropdownAddonList">Danh sách Addon</a>
+            <a href="manifest.html" id="dropdownCreateManifest">Tạo Manifest</a>
+            <a href="wiki.html" id="dropdownWiki">Wiki</a>
           </div>
         </div>
+        <!-- End Home Dropdown -->
+
         <a href="forum.html" id="navForum" class="nav-link">Diễn đàn</a>
         <div class="header-controls">
           <!-- Language Selector -->
@@ -33,7 +36,7 @@
             <button class="dropbtn" id="langBtn">
               <i class="fas fa-globe"></i>
             </button>
-            <div class="dropdown-content" id="langDropdownContent">
+            <div class="dropdown-content">
               <a href="#" data-lang="vi">Tiếng Việt</a>
               <a href="#" data-lang="en">English</a>
             </div>
@@ -66,14 +69,14 @@
             <button id="userProfileBtn" class="icon-btn">
               <img
                 id="userAvatar"
-                src="https://placehold.co/40x40/333333/FFFFFF?text=U"
+                src="https://placehold.co/40x40/00e676/FFFFFF?text=U"
                 alt="User Avatar"
                 class="user-avatar"
               />
             </button>
             <div class="user-dropdown-content">
-              <p id="userNameDisplay">Chào mừng, Khách</p>
-              <p id="userIdDisplay">ID: Đang tải...</p>
+              <p id="welcomeMessage">Chào mừng,</p>
+              <p id="userIdDisplay">ID:</p>
               <button id="logoutBtn" class="btn logout-btn">Đăng xuất</button>
             </div>
           </div>
@@ -81,18 +84,58 @@
       </nav>
     </header>
 
-    <main>
-      <div class="search-container">
-        <input
-          type="text"
-          id="addonSearch"
-          placeholder="Tìm kiếm addon..."
-          class="search-input"
-        />
-        <i class="fas fa-search search-icon"></i>
-      </div>
+    <main class="wiki-main">
+      <h2 id="wikiTitle">Wiki Dienkon Addons</h2>
 
-      <div id="addonList"></div>
+      <section class="wiki-section">
+        <h3 id="gettingStartedTitle">Bắt đầu</h3>
+        <p id="gettingStartedContent">
+          Chào mừng bạn đến với Wiki của Dienkon Addons! Tại đây, bạn sẽ tìm
+          thấy thông tin chi tiết về cách sử dụng, cài đặt và tùy chỉnh các
+          addon của chúng tôi.
+        </p>
+        <p id="gettingStartedContent2">
+          Hãy khám phá các mục dưới đây để tìm hiểu thêm.
+        </p>
+      </section>
+
+      <section class="wiki-section">
+        <h3 id="generalInfoTitle">Thông tin chung về Addon</h3>
+        <p id="generalInfoContent">
+          Các addon của chúng tôi được thiết kế để nâng cao trải nghiệm
+          Minecraft Bedrock Edition của bạn. Chúng tôi cung cấp nhiều loại
+          addon, từ hệ thống kỹ năng đến hệ thống nhiệm vụ và các công cụ quản
+          lý rương.
+        </p>
+      </section>
+
+      <section class="wiki-section">
+        <h3 id="installationGuideTitle">Hướng dẫn cài đặt</h3>
+        <p id="installationGuideContent">
+          Để cài đặt một addon, hãy tải xuống tệp .mcaddon hoặc .zip từ trang
+          danh sách addon. Sau đó, nhấp đúp vào tệp để nhập vào Minecraft. Nếu
+          là tệp .zip, bạn cần giải nén và sao chép vào thư mục hành vi/tài
+          nguyên thích hợp trong thư mục thế giới của bạn.
+        </p>
+      </section>
+
+      <section class="wiki-section">
+        <h3 id="troubleshootingTitle">Khắc phục sự cố</h3>
+        <p id="troubleshootingContent">
+          Nếu bạn gặp bất kỳ vấn đề nào, vui lòng kiểm tra phần Câu hỏi thường
+          gặp (FAQ) hoặc truy cập diễn đàn của chúng tôi để được hỗ trợ. Đảm bảo
+          rằng bạn đang sử dụng phiên bản Minecraft Bedrock tương thích với
+          addon.
+        </p>
+      </section>
+
+      <section class="wiki-section">
+        <h3 id="contributeTitle">Đóng góp</h3>
+        <p id="contributeContent">
+          Bạn có thể đóng góp vào wiki này bằng cách liên hệ với quản trị viên
+          hoặc gửi đề xuất trên diễn đàn. Mọi đóng góp đều được đánh giá cao!
+        </p>
+      </section>
     </main>
 
     <!-- Settings Modal -->
@@ -130,8 +173,7 @@
       <i class="fas fa-arrow-up"></i>
     </button>
 
-    <!-- Đảm bảo data.js được tải trước script.js -->
     <script src="data.js"></script>
-    <script type="module" src="script.js"></script>
+    <script type="module" src="wiki.js"></script>
   </body>
 </html>

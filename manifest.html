@@ -1,0 +1,632 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title id="pageTitle">MCPE Manifest Creator</title>
+    <!-- Font Awesome for icons -->
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"
+    />
+    <!-- Tailwind CSS (vẫn giữ để tận dụng các utility classes khác) -->
+    <link
+      href="https://cdnjs.cloudflare.com/ajax/libs/tailwindcss/2.2.19/tailwind.min.css"
+      rel="stylesheet"
+    />
+    <!-- UUID library for generating unique IDs -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/uuid/8.3.2/uuid.min.js"></script>
+
+    <!-- Nhúng CSS trực tiếp vào đây, lấy từ style.css của bạn -->
+    <style>
+      /* Định nghĩa biến màu cho chế độ sáng (mặc định) */
+      :root {
+        --primary-color: #00e676; /* Xanh lá cây rực rỡ */
+        --primary-hover-color: #00c853; /* Xanh lá cây đậm hơn khi hover */
+        --secondary-color: #f2f2f2; /* Xám nhạt */
+
+        --text-color: #000000; /* Màu chữ chính: ĐEN */
+        --text-color-light: #666666; /* Màu chữ nhạt hơn (cho placeholder): Xám đậm */
+
+        --background-color: #ffffff; /* Màu nền chính: Trắng */
+        --secondary-bg-color: #f9f9f9; /* Màu nền phụ (ví dụ: cho khung chat, danh sách bạn bè) */
+        --card-bg-color: #ffffff; /* Màu nền thẻ */
+        --border-color: #ddd; /* Màu đường viền */
+        --input-bg-color: #f0f0f0; /* Màu nền input */
+        --shadow: 0 4px 12px rgba(0, 0, 0, 0.3); /* Đổ bóng */
+        --heading-color: #000000; /* Màu tiêu đề: ĐEN */
+        --hover-bg-color: rgba(
+          0,
+          0,
+          0,
+          0.05
+        ); /* Màu nền khi hover (chế độ sáng) */
+
+        --header-bg-color: #333333; /* Màu nền header mặc định: Xám đậm */
+        --header-text-color: #ffffff; /* Màu chữ header mặc định: TRẮNG */
+      }
+
+      /* Áp dụng biến màu cho chế độ tối khi body có class .dark-mode */
+      body.dark-mode {
+        --primary-color: #00e676; /* Xanh lá cây rực rỡ */
+        --primary-hover-color: #00c853; /* Xanh lá cây đậm hơn khi hover */
+        --secondary-color: #242526; /* Nền tối hơi sáng hơn cho các phần */
+
+        --text-color: #ffffff; /* Chữ sáng trong dark mode: TRẮNG TINH */
+        --text-color-light: #cccccc; /* Chữ phụ nhạt hơn trong dark mode: Xám nhạt */
+
+        --background-color: #18191a; /* Nền tối */
+        --secondary-bg-color: #242526; /* Nền tối hơi sáng hơn cho các phần */
+        --card-bg-color: #242526; /* Nền thẻ trong dark mode */
+        --border-color: #3a3b3c; /* Đường viền trong dark mode */
+        --input-bg-color: #3a3b3c; /* Nền input trong dark mode */
+        --shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
+        --heading-color: #ffffff; /* Tiêu đề trong dark mode: TRẮNG TINH */
+        --hover-bg-color: rgba(
+          255,
+          255,
+          255,
+          0.08
+        ); /* Màu nền khi hover (chế độ tối) */
+
+        --header-bg-color: #242526; /* Màu nền header trong dark mode */
+        --header-text-color: #ffffff; /* Màu chữ header trong dark mode: TRẮNG TINH */
+      }
+
+      /* Kiểu dáng chung cho body */
+      body {
+        font-family: "Inter", sans-serif;
+        margin: 0;
+        padding: 0;
+        background-color: var(--background-color);
+        color: var(--text-color); /* Màu chữ chính của body */
+        transition: background-color 0.3s ease, color 0.3s ease;
+        line-height: 1.6;
+      }
+
+      /* Header */
+      header {
+        background-color: var(--header-bg-color); /* Màu nền header từ biến */
+        color: var(--header-text-color); /* Màu chữ header từ biến */
+        padding: 15px 20px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        flex-wrap: wrap;
+        gap: 15px;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+        transition: background-color 0.3s ease, color 0.3s ease;
+      }
+
+      header h1 {
+        margin: 0;
+        font-size: 1.8em;
+      }
+
+      header h1 a {
+        color: var(
+          --header-text-color
+        ); /* Đảm bảo link tiêu đề cũng dùng biến */
+        text-decoration: none;
+        transition: color 0.3s ease;
+      }
+
+      header h1 a:hover {
+        color: var(--primary-hover-color);
+      }
+
+      header nav {
+        display: flex;
+        align-items: center;
+        gap: 15px;
+        flex-wrap: wrap;
+      }
+
+      header nav .nav-link {
+        color: var(--header-text-color); /* Đảm bảo link nav cũng dùng biến */
+        text-decoration: none;
+        padding: 8px 12px;
+        border-radius: 8px;
+        transition: background-color 0.3s ease, color 0.3s ease;
+      }
+
+      header nav .nav-link:hover {
+        background-color: rgba(255, 255, 255, 0.2);
+        color: var(--primary-color);
+      }
+
+      .header-controls {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+      }
+
+      .icon-btn {
+        background: none;
+        border: none;
+        color: var(--header-text-color); /* Đảm bảo icon cũng dùng biến */
+        font-size: 1.2em;
+        cursor: pointer;
+        padding: 8px;
+        border-radius: 8px;
+        transition: background-color 0.3s ease, color 0.3s ease,
+          transform 0.2s ease;
+      }
+
+      .icon-btn:hover {
+        background-color: rgba(255, 255, 255, 0.2);
+        color: var(--primary-color);
+        transform: translateY(-2px) scale(1.05);
+      }
+
+      /* Dropdown cho bộ chọn ngôn ngữ và Home */
+      .dropdown {
+        position: relative;
+        display: inline-block;
+      }
+
+      .dropbtn {
+        background: none;
+        border: none;
+        color: var(
+          --header-text-color
+        ); /* Đảm bảo nút dropdown cũng dùng biến */
+        font-size: 1.2em;
+        cursor: pointer;
+        padding: 8px;
+        border-radius: 8px;
+        transition: background-color 0.3s ease, color 0.3s ease;
+      }
+
+      .dropdown .nav-link {
+        font-size: 1em;
+        padding: 8px 12px;
+        display: flex;
+        align-items: center;
+        gap: 5px;
+      }
+
+      .dropdown .nav-link .fa-caret-down {
+        transition: transform 0.3s ease;
+      }
+
+      .dropdown .nav-link:hover .fa-caret-down {
+        transform: rotate(180deg);
+      }
+
+      .dropbtn:hover {
+        background-color: rgba(255, 255, 255, 0.2);
+        color: white; /* Giữ màu trắng khi hover cho dropbtn */
+      }
+
+      .dropdown-content {
+        display: none;
+        position: absolute;
+        background-color: var(--card-bg-color);
+        min-width: 120px;
+        box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.4);
+        z-index: 1;
+        border-radius: 8px;
+        overflow: hidden;
+        left: 0;
+        right: auto;
+      }
+
+      .header-controls .dropdown .dropdown-content {
+        right: 0;
+        left: auto;
+      }
+
+      .dropdown-content a {
+        color: var(
+          --text-color
+        ); /* Đảm bảo chữ trong dropdown cũng dùng biến chính */
+        padding: 12px 16px;
+        text-decoration: none;
+        display: block;
+        transition: background-color 0.3s ease;
+      }
+
+      .dropdown-content a:hover {
+        background-color: var(--hover-bg-color);
+        color: var(--primary-color);
+      }
+
+      .dropdown:hover .dropdown-content {
+        display: block;
+      }
+
+      /* Dropdown hồ sơ người dùng */
+      .user-profile-menu {
+        position: relative;
+        display: inline-block;
+      }
+
+      .user-avatar {
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        object-fit: cover;
+        border: 2px solid var(--header-text-color); /* Viền avatar dùng biến */
+        transition: border-color 0.3s ease;
+      }
+
+      .user-profile-menu:hover .user-avatar {
+        border-color: rgba(255, 255, 255, 0.5);
+      }
+
+      .user-dropdown-content {
+        display: none;
+        position: absolute;
+        background-color: var(--card-bg-color);
+        min-width: 200px;
+        box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.4);
+        z-index: 1;
+        border-radius: 8px;
+        overflow: hidden;
+        right: 0;
+        padding: 15px;
+        text-align: center;
+        transition: background-color 0.3s ease;
+      }
+
+      .user-dropdown-content p {
+        margin: 5px 0;
+        color: var(--text-color); /* Chữ trong dropdown người dùng */
+      }
+
+      .user-dropdown-content .logout-btn {
+        background-color: var(--primary-color);
+        color: #fff;
+        border: none;
+        padding: 8px 15px;
+        border-radius: 8px;
+        cursor: pointer;
+        margin-top: 10px;
+        transition: background-color 0.3s ease;
+      }
+
+      .user-dropdown-content .logout-btn:hover {
+        background-color: var(--primary-hover-color);
+      }
+
+      /* Nội dung chính */
+      main {
+        padding: 20px;
+        max-width: 1200px;
+        margin: 20px auto;
+        background-color: var(--background-color);
+        border-radius: 10px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+        transition: background-color 0.3s ease, box-shadow 0.3s ease;
+      }
+
+      .content-card {
+        background-color: var(--card-bg-color);
+        transition: background-color 0.3s ease;
+      }
+
+      /* Các trường input, textarea, và select */
+      .input-field {
+        background-color: var(--input-bg-color);
+        color: var(--text-color); /* Màu chữ của nội dung trong input */
+        border-color: var(--border-color);
+        transition: background-color 0.3s ease, color 0.3s ease,
+          border-color 0.3s ease;
+      }
+
+      .input-field::placeholder {
+        color: var(--text-color-light); /* Màu chữ cho placeholder */
+      }
+
+      .input-field:focus {
+        border-color: var(--primary-color);
+        outline: none;
+        box-shadow: 0 0 0 2px rgba(0, 230, 118, 0.3);
+      }
+
+      /* Màu chữ cho các nhãn (label) */
+      label {
+        color: var(
+          --text-color
+        ); /* Đảm bảo các label cũng dùng màu chữ chính */
+        transition: color 0.3s ease;
+      }
+
+      /* Các nút chính */
+      .primary-btn {
+        background-color: var(--primary-color);
+        transition: background-color 0.3s ease, transform 0.2s ease;
+      }
+      .primary-btn:hover {
+        background-color: var(--primary-hover-color);
+      }
+
+      /* Màu chữ cho tiêu đề chính */
+      .heading-text {
+        color: var(--primary-color); /* Màu tiêu đề này vẫn giữ xanh lá cây */
+        transition: color 0.3s ease;
+      }
+
+      /* Scroll to Top Button */
+      #scrollToTopBtn {
+        display: none;
+        position: fixed;
+        bottom: 30px;
+        right: 30px;
+        z-index: 99;
+        border: none;
+        outline: none;
+        background-color: var(--primary-color);
+        color: white;
+        cursor: pointer;
+        padding: 15px;
+        border-radius: 50%;
+        font-size: 18px;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
+        transition: background-color 0.3s ease, transform 0.2s ease;
+      }
+
+      #scrollToTopBtn:hover {
+        background-color: var(--primary-hover-color);
+        transform: translateY(-2px);
+      }
+
+      /* Custom Message Box */
+      #messageBox {
+        z-index: 100;
+      }
+      #messageBox .modal-content-custom {
+        background-color: var(--card-bg-color);
+        transition: background-color 0.3s ease;
+      }
+      #messageBox .message-text-custom {
+        color: var(--text-color);
+      }
+    </style>
+  </head>
+  <body class="font-inter min-h-screen flex flex-col">
+    <header>
+      <h1 class="text-2xl font-bold text-center">
+        <a href="index.html" id="headerTitle">🧩 MCPE Addons</a>
+      </h1>
+      <nav>
+        <!-- Home Dropdown -->
+        <div class="dropdown">
+          <button class="dropbtn nav-link" id="navHome">
+            Trang chủ <i class="fas fa-caret-down"></i>
+          </button>
+          <div class="dropdown-content" id="homeDropdownContent">
+            <a href="index.html">Trang chủ</a>
+            <a href="manifest.html">Tạo Manifest</a>
+            <a href="wiki.html">Wiki</a>
+          </div>
+        </div>
+        <a href="forum.html" id="navForum" class="nav-link">Diễn đàn</a>
+        <div class="header-controls">
+          <!-- Language Selector -->
+          <div class="dropdown">
+            <button class="dropbtn" id="langBtn">
+              <i class="fas fa-globe"></i>
+            </button>
+            <div class="dropdown-content" id="langDropdownContent">
+              <a href="#" data-lang="vi">Tiếng Việt</a>
+              <a href="#" data-lang="en">English</a>
+            </div>
+          </div>
+          <!-- Theme Toggle -->
+          <button id="themeToggle" class="icon-btn">
+            <i class="fas fa-sun" id="themeIcon"></i>
+          </button>
+          <!-- Social Media Icons -->
+          <a
+            href="https://www.youtube.com/@dien3456"
+            target="_blank"
+            class="icon-btn"
+          >
+            <i class="fab fa-youtube"></i>
+          </a>
+          <a
+            href="https://discord.gg/P2BBa5JpHr"
+            target="_blank"
+            class="icon-btn"
+          >
+            <i class="fab fa-discord"></i>
+          </a>
+          <!-- Settings Button (Placeholder for future functionality) -->
+          <button id="settingsBtn" class="icon-btn">
+            <i class="fas fa-cog"></i>
+          </button>
+          <!-- User Profile/Logout -->
+          <div class="user-profile-menu">
+            <button id="userProfileBtn" class="icon-btn">
+              <img
+                id="userAvatar"
+                src="https://placehold.co/40x40/333333/FFFFFF?text=U"
+                alt="User Avatar"
+                class="user-avatar"
+              />
+            </button>
+            <div class="user-dropdown-content">
+              <p id="userNameDisplay">Chào mừng, Khách</p>
+              <p id="userIdDisplay">ID: Đang tải...</p>
+              <button id="logoutBtn" class="btn logout-btn">Đăng xuất</button>
+            </div>
+          </div>
+        </div>
+      </nav>
+    </header>
+
+    <main class="flex-grow container mx-auto p-4 md:p-8">
+      <div
+        class="rounded-lg shadow-xl p-6 md:p-10 max-w-3xl mx-auto content-card"
+      >
+        <h2 class="text-2xl font-semibold mb-6 text-center heading-text">
+          Tạo Manifest Mới
+        </h2>
+
+        <!-- Form to input manifest information -->
+        <div class="space-y-5">
+          <!-- Addon Name -->
+          <div>
+            <label for="addonName" class="block text-sm font-medium mb-1"
+              >Tên Addon:</label
+            >
+            <input
+              type="text"
+              id="addonName"
+              class="w-full p-3 border rounded-md input-field"
+              placeholder="Ví dụ: Addon Minigame Wordle"
+            />
+          </div>
+
+          <!-- Addon Description -->
+          <div>
+            <label for="addonDescription" class="block text-sm font-medium mb-1"
+              >Mô tả:</label
+            >
+            <textarea
+              id="addonDescription"
+              rows="4"
+              class="w-full p-3 border rounded-md input-field"
+              placeholder="Mô tả ngắn gọn về addon của bạn..."
+            ></textarea>
+          </div>
+
+          <!-- Addon Version -->
+          <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <div>
+              <label for="versionMajor" class="block text-sm font-medium mb-1"
+                >Phiên bản (Major):</label
+              >
+              <input
+                type="number"
+                id="versionMajor"
+                value="1"
+                min="0"
+                class="w-full p-3 border rounded-md input-field"
+              />
+            </div>
+            <div>
+              <label for="versionMinor" class="block text-sm font-medium mb-1"
+                >Phiên bản (Minor):</label
+              >
+              <input
+                type="number"
+                id="versionMinor"
+                value="0"
+                min="0"
+                class="w-full p-3 border rounded-md input-field"
+              />
+            </div>
+            <div>
+              <label for="versionPatch" class="block text-sm font-medium mb-1"
+                >Phiên bản (Patch):</label
+              >
+              <input
+                type="number"
+                id="versionPatch"
+                value="0"
+                min="0"
+                class="w-full p-3 border rounded-md input-field"
+              />
+            </div>
+          </div>
+
+          <!-- Minimum Minecraft Version -->
+          <div>
+            <label for="mcVersion" class="block text-sm font-medium mb-1"
+              >Phiên bản Minecraft hiện tại:</label
+            >
+            <select
+              id="mcVersion"
+              class="w-full p-3 border rounded-md input-field"
+            >
+              <!-- Options will be dynamically loaded by manifest.js -->
+            </select>
+          </div>
+
+          <!-- Module Type Selector -->
+          <div>
+            <label for="moduleType" class="block text-sm font-medium mb-1"
+              >Loại Module:</label
+            >
+            <select
+              id="moduleType"
+              class="w-full p-3 border rounded-md input-field"
+            >
+              <option value="script">Script</option>
+              <option value="resources">Resources</option>
+            </select>
+          </div>
+
+          <!-- Beta API Checkbox -->
+          <div class="flex items-center">
+            <input
+              type="checkbox"
+              id="useBetaApi"
+              class="h-4 w-4 text-primary-color border-gray-300 rounded focus:ring-primary-color"
+            />
+            <label for="useBetaApi" class="ml-2 block text-sm font-medium"
+              >Sử dụng Beta API</label
+            >
+          </div>
+
+          <!-- Generate Manifest Button -->
+          <button
+            id="generateManifestBtn"
+            class="w-full primary-btn text-white font-bold py-3 px-6 rounded-lg shadow-md transition duration-300 transform hover:scale-105"
+          >
+            Tạo Manifest
+          </button>
+        </div>
+
+        <!-- Area to display generated Manifest -->
+        <div class="mt-8">
+          <label for="manifestOutput" class="block text-sm font-medium mb-2"
+            >Manifest của bạn:</label
+          >
+          <textarea
+            id="manifestOutput"
+            rows="15"
+            readonly
+            class="w-full p-4 border rounded-md font-mono text-sm resize-y focus:outline-none input-field"
+          ></textarea>
+          <button
+            id="copyManifestBtn"
+            class="mt-4 w-full bg-gray-600 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded-lg shadow-md transition duration-300 transform hover:scale-105"
+          >
+            Sao chép Manifest
+          </button>
+        </div>
+      </div>
+    </main>
+
+    <!-- Custom Message Box HTML -->
+    <div
+      id="messageBox"
+      class="fixed inset-0 bg-gray-900 bg-opacity-50 flex items-center justify-center hidden"
+    >
+      <div
+        class="p-6 rounded-lg shadow-xl max-w-sm w-full text-center modal-content-custom"
+      >
+        <p id="messageBoxText" class="mb-4 message-text-custom"></p>
+        <button
+          id="messageBoxCloseBtn"
+          class="primary-btn text-white font-bold py-2 px-4 rounded-lg"
+        >
+          OK
+        </button>
+      </div>
+    </div>
+
+    <!-- Scroll to Top Button -->
+    <button id="scrollToTopBtn" title="Go to top">
+      <i class="fas fa-arrow-up"></i>
+    </button>
+
+    <!-- Include manifest.js for functionality -->
+    <script src="data.js"></script>
+    <script type="module" src="manifest.js"></script>
+  </body>
+</html>

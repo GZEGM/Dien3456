@@ -726,7 +726,7 @@ Quest System - Version 1.0.0 - Changelog
     },
     description: {
       vi: "Rơi vật phẩm tùy chỉnh từ mob.",
-      en: "Custome item drop from mob.",
+      en: "Custom item drop from mob.",
     },
     image: "images/mob_drop/mob_drop.png",
     video: "not_Supported",
@@ -832,6 +832,50 @@ const translations = {
     welcome: "Chào mừng,",
     userId: "ID:",
     logout: "Đăng xuất",
+    pageTitle: "Tạo Manifest MCPE", // Added for manifest.html
+    addonName: "Tên Addon:", // Added for manifest.html
+    description: "Mô tả:", // Added for manifest.html
+    versionMajor: "Phiên bản (Major):", // Added for manifest.html
+    versionMinor: "Phiên bản (Minor):", // Added for manifest.html
+    versionPatch: "Phiên bản (Patch):", // Added for manifest.html
+    currentMinecraftVersion: "Phiên bản Minecraft hiện tại:", // Added for manifest.html
+    moduleType: "Loại Module:", // Added for manifest.html
+    useBetaApi: "Sử dụng Beta API", // Added for manifest.html
+    generateManifest: "Tạo Manifest", // Added for manifest.html
+    yourManifest: "Manifest của bạn:", // Added for manifest.html
+    copyManifest: "Sao chép Manifest", // Added for manifest.html
+    fillAllFields: "Vui lòng điền đầy đủ Tên Addon và Mô tả.", // Added for manifest.html
+    invalidVersion: "Vui lòng nhập phiên bản hợp lệ (chỉ số).", // Added for manifest.html
+    copiedToClipboard: "Manifest đã được sao chép vào clipboard!", // Added for manifest.html
+    logoutSuccess: "Đăng xuất thành công!", // Added for manifest.html
+    logoutFailed: "Đăng xuất thất bại. Vui lòng thử lại.", // Added for manifest.html
+    selectedLanguage: "Ngôn ngữ đã chọn:", // Added for manifest.html
+    vietnamese: "Tiếng Việt", // Added for manifest.html
+    english: "English", // Added for manifest.html
+    manifestCreator: "Tạo Manifest", // Added for manifest.html
+    wiki: "Wiki", // Added for manifest.html
+    resources: "Gói Tài nguyên", // Added for manifest.html
+    script: "API Scripting", // Added for manifest.html
+
+    // Wiki Page specific
+    wikiPageTitle: "Dienkon Addons - Wiki",
+    wikiTitle: "Wiki Dienkon Addons",
+    gettingStartedTitle: "Bắt đầu",
+    gettingStartedContent:
+      "Chào mừng bạn đến với Wiki của Dienkon Addons! Tại đây, bạn sẽ tìm thấy thông tin chi tiết về cách sử dụng, cài đặt và tùy chỉnh các addon của chúng tôi.",
+    gettingStartedContent2: "Hãy khám phá các mục dưới đây để tìm hiểu thêm.",
+    generalInfoTitle: "Thông tin chung về Addon",
+    generalInfoContent:
+      "Các addon của chúng tôi được thiết kế để nâng cao trải nghiệm Minecraft Bedrock Edition của bạn. Chúng tôi cung cấp nhiều loại addon, từ hệ thống kỹ năng đến hệ thống nhiệm vụ và các công cụ quản lý rương.",
+    installationGuideTitle: "Hướng dẫn cài đặt",
+    installationGuideContent:
+      "Để cài đặt một addon, hãy tải xuống tệp .mcaddon hoặc .zip từ trang danh sách addon. Sau đó, nhấp đúp vào tệp để nhập vào Minecraft. Nếu là tệp .zip, bạn cần giải nén và sao chép vào thư mục hành vi/tài nguyên thích hợp trong thư mục thế giới của bạn.",
+    troubleshootingTitle: "Khắc phục sự cố",
+    troubleshootingContent:
+      "Nếu bạn gặp bất kỳ vấn đề nào, vui lòng kiểm tra phần Câu hỏi thường gặp (FAQ) hoặc truy cập diễn đàn của chúng tôi để được hỗ trợ. Đảm bảo rằng bạn đang sử dụng phiên bản Minecraft Bedrock tương thích với addon.",
+    contributeTitle: "Đóng góp",
+    contributeContent:
+      "Bạn có thể đóng góp vào wiki này bằng cách liên hệ với quản trị viên hoặc gửi đề xuất trên diễn đàn. Mọi đóng góp đều được đánh giá cao!",
   },
   en: {
     home: "Home",
@@ -857,5 +901,49 @@ const translations = {
     welcome: "Welcome,",
     userId: "ID:",
     logout: "Logout",
+    pageTitle: "MCPE Manifest Creator", // Added for manifest.html
+    addonName: "Addon Name:", // Added for manifest.html
+    description: "Description:", // Added for manifest.html
+    versionMajor: "Version (Major):", // Added for manifest.html
+    versionMinor: "Version (Minor):", // Added for manifest.html
+    versionPatch: "Version (Patch):", // Added for manifest.html
+    currentMinecraftVersion: "Current Minecraft Version:", // Added for manifest.html
+    moduleType: "Module Type:", // Added for manifest.html
+    useBetaApi: "Use Beta API", // Added for manifest.html
+    generateManifest: "Generate Manifest", // Added for manifest.html
+    yourManifest: "Your Manifest:", // Added for manifest.html
+    copyManifest: "Copy Manifest", // Added for manifest.html
+    fillAllFields: "Please fill in all Addon Name and Description fields.", // Added for manifest.html
+    invalidVersion: "Please enter a valid version (numeric).", // Added for manifest.html
+    copiedToClipboard: "Manifest copied to clipboard!", // Added for manifest.html
+    logoutSuccess: "Logout successful!", // Added for manifest.html
+    logoutFailed: "Logout failed. Please try again.", // Added for manifest.html
+    selectedLanguage: "Selected language:", // Added for manifest.html
+    vietnamese: "Tiếng Việt", // Added for manifest.html
+    english: "English", // Added for manifest.html
+    manifestCreator: "Manifest Creator", // Added for manifest.html
+    wiki: "Wiki", // Added for manifest.html
+    resources: "Resource Pack", // Added for manifest.html
+    script: "Scripting API", // Added for manifest.html
+
+    // Wiki Page specific
+    wikiPageTitle: "Dienkon Addons - Wiki",
+    wikiTitle: "Dienkon Addons Wiki",
+    gettingStartedTitle: "Getting Started",
+    gettingStartedContent:
+      "Welcome to the Dienkon Addons Wiki! Here, you will find detailed information on how to use, install, and customize our addons.",
+    gettingStartedContent2: "Explore the sections below to learn more.",
+    generalInfoTitle: "General Addon Information",
+    generalInfoContent:
+      "Our addons are designed to enhance your Minecraft Bedrock Edition experience. We offer a variety of addons, from skill systems to quest systems and chest management tools.",
+    installationGuideTitle: "Installation Guide",
+    installationGuideContent:
+      "To install an addon, download the .mcaddon or .zip file from the addon list page. Then, double-click the file to import it into Minecraft. If it's a .zip file, you need to extract it and copy it to the appropriate behavior/resource pack folders in your world directory.",
+    troubleshootingTitle: "Troubleshooting",
+    troubleshootingContent:
+      "If you encounter any issues, please check the Frequently Asked Questions (FAQ) section or visit our forum for support. Make sure you are using a Minecraft Bedrock version compatible with the addon.",
+    contributeTitle: "Contribute",
+    contributeContent:
+      "You can contribute to this wiki by contacting the administrator or submitting suggestions on the forum. All contributions are highly appreciated!",
   },
 };

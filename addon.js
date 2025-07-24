@@ -48,7 +48,7 @@ db = getFirestore(app);
 
 // --- START Discord Notification Function ---
 const DISCORD_WEBHOOK_URL =
-  "https://discord.com/api/webhooks/1397090922818310206/iIBWjVnMlaDozLfnzy4vctvEcUXiefGj11vuIdEmZ2Rv0OrXp57Q0V3hLdcUn8NLUOU3"; // Replace with your actual Discord Webhook URL
+  "https://discord.com/api/webhooks/1397090922818310206/iIBWjVnMlaDoZLfnzy4vctvEcUXiefGj11vuIdEmZ2Rv0OrXp57Q0V3hLdcUn8NLUOU3"; // Replace with your actual Discord Webhook URL
 
 async function sendDiscordNotification(username, eventType, details = {}) {
   if (
@@ -133,8 +133,9 @@ function updateUIText() {
     translations[currentLanguage].addonDetails;
   document.getElementById("headerTitle").textContent =
     translations[currentLanguage].mcpeAddons; // Updated
-  document.getElementById("navHome").textContent =
-    translations[currentLanguage].home;
+  // Update the text for the Home dropdown button
+  document.querySelector("#navHome").childNodes[0].nodeValue =
+    translations[currentLanguage].home + " ";
   document.getElementById("navForum").textContent =
     translations[currentLanguage].forum; // Added forum translation
   document.getElementById("settingsModalTitle").textContent =

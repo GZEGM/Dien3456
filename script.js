@@ -14,7 +14,7 @@ import { getFirestore } from "https://www.gstatic.com/firebasejs/11.6.1/firebase
 let currentLanguage =
   (localStorage.getItem("language") || "en") in translations
     ? localStorage.getItem("language") || "en"
-    : "en"; // Changed default language to English
+    : "en";
 let currentTheme = localStorage.getItem("theme") || "dark";
 let currentUser = null; // To store current authenticated user
 let db, auth; // Firebase instances
@@ -66,8 +66,9 @@ function updateUIText() {
     translations[currentLanguage].addonGallery;
   document.getElementById("headerTitle").textContent =
     translations[currentLanguage].mcpeAddons; // Updated
-  document.getElementById("navHome").textContent =
-    translations[currentLanguage].home;
+  // Update the text for the Home dropdown button
+  document.querySelector("#navHome").childNodes[0].nodeValue =
+    translations[currentLanguage].home + " ";
   document.getElementById("navForum").textContent =
     translations[currentLanguage].forum; // Added forum translation
   document.getElementById("addonSearch").placeholder =
@@ -189,7 +190,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 
   // Event Listeners for Header Controls
   // Language Dropdown
-  document.querySelectorAll(".dropdown-content a").forEach((link) => {
+  document.querySelectorAll("#langDropdownContent a").forEach((link) => {
     link.addEventListener("click", (e) => {
       e.preventDefault();
       currentLanguage = e.target.dataset.lang;
