@@ -804,6 +804,104 @@ Quest System - Version 1.0.0 - Changelog
       },
     ],
   },
+
+  // ==========================================================================================================
+
+  {
+    id: 6,
+    title: {
+      vi: "Hệ Thống Máy Tạo Quái Vật",
+      en: "Mob Spawner System",
+    },
+    description: {
+      vi: "Máy tạo quái vật tùy chỉnh.",
+      en: "Custom mob spawner.",
+    },
+    image: "images/mob_spawner/1.0.1/show_ft.png",
+    video: "not_Supported",
+    versions: [
+      {
+        versionName: "1.0.1",
+        releaseDate: "28/7/2025",
+        title: {
+          vi: "Hệ Thống Máy Tạo Quái Vật v1.0.1",
+          en: "Mob Spawner System v1.0.1",
+        },
+        description: {
+          vi: "Addon này cung cấp hệ thống quản lý máy tạo quái vật Minecraft nâng cao, cho phép tùy chỉnh chi tiết cách quái vật xuất hiện và hành vi của chúng trong thế giới. Hỗ trợ Minecraft Bedrock 1.21.90+.",
+          en: "This addon provides an advanced Minecraft mob spawner management system, allowing detailed customization of how mobs spawn and behave in the world. Support Minecraft Bedrock 1.21.90+.",
+        },
+        images: [
+          {
+            src: "images/mob_spawner/1.0.1/new_toggle.png",
+            captions: {
+              vi: "Tính năng mới khi tạo thực thể",
+              en: "New Feature when creating entity",
+            },
+          },
+          {
+            src: "images/mob_spawner/1.0.1/ft_settings.png",
+            captions: {
+              vi: "Cài đặt văn bản nổi",
+              en: "Floating Text Settings",
+            },
+          },
+          {
+            src: "images/mob_spawner/1.0.1/show_area_particles.png",
+            captions: {
+              vi: "Đây là khi bật tính năng hiện thị khu vực bằng hạt.",
+              en: "This is when the area display feature is enabled with particles.",
+            },
+          },
+          {
+            src: "images/mob_spawner/1.0.1/show_ft.png",
+            captions: {
+              vi: "Bảng chữ nổi riêng cho từng máy tạo quái vật.",
+              en: "Floating text for each mob spawner.",
+            },
+          },
+        ],
+        videos: [
+          "https://www.youtube.com/embed/M1mXe6Y3wrQ?si=4Fb1VDn0huyj8KP9",
+        ],
+        changelog: {
+          vi: `Cập nhật Hệ Thống Máy Tạo Quái Vật v1.0.1 - Hỗ trợ 1.21.90+
+
+- Văn bản nổi & Hiệu ứng hạt: Cải thiện quản lý văn bản và hiệu ứng xung quanh máy tạo quái vật.
+
+- Phân tích tọa độ: Hỗ trợ nhập tọa độ linh hoạt hơn (ví dụ: ~~10~).
+
+- Quản lý máy tạo quái vật: Xóa hiệu ứng cũ khi xóa/chỉnh sửa máy tạo quái vật.
+
+- Thông tin máy tạo quái vật: Hiển thị tên máy tạo quái vật và đếm số lượng mob chính xác hơn.
+
+- Cài đặt mob khu vực: Thêm các tùy chọn hiển thị mới (văn bản nổi, hạt), tự động dịch chuyển cho mob; cài đặt chi tiết cho văn bản nổi và trang bị mob.
+
+- Nhật ký gỡ lỗi: Lỗi giờ đây cũng được ghi vào console.warn.
+
+- Sửa lỗi: Chỉ có xẻng mới có thể được sử dụng để tạo máy tạo quái vật.
+`,
+          en: `Mob Spawner v1.0.1 Update - Support 1.21.90+
+
+- Floating Text & Particle Effects: Improved management for text and effects around spawners.
+
+- Coordinate Parsing: Supports more flexible coordinate input (e.g., ~~10~). 
+
+- Spawner Handling: Clears old effects when removing/editing spawners.
+
+- Spawner Info: Displays spawner name and counts mobs more accurately.
+
+- Area Mob Settings: Added new display toggles (floating text, particles), auto-teleport for mobs; detailed settings for mob floating text and equipment.
+
+- Debug Log: Errors are now also logged to console.warn.
+
+- Fixed Bug: Only shovels could be used to create spawners.
+`,
+        },
+        file: "addons/Mob Spawner System - 1.21.90 - 1.0.1.zip",
+      },
+    ],
+  },
 ];
 
 // Translations for general UI elements
