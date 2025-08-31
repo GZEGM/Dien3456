@@ -902,6 +902,64 @@ Quest System - Version 1.0.0 - Changelog
       },
     ],
   },
+
+  // ===========================================================================================================
+
+  {
+    id: 7,
+    title: {
+      vi: "Player Vault",
+      en: "Player Vault",
+    },
+    description: {
+      vi: "...",
+      en: "...",
+    },
+    image: "images/pv/main.png",
+    video: "not_Supported",
+    versions: [
+      {
+        versionName: "1.0.0",
+        releaseDate: "12/8/2025",
+        title: {
+          vi: "Hệ Thống Máy Tạo Quái Vật v1.0.1",
+          en: "Player Vault v1.0.0",
+        },
+        description: {
+          vi: "Hỗ trợ phiên bản 1.21.100+",
+          en: "Support minecraft version 1.21.100+",
+        },
+        images: [
+          {
+            src: "images/pv/1.0.0/vault.png",
+            captions: {
+              vi: "",
+              en: "",
+            },
+          },
+          {
+            src: "images/pv/1.0.0/command.png",
+            captions: {
+              vi: "",
+              en: "",
+            },
+          },
+        ],
+        videos: [
+          "https://www.youtube.com/embed/00oLcmSEvTQ?si=PknPgsIxzi_ONhOY",
+        ],
+        changelog: {
+          vi: `
+          Không có dì:)))
+`,
+          en: `
+          Nothing....
+`,
+        },
+        file: "addons/Player Vault v1.0.0 - 1.21.100+.zip",
+      },
+    ],
+  },
 ];
 
 // Translations for general UI elements
